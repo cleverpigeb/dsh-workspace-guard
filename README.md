@@ -25,9 +25,6 @@
   - [Upgrading, Disabling, and Uninstalling](#upgrading-disabling-and-uninstalling)
   - [Advanced Diagnostics and Offline Recovery (CLI)](#advanced-diagnostics-and-offline-recovery-cli)
 - [Supported Capabilities and Blocked Actions](#supported-capabilities-and-blocked-actions)
-- [Windows Enforcement Characteristics](#windows-enforcement-characteristics)
-- [Trust Assumptions and Security Boundaries](#trust-assumptions-and-security-boundaries)
-- [Release Status (`0.2.1`)](#release-status-021)
 - [Development Commands](#development-commands)
 - [Repository Structure](#repository-structure)
 - [Detailed Documentation](#detailed-documentation)
@@ -153,7 +150,7 @@ DSH Workspace Guard (`0.2.1`) retains the following native routes. This summary 
 | 4 | **Sandbox Policy & Approval Broker** | `@deepseek-ai/dsh-sandbox-policy`, `@deepseek-ai/dsh-user-approval` | `dsh-workspace-guard/policy`, `dsh-workspace-guard/approval` | Native approval outcomes restored |
 | 5 | **Native Windows ACL Sandbox** | `@deepseek-ai/dsh-sandbox-local` | `dsh-workspace-guard/sandbox` | Restored; requires host Windows runner |
 | 6 | **Built-in File Tools** (`read`, `read_image`, `write`, `edit`) | `@deepseek-ai/dsh-tool-fs` | `dsh-workspace-guard/tool-fs` | Restored + Purge patch `#22` preserved |
-| 7 | **PowerShell Tool (`pwsh`)** (one-shot, background, and persistent terminal paths) | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | Native implementation + Purge patch `#48` retained; persistent startup failed in the fixture (see [Release Status](#release-status-021)) |
+| 7 | **PowerShell Tool (`pwsh`)** (one-shot, background, and persistent terminal paths) | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | Native implementation + Purge patch `#48` retained; persistent startup failed in the fixture (see [acceptance report](docs/ACCEPTANCE.md)) |
 | 8 | **Bash Tool (`bash`)** | `@deepseek-ai/dsh-tool-bash` | `dsh-workspace-guard/tool-bash` | Restored + Purge patch `#48` preserved |
 | 9 | **Tool Runtime & Python `run_code` (`preset-ptc`)** | `@deepseek-ai/dsh-tools`, `@deepseek-ai/dsh-sandbox` | `dsh-workspace-guard/tools` | Restored (shares host `TOOL_RUNTIME_SCHEDULER`) |
 | 10 | **Agent Presets** (`preset-standard`, `preset-ptc`, `preset-minimal`, `preset-cordis`) | Native host preset bundles | Paired nested entries in `cordis.patch.yml` | All 4 presets rewired |
@@ -291,56 +288,6 @@ For lasting disablement, disable or deselect the bundle in DSH's plugin manager.
 | Shell (`pwsh` / `bash`) network commands (`curl`, `Invoke-WebRequest`, etc.) | No network isolation supplied by this mode | No network isolation supplied by this mode | No network isolation supplied by this mode |
 | Write in another Git worktree | Native write denial | Depends on the effective workspace/writable roots; real worktree execution unverified | Subject to OS permissions |
 | Automatic session promotion to Full Access by `dsh-purge` | Suppressed | **Suppressed** (preserves the selected mode) | N/A |
-
----
-
-## Windows Enforcement Characteristics
-
-DSH Workspace Guard uses DeepSeek Harness's official Windows sandbox architecture (`@deepseek-ai/dsh-sandbox-local` + `@deepseek-ai/dsh-sandbox-windows-acl`). Operators should understand the enforcement characteristics of this native backend on Windows:
-
-1. **`partial` Write Restriction Level**:
-   - The native Windows ACL backend provides partial write restriction using restricted child tokens and ACL grants for workspace and native temporary roots. It does not add special `.git`, `.dsh`, or `.agents` exclusions inside an allowed workspace.
-   - If a drive, filesystem, or host installation lacks `@deepseek-ai/dsh-sandbox-windows-acl`, `workspace-write` and `read-only` refuse to fall back silently to unsandboxed execution; instead, they surface `SandboxUnavailableError` and require explicit operator approval.
-2. **No Kernel Read or Network Isolation on Windows**:
-   - The Windows ACL sandbox provides neither kernel-level read isolation nor network isolation.
-   - The restored filesystem provider passes reads through. Its write-containment checks and tool approval flow do not establish sensitive-read filtering or general network-command blocking.
-3. **Temporary ACL Cleanup**:
-   - On provider disposal, native cleanup revokes private-temp grants and removes owned temporary directories; standing workspace ACL entries remain for reuse. A crash can leave temporary residue. There is no per-command restoration or persistent ACL journal provided by this plugin.
-4. **ConPTY (`persistent-pwsh`) Test Observation**:
-   - In the `0.2.1-rc.5` Windows test environment, `persistent-pwsh` (`ConPTY`) fails identically in both the clean official DSH baseline and the generated provider with `PTY shell exited during startup`. DSH Workspace Guard preserves the official `@deepseek-ai/dsh-tool-pwsh` implementation without artificially disabling persistent terminals.
-
----
-
-## Trust Assumptions and Security Boundaries
-
-DSH Workspace Guard is an **accidental-damage and workflow safety control** that restores DSH's native permission modes alongside Purge. It is **not** a hostile-code or multi-tenant containment boundary:
-
-- **Same-Process Cordis Plugins Are Trusted**: All plugins loaded into the same DSH Node.js/Electron process share the root Cordis context and process memory. The `workspace-guard-purge` service isolation prevents `dsh-purge`'s standard `ctx.permissionPresets.set(session, "danger-full-access")` listener from promoting new sessions, but it cannot stop arbitrary in-process code that intentionally bypasses Cordis DI or mutates the filesystem directly.
-- **Host Integrity Outside Replaced Modules**: Workspace Guard replaces the 11 sandbox, policy, approval, permission, filesystem, and tool modules and binds two identity-sensitive symbols (`TOOL_RUNTIME_SCHEDULER` and `SandboxUnavailableError`) from the host. It assumes the remaining host runtime (`AgentLoop`, Electron main process, UI renderer, and `@deepseek-ai/dsh-sandbox-windows-acl`) has not been maliciously trojanised.
-- **Operator Actions Are Authoritative**: Explicitly switching a session to **Full Access** (`danger-full-access`) or approving an escalation prompt intentionally grants unrestricted execution for that session or command.
-- **Offline CLI Recovery Requirement (`--host-stopped`)**: Normal installation and removal run inside DSH's plugin lifecycle and HMR watcher. When using the optional CLI recovery commands (`activate`, `deactivate`, `rollback`), the CLI uses a profile lockfile (`<profile>/.workspace-guard/configuration.lock`), temporary files, and atomic renames, and relies on the operator ensuring DSH is stopped when passing `--apply --host-stopped`.
-- **Subject-Matter Neutrality**: The repair restores native permission modes, path checks, and approval outcomes; it adds no prompt-topic or document-content classification. Existing external approval answerers remain unchanged.
-
----
-
-## Release Status (`0.2.1`)
-
-- **Current Version**: `0.2.1` (targeting `dsh@0.2.1-rc.5` and `dsh-purge@1.6.67`).
-- **Automated & Isolated Runtime Acceptance** ([`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md), [`docs/acceptance-results.json`](docs/acceptance-results.json)):
-  - **Automatic Activation & Lifecycle Suite (`0.2.1`)**: Passed 10 focused transaction scenario groups (automatic activation, repeat-load idempotence, shutdown retention, `0.2.0` version-2 receipt reuse, later-edit preservation, disable/removal restoration, launch-overlay conflicts, dynamic-state diagnostics, interrupted-journal recovery, and offline recovery after package removal), isolated Cordis Loader / DSH `app-boot` / HMR / `PluginManager` lifecycle tests, and end-to-end isolated activation with real compiled Guard providers.
-  - **Native Functional Baseline (`0.2.0`)**: **41 passed, 0 failed, 1 `native-baseline-unavailable`** in the native suite, plus a separate physically absent approval-handler check (**42 distinct passing checks**), verified across direct runtime execution, explicit-target Purge `Apply`, and Purge `reapply` with **0 source/profile hash drift** across 21 monitored normal installation and profile files.
-  - **Normal Desktop Profile Status**: Left untouched during engineering verification and remains awaiting user installation.
-- **Documented Runtime Observations**:
-  1. **`persistent-pwsh` (ConPTY)**: Categorised as `native-baseline-unavailable` (`PTY shell exited during startup` on both clean official `0.2.1-rc.5` and `dsh-workspace-guard`). Not counted as a pass and not artificially disabled.
-  2. **Transient Windows `ReplaceFileW` (`EIO` / Win32 `1175`)**: Observed once in an initial reused-file fixture. Its cause remains unconfirmed. An isolated retry and later direct/Apply/reapply runs passed.
-  3. **Read Only Shell Startup**: One initial isolated startup timed out; a bounded repeat passed. The cause remains unconfirmed.
-- **Unverified Boundaries in `0.2.1`**:
-  - Live Desktop GUI interactive click-through and normal user profile installation (all tests ran in isolated temporary copies to preserve the host untouched).
-  - `persistent-pwsh` under `danger-full-access` where ConPTY can spawn.
-  - Live model-backed subagent `spawn`/`fork`/`resume` turns and background task survival past parent session close.
-  - End-to-end `git worktree add` checkout via a live VCS service.
-  - Live external LSP server stdio/socket transport.
-  - Hosted plugin-manager registry download over the network.
 
 ---
 

@@ -25,9 +25,6 @@
   - [版本升级、停用与卸载](#版本升级停用与卸载)
   - [高级诊断与离线恢复（CLI）](#高级诊断与离线恢复cli)
 - [支持的能力与拦截行为](#支持的能力与拦截行为)
-- [Windows 平台沙盒执行特性](#windows-平台沙盒执行特性)
-- [信任假设与安全边界](#信任假设与安全边界)
-- [发布状态（`0.2.1`）](#发布状态021)
 - [开发与构建命令](#开发与构建命令)
 - [仓库目录结构](#仓库目录结构)
 - [详细文档索引](#详细文档索引)
@@ -152,7 +149,7 @@ DSH Workspace Guard 由四个协同机制组成：
 | 4 | **命令策略与审批引擎**（`policy`、`approval`、失败后提权审批） | `@deepseek-ai/dsh-sandbox-policy`、`@deepseek-ai/dsh-user-approval` | `dsh-workspace-guard/policy`、`dsh-workspace-guard/approval` | 已恢复 |
 | 5 | **原生 Windows ACL 沙盒**（`sandbox`、`@deepseek-ai/dsh-sandbox-windows-acl`） | `@deepseek-ai/dsh-sandbox-local` | `dsh-workspace-guard/sandbox` | 已恢复（依赖宿主 Windows ACL 原生扩展） |
 | 6 | **内置文件工具**（`read`、`read_image`、`write`、`edit`） | `@deepseek-ai/dsh-tool-fs` | `dsh-workspace-guard/tool-fs` | 已恢复 + 保留 Purge 补丁 `#22` |
-| 7 | **PowerShell 工具（`pwsh`）**（单次执行、后台任务、持久终端链路） | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | 已恢复 + 保留 Purge 补丁 `#48`（ConPTY 测试用例启动失败尚未解决，详见[发布状态](#发布状态021)） |
+| 7 | **PowerShell 工具（`pwsh`）**（单次执行、后台任务、持久终端链路） | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | 已恢复 + 保留 Purge 补丁 `#48`（ConPTY 测试用例启动失败尚未解决，详见[验收报告](docs/ACCEPTANCE.md)） |
 | 8 | **Bash 工具（`bash`）** | `@deepseek-ai/dsh-tool-bash` | `dsh-workspace-guard/tool-bash` | 已恢复 + 保留 Purge 补丁 `#48` |
 | 9 | **工具运行时与 Python `run_code`（`preset-ptc`）** | `@deepseek-ai/dsh-tools`、`@deepseek-ai/dsh-sandbox` | `dsh-workspace-guard/tools` | 已恢复（共享宿主 `TOOL_RUNTIME_SCHEDULER`） |
 | 10 | **智能体预设**（`preset-standard`、`preset-ptc`、`preset-minimal`、`preset-cordis`） | 宿主预设配置 | `cordis.patch.yml` 配对嵌套条目 | 全部 4 个预设已完成重连 |
@@ -287,57 +284,6 @@ $Cli         = "$ProfileDir\node_modules\dsh-workspace-guard\lib\cli.js"
 | Shell（`pwsh` / `bash`）执行网络命令（如 `curl`、`Invoke-WebRequest`） | 无网络隔离保证 | 无网络隔离保证 | 允许 |
 | Git worktree 适配器 | 已测试分派，真实创建未验证 | 已测试分派；不额外注册可写根目录 | 同左 |
 | `dsh-purge` 新建会话自动提权至 Full Access | 已抑制 | **已抑制**（保留原生/显式选择） | 不适用 |
-
----
-
-## Windows 平台沙盒执行特性
-
-DSH Workspace Guard 采用 DeepSeek Harness 官方的 Windows 沙盒架构（`@deepseek-ai/dsh-sandbox-local` + `@deepseek-ai/dsh-sandbox-windows-acl`）。在 Windows 环境下使用时，请注意以下原生执行特性：
-
-1. **原生部分写入限制**：
-   - Windows ACL 后端通过 Windows SID 与 DACL 权限项，为受限子进程令牌配置工作区与原生临时根目录的写入范围。此为原生部分写入限制，不包含额外的 `.git`、`.dsh`、`.agents` 目录禁写规则，也不承诺任意 Windows 路径均受完整隔离。
-   - 如果磁盘分区、文件系统或宿主环境缺失 `@deepseek-ai/dsh-sandbox-windows-acl`，`workspace-write` 与 `read-only` 不会静默退化为无沙盒执行，而是抛出 `SandboxUnavailableError` 并要求操作员显式审批。
-2. **Windows 下无内核级读取隔离与网络命名空间隔离**：
-   - Windows ACL 沙盒**不提供**读取隔离或网络隔离。
-   - 核心 `fs` 读取直接放行；此插件不承诺敏感文件读取审批或网络命令拦截。原生策略/审批仍处理其支持的执行决策。
-3. **ACL 生命周期**：
-   - 原生提供方在释放服务时撤销私有临时目录的授权；工作区访问控制项（ACE）保留以供复用。并非每条命令结束后恢复全部 ACL；异常退出后的残留不在此清理保证内。
-4. **ConPTY（`persistent-pwsh`）测试观察**：
-   - 在 `0.2.1-rc.5` Windows 测试环境中，`persistent-pwsh`（基于 `ConPTY` 的持久终端）在纯净官方 DSH 基线与生成的替换提供方中表现完全一致，均在启动阶段因 `PTY shell exited during startup` 退出。DSH Workspace Guard 原样保留了官方 `@deepseek-ai/dsh-tool-pwsh` 实现，未人为屏蔽持久终端功能。
-
----
-
-## 信任假设与安全边界
-
-DSH Workspace Guard 的定位是**防止误操作与恢复工作流安全边界的兼容性控制组件**，用于在启用 Purge 的环境中恢复 DSH 原生权限模式，**而非**抵御恶意代码或多租户隔离的强安全容器：
-
-- **同进程 Cordis 插件互信假设**：加载到同一个 DSH Node.js/Electron 进程中的所有插件共享根级 Cordis 上下文与进程内存。`workspace-guard-purge` 服务隔离能够阻止 `dsh-purge` 标准的 `ctx.permissionPresets.set(session, "danger-full-access")` 监听器自动提权新建会话，但无法防御刻意绕过 Cordis 依赖注入或直接调用底层 API 篡改文件系统的恶意同进程代码。
-- **未替换宿主模块的完整性假设**：Workspace Guard 打包了 11 个选定的沙盒、策略、审批、权限、文件系统与工具入口，并从宿主绑定了两个身份敏感符号（`TOOL_RUNTIME_SCHEDULER` 与 `SandboxUnavailableError`）。它假定其余宿主运行时组件（`AgentLoop`、Electron 主进程、UI 渲染进程及 `@deepseek-ai/dsh-sandbox-windows-acl`）未被恶意篡改。
-- **操作员显式操作具有最高权威**：操作员在界面中主动将会话切换为 **Full Access**（`danger-full-access`），或在审批弹窗中批准提权请求时，系统会按预期授予相应的非受限执行权限。
-- **离线 CLI 恢复前提（`--host-stopped`）**：自动插件生命周期在运行中的宿主内通过配置文件锁（`<profile>/.workspace-guard/configuration.lock`）、临时文件与原子重命名完成配置同步。对于离线恢复场景，CLI 依赖操作员在传入 `--apply --host-stopped` 时确保 DSH 已完全关闭，以免运行中的宿主在退出时覆写 `cordis.patch.yml`。
-- **内容主题中立性**：此修复恢复原生权限模式、路径检查与审批结果，不新增提示词主题或文档内容分类。已有的外部审批答复组件保持不变。
-
----
-
-## 发布状态（`0.2.1`）
-
-- **当前版本**：`0.2.1`（面向 `dsh@0.2.1-rc.5` 与 `dsh-purge@1.6.67` 的**审查 / 候选发布版本**）。
-- **自动化与隔离运行时验收结果**（详见 [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md)、[`docs/acceptance-results.json`](docs/acceptance-results.json)）：
-  - **`0.2.1` 自动激活与生命周期验收**：10 组配置事务测试通过。真实 Cordis Loader、DSH `app-boot`、HMR 与 `PluginManager` 的隔离测试验证了安装、停用、重启和卸载，提供方及包管理器执行使用测试替身。另一组端到端测试加载了真实编译提供方，验证自动激活、工作区内写入成功与外部写入被拒绝。
-  - **宿主预设重载语义**：源码检查确认已有智能体保留原先的预设版本，真正的冷恢复会挂载当前版本。
-  - **正常桌面 Profile 状态**：本轮工程验证保持正常 Profile 与运行中任务原状，等待用户安装。
-  - **`0.2.0` 运行时基线套件**：隔离的临时 Profile 中，原生功能套件为 **41 项通过、0 项失败、1 项 `native-baseline-unavailable`（原生基线不可用）**，另有无审批处理器测试通过（共 42 项不同的通过用例）；在隔离显式目标的 Purge `Apply` 与 `reapply` 后重复通过。当时监控的 21 个正常安装及配置文件哈希保持一致。
-- **已记录的运行时观察项**：
-  1. **`persistent-pwsh`（ConPTY）**：归类为 `native-baseline-unavailable`（在纯净官方 `0.2.1-rc.5` 基线与 `dsh-workspace-guard` 下均报 `PTY shell exited during startup`）。未计入通过项，也未人为禁用。
-  2. **Windows `ReplaceFileW`（`EIO` / Win32 `1175`）**：在初始复用文件的测试用例中曾出现过一次，具体原因尚未确定。在随后的隔离重试以及直接运行、显式目标 Apply/reapply 测试中均通过。
-  3. **Read Only 模式下的 Shell 启动**：首次隔离测试曾超时，一次限时重试通过，原因尚未确定。
-- **`0.2.1` 尚未验证的边界**：
-  - 真实桌面 GUI 界面的交互式点击验收与正常用户 Profile 的原地安装（所有工程验收均在隔离临时副本中执行，以保持正常桌面 Profile 零改动，等待用户安装）。
-  - `danger-full-access` 模式下 ConPTY 可正常启动时的 `persistent-pwsh` 行为。
-  - 接入真实模型的子智能体（Subagent）`spawn`/`fork`/`resume` 多轮对话，以及父会话关闭后后台任务的持续存活。
-  - 通过在线 VCS 服务完整执行 `git worktree add` 检出流程。
-  - 外部真实 LSP 语言服务器的 stdio/socket 通信传输。
-  - 宿主插件管理器通过网络从远程注册表下载安装的过程。
 
 ---
 
