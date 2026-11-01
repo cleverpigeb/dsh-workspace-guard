@@ -44,6 +44,6 @@ Before publishing, it reads the public npm version metadata. A version with the 
 
 For local inspection without credentials or publishing, use Node.js with `RELEASE_TAG` and `RELEASE_ASSETS_DIR` set, then run `node build/publish-release.mjs --verify-only` from the matching release checkout. The files must already be tracked; this verifies the archive against the current checkout and does not claim that a tag or hosted workflow ran locally.
 
-To retry a published release, use **Actions → Publish tested npm release → Run workflow** and enter its exact stable tag. The same release, tag, archive and registry checks run again. The workflow must also exist on the default branch for this manual trigger. A retry does not bypass failed checks or missing npm trust configuration.
+To retry a published release, use **Actions → Publish to npm → Run workflow** and enter its exact stable tag. The same release, tag, archive and registry checks run again. The workflow must also exist on the default branch for this manual trigger. A retry does not bypass failed checks or missing npm trust configuration.
 
 After the first hosted run, inspect its logs and the public npm package version and record the result. The workflow preparation alone does not establish that hosted CI, trusted authentication or publication has succeeded.

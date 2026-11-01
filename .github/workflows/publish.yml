@@ -1,4 +1,4 @@
-name: Publish tested npm release
+name: Publish to npm
 
 on:
   release:
@@ -70,5 +70,5 @@ jobs:
             --pattern "cleverpig-dsh-workspace-guard-${version}.tgz" \
             --pattern "cleverpig-dsh-workspace-guard-${version}-source.tar.gz" \
             --pattern SHA256SUMS
-      - name: Verify and publish the tested archive
+      - name: Verify and publish package
         run: node build/publish-release.mjs
