@@ -3,6 +3,14 @@
   "version": "0.2.0",
   "description": "Restore compatibility between Purge and DSH Workspace mode",
   "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cleverpigeb/dsh-workspace-guard.git"
+  },
+  "homepage": "https://github.com/cleverpigeb/dsh-workspace-guard#readme",
+  "bugs": {
+    "url": "https://github.com/cleverpigeb/dsh-workspace-guard/issues"
+  },
   "bin": {
     "dsh-workspace-guard": "./lib/cli.js"
   },
