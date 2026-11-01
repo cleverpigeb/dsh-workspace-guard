@@ -2,16 +2,23 @@
   "name": "dsh-workspace-guard",
   "version": "0.2.0",
   "description": "Restore compatibility between Purge and DSH Workspace mode",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "bin": {
     "dsh-workspace-guard": "./lib/cli.js"
   },
   "files": [
     "lib",
+    "src/**/*.ts",
+    "build/*.mjs",
+    "build/upstream-lock.json",
+    "build/source-lock.json",
+    "tsconfig.json",
+    "tsdown.config.ts",
     "cordis.patch.yml",
     "locale",
     "icon.svg",
     "README.md",
+    "README.zh-CN.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
     "docs"
@@ -39,6 +46,7 @@
   "scripts": {
     "format": "oxfmt src/*.ts",
     "build:release": "node build/verify-upstream.mjs && tsdown && node build/provenance.mjs",
+    "source:release": "node build/source-release.mjs",
     "lint": "oxlint src build tsdown.config.ts",
     "typecheck": "tsc --noEmit",
     "upstream:refresh": "node build/verify-upstream.mjs --refresh"

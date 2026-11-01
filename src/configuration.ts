@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 DSH Workspace Guard contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import { createHash, randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import { createRequire } from "node:module";

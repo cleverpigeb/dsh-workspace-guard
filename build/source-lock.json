@@ -1,0 +1,141 @@
+[
+  {
+    "repository": "deepseek-ai/deepseek-harness",
+    "revision": "b830ec950faba0a46dda564be3e2d854afed94f1",
+    "packages": [
+      {
+        "name": "@deepseek-ai/dsh-sandbox-local",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-sandbox-policy",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-user-approval",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-permission-presets",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-fs-sandbox",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tools",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-bash",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-pwsh",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-fs",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-plugin-manager",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-sandbox",
+        "version": "0.2.1-rc.5"
+      }
+    ],
+    "file": "deepseek-harness-b830ec950faba0a46dda564be3e2d854afed94f1.tar.gz",
+    "url": "https://codeload.github.com/deepseek-ai/deepseek-harness/tar.gz/b830ec950faba0a46dda564be3e2d854afed94f1",
+    "bytes": 34811890,
+    "sha256": "4281be5574c2eb94d1024d0e165ee24581efc59876e0849610b2dfb0784e5b23",
+    "evidence": {
+      "kind": "git-tag",
+      "tag": "dsh-v0.2.1-rc.5",
+      "matchingLimitation": "Official npm metadata has no gitHead. Release tag and root package version match 0.2.1-rc.5; byte-equivalent rebuild against official npm inputs has not been verified."
+    },
+    "verifiedSourcePaths": [
+      "package.json",
+      "packages/sandbox/sandbox-local/src/index.ts",
+      "packages/core/tools/src/index.ts",
+      "packages/boot/plugin-manager/src/tools.ts",
+      "scripts/build.ts",
+      "pnpm-lock.yaml"
+    ]
+  },
+  {
+    "repository": "kpdecker/jsdiff",
+    "revision": "db0b12ace208da7fd741cf96d97f009347a9eaa8",
+    "packages": [
+      {
+        "name": "diff",
+        "version": "9.0.0"
+      }
+    ],
+    "file": "jsdiff-db0b12ace208da7fd741cf96d97f009347a9eaa8.tar.gz",
+    "url": "https://codeload.github.com/kpdecker/jsdiff/tar.gz/db0b12ace208da7fd741cf96d97f009347a9eaa8",
+    "bytes": 216164,
+    "sha256": "ac8d36206309bd5829b3246e7a075694ab90ce9f629f786a42c0ce6c9d4a42af",
+    "evidence": {
+      "kind": "npm-version-metadata-gitHead",
+      "url": "https://registry.npmjs.org/diff/9.0.0"
+    },
+    "verifiedSourcePaths": [
+      "package.json",
+      "src/index.ts",
+      "tsconfig.json",
+      "rollup.config.mjs"
+    ]
+  },
+  {
+    "repository": "eemeli/yaml",
+    "revision": "ddb21b04cb889722cec8f89dc1b67f19d62d7f7d",
+    "packages": [
+      {
+        "name": "yaml",
+        "version": "2.9.0"
+      }
+    ],
+    "file": "yaml-ddb21b04cb889722cec8f89dc1b67f19d62d7f7d.tar.gz",
+    "url": "https://codeload.github.com/eemeli/yaml/tar.gz/ddb21b04cb889722cec8f89dc1b67f19d62d7f7d",
+    "bytes": 239059,
+    "sha256": "119a96e0bd4f0da36dd45d3450c25f92818a425c02df07b988d15f4044ea3415",
+    "evidence": {
+      "kind": "npm-version-metadata-gitHead",
+      "url": "https://registry.npmjs.org/yaml/2.9.0"
+    },
+    "verifiedSourcePaths": [
+      "package.json",
+      "src/index.ts",
+      "config/rollup.node-config.mjs"
+    ]
+  },
+  {
+    "repository": "colinhacks/zod",
+    "revision": "f3c9ec03ba7a28ae72d25cc295f38674bee0f559",
+    "packages": [
+      {
+        "name": "zod",
+        "version": "4.4.3"
+      }
+    ],
+    "file": "zod-f3c9ec03ba7a28ae72d25cc295f38674bee0f559.tar.gz",
+    "url": "https://codeload.github.com/colinhacks/zod/tar.gz/f3c9ec03ba7a28ae72d25cc295f38674bee0f559",
+    "bytes": 9860867,
+    "sha256": "3647a866d486f04342e668b3730dd849c990a95900c5942d4f30ed3e9f9003fb",
+    "evidence": {
+      "kind": "npm-version-metadata-gitHead",
+      "url": "https://registry.npmjs.org/zod/4.4.3"
+    },
+    "verifiedSourcePaths": [
+      "package.json",
+      "packages/zod/package.json",
+      "packages/zod/src/index.ts",
+      "packages/zod/tsconfig.build.json",
+      "scripts/write-stub-package-jsons.ts"
+    ]
+  }
+]

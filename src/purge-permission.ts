@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 DSH Workspace Guard contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import { Service } from "@deepseek-ai/cordis";
 import "./runtime-version.js";
 import { assertSelectedPurgeCompatibility } from "./compatibility.js";

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 DSH Workspace Guard contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import { createRequire } from "node:module";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";

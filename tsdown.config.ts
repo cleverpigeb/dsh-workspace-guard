@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 DSH Workspace Guard contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import { defineConfig } from "tsdown";
 import { readFileSync } from "node:fs";
 import { entries, selectedModules, selectedPackages, standalonePackages } from "./build/upstream.mjs";
@@ -18,6 +21,12 @@ export default defineConfig({
   target: "node22",
   dts: false,
   sourcemap: false,
+  banner: `/*!
+ * DSH Workspace Guard
+ * Copyright (c) 2026 DSH Workspace Guard contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Third-party notices and licenses: THIRD_PARTY_LICENSES.txt
+ */`,
   outExtensions: () => ({ js: ".js" }),
   deps: {
     neverBundle: true,

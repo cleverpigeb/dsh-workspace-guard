@@ -23,8 +23,8 @@
     {
       "file": "approval.js",
       "imports": [
-        "lib-B_A0IXaB.js",
-        "runtime-version-CNudQvOj.js"
+        "lib-KC55FOau.js",
+        "runtime-version-Df1UH3du.js"
       ],
       "exports": [
         "APPROVAL_POLICIES",
@@ -38,7 +38,7 @@
     {
       "file": "cli.js",
       "imports": [
-        "compatibility-DgfB-Kno.js",
+        "compatibility-xXJmL-DL.js",
         "node:module",
         "node:crypto",
         "node:fs",
@@ -123,7 +123,7 @@
       ]
     },
     {
-      "file": "compatibility-DgfB-Kno.js",
+      "file": "compatibility-xXJmL-DL.js",
       "imports": [
         "node:module",
         "node:fs",
@@ -140,8 +140,8 @@
     {
       "file": "fs.js",
       "imports": [
-        "lib-5qu6ZlSr.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-DWBq_88x.js",
+        "runtime-version-Df1UH3du.js",
         "node:path",
         "@deepseek-ai/dsh-fs-local",
         "@deepseek-ai/dsh-fs",
@@ -165,93 +165,9 @@
       "modules": []
     },
     {
-      "file": "lib-5qu6ZlSr.js",
+      "file": "lib-BDj20byz.js",
       "imports": [
-        "node:fs",
-        "@deepseek-ai/cordis",
-        "node:os",
-        "@deepseek-ai/dsh-llm",
-        "@deepseek-ai/dsh-util-values",
-        "@deepseek-ai/dsh-sandbox"
-      ],
-      "exports": [
-        "a",
-        "c",
-        "i",
-        "l",
-        "n",
-        "o",
-        "r",
-        "s",
-        "t",
-        "u"
-      ],
-      "modules": [
-        "@deepseek-ai/dsh-sandbox/lib/index.js"
-      ]
-    },
-    {
-      "file": "lib-B_A0IXaB.js",
-      "imports": [
-        "node:crypto",
-        "@deepseek-ai/cordis",
-        "@deepseek-ai/schemastery",
-        "@deepseek-ai/dsh-llm",
-        "@deepseek-ai/dsh-scope",
-        "@deepseek-ai/dsh-session"
-      ],
-      "exports": [
-        "i",
-        "n",
-        "r",
-        "t"
-      ],
-      "modules": [
-        "@deepseek-ai/dsh-user-approval/lib/index.js"
-      ]
-    },
-    {
-      "file": "lib-CcpZWnEJ.js",
-      "imports": [
-        "node:path",
-        "@deepseek-ai/cordis",
-        "@deepseek-ai/schemastery"
-      ],
-      "exports": [
-        "a",
-        "c",
-        "i",
-        "n",
-        "o",
-        "r",
-        "s",
-        "t"
-      ],
-      "modules": [
-        "@deepseek-ai/dsh-sandbox-policy/lib/index.js",
-        "zod/v4/classic/errors.js",
-        "zod/v4/classic/iso.js",
-        "zod/v4/classic/parse.js",
-        "zod/v4/classic/schemas.js",
-        "zod/v4/core/api.js",
-        "zod/v4/core/checks.js",
-        "zod/v4/core/core.js",
-        "zod/v4/core/doc.js",
-        "zod/v4/core/errors.js",
-        "zod/v4/core/json-schema-processors.js",
-        "zod/v4/core/parse.js",
-        "zod/v4/core/regexes.js",
-        "zod/v4/core/registries.js",
-        "zod/v4/core/schemas.js",
-        "zod/v4/core/to-json-schema.js",
-        "zod/v4/core/util.js",
-        "zod/v4/core/versions.js"
-      ]
-    },
-    {
-      "file": "lib-DpUORC-p.js",
-      "imports": [
-        "lib-5qu6ZlSr.js",
+        "lib-DWBq_88x.js",
         "@deepseek-ai/cordis",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -289,9 +205,93 @@
       ]
     },
     {
+      "file": "lib-BFoXg-Us.js",
+      "imports": [
+        "node:path",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery"
+      ],
+      "exports": [
+        "a",
+        "c",
+        "i",
+        "n",
+        "o",
+        "r",
+        "s",
+        "t"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox-policy/lib/index.js",
+        "zod/v4/classic/errors.js",
+        "zod/v4/classic/iso.js",
+        "zod/v4/classic/parse.js",
+        "zod/v4/classic/schemas.js",
+        "zod/v4/core/api.js",
+        "zod/v4/core/checks.js",
+        "zod/v4/core/core.js",
+        "zod/v4/core/doc.js",
+        "zod/v4/core/errors.js",
+        "zod/v4/core/json-schema-processors.js",
+        "zod/v4/core/parse.js",
+        "zod/v4/core/regexes.js",
+        "zod/v4/core/registries.js",
+        "zod/v4/core/schemas.js",
+        "zod/v4/core/to-json-schema.js",
+        "zod/v4/core/util.js",
+        "zod/v4/core/versions.js"
+      ]
+    },
+    {
+      "file": "lib-DWBq_88x.js",
+      "imports": [
+        "node:fs",
+        "@deepseek-ai/cordis",
+        "node:os",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-sandbox"
+      ],
+      "exports": [
+        "a",
+        "c",
+        "i",
+        "l",
+        "n",
+        "o",
+        "r",
+        "s",
+        "t",
+        "u"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox/lib/index.js"
+      ]
+    },
+    {
+      "file": "lib-KC55FOau.js",
+      "imports": [
+        "node:crypto",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-scope",
+        "@deepseek-ai/dsh-session"
+      ],
+      "exports": [
+        "i",
+        "n",
+        "r",
+        "t"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-user-approval/lib/index.js"
+      ]
+    },
+    {
       "file": "permission-bridge.js",
       "imports": [
-        "runtime-version-CNudQvOj.js",
+        "runtime-version-Df1UH3du.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -302,9 +302,9 @@
     {
       "file": "permission.js",
       "imports": [
-        "lib-CcpZWnEJ.js",
-        "lib-B_A0IXaB.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-BFoXg-Us.js",
+        "lib-KC55FOau.js",
+        "runtime-version-Df1UH3du.js",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-commands/brand",
         "@deepseek-ai/dsh-typert-protocol"
@@ -322,9 +322,9 @@
     {
       "file": "plugin-tools.js",
       "imports": [
-        "lib-5qu6ZlSr.js",
-        "lib-DpUORC-p.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-DWBq_88x.js",
+        "lib-BDj20byz.js",
+        "runtime-version-Df1UH3du.js",
         "@deepseek-ai/dsh-util-values",
         "@deepseek-ai/dsh-app-boot"
       ],
@@ -339,8 +339,8 @@
     {
       "file": "policy.js",
       "imports": [
-        "lib-CcpZWnEJ.js",
-        "runtime-version-CNudQvOj.js"
+        "lib-BFoXg-Us.js",
+        "runtime-version-Df1UH3du.js"
       ],
       "exports": [
         "SANDBOX_MODES",
@@ -353,8 +353,8 @@
     {
       "file": "purge-permission.js",
       "imports": [
-        "runtime-version-CNudQvOj.js",
-        "compatibility-DgfB-Kno.js",
+        "runtime-version-Df1UH3du.js",
+        "compatibility-xXJmL-DL.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -363,9 +363,9 @@
       "modules": []
     },
     {
-      "file": "runtime-version-CNudQvOj.js",
+      "file": "runtime-version-Df1UH3du.js",
       "imports": [
-        "compatibility-DgfB-Kno.js"
+        "compatibility-xXJmL-DL.js"
       ],
       "exports": [],
       "modules": []
@@ -373,8 +373,8 @@
     {
       "file": "sandbox.js",
       "imports": [
-        "lib-5qu6ZlSr.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-DWBq_88x.js",
+        "runtime-version-Df1UH3du.js",
         "node:fs",
         "node:path",
         "node:url",
@@ -396,9 +396,9 @@
     {
       "file": "tool-bash.js",
       "imports": [
-        "lib-DpUORC-p.js",
-        "lib-5qu6ZlSr.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-BDj20byz.js",
+        "lib-DWBq_88x.js",
+        "runtime-version-Df1UH3du.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -417,9 +417,9 @@
     {
       "file": "tool-fs.js",
       "imports": [
-        "lib-DpUORC-p.js",
-        "lib-5qu6ZlSr.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-BDj20byz.js",
+        "lib-DWBq_88x.js",
+        "runtime-version-Df1UH3du.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-fs",
@@ -450,9 +450,9 @@
     {
       "file": "tool-pwsh.js",
       "imports": [
-        "lib-DpUORC-p.js",
-        "lib-5qu6ZlSr.js",
-        "runtime-version-CNudQvOj.js",
+        "lib-BDj20byz.js",
+        "lib-DWBq_88x.js",
+        "runtime-version-Df1UH3du.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -471,8 +471,8 @@
     {
       "file": "tools.js",
       "imports": [
-        "lib-DpUORC-p.js",
-        "runtime-version-CNudQvOj.js"
+        "lib-BDj20byz.js",
+        "runtime-version-Df1UH3du.js"
       ],
       "exports": [
         "CodeRunFailedError",

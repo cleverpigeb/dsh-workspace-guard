@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 DSH Workspace Guard contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 export const upstreamVersion = "0.2.1-rc.5";
 
 export const entries = {
