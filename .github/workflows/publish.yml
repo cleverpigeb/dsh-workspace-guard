@@ -28,7 +28,6 @@ jobs:
     env:
       RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
       RELEASE_REPOSITORY: cleverpigeb/dsh-workspace-guard
-      RELEASE_ASSETS_DIR: ${{ runner.temp }}/npm-release-assets
     steps:
       - name: Validate published stable release
         env:
@@ -36,6 +35,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          printf 'RELEASE_ASSETS_DIR=%s/npm-release-assets\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
           [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
           gh release view "$RELEASE_TAG" --repo "$RELEASE_REPOSITORY" --json tagName,isDraft,isPrerelease,publishedAt > "$RUNNER_TEMP/release.json"
           node --input-type=module <<'NODE'
