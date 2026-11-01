@@ -1,20 +1,28 @@
 # Installation and removal
 
-The package contains prebuilt ESM JavaScript. Git-source and npm distribution use the same runtime; installation requires no compiler, custom native addon or lifecycle build script. Registry publication and a hosted Git mirror are separate steps.
+Install `dsh-workspace-guard` through DSH's plugin manager using its npm or Git source. The manager enables the bundle by default. The plugin then records its configuration changes and DSH's normal profile watcher loads the repaired native providers automatically. Installation and enabling are the complete setup flow.
 
-Installation registers an inactive bundle. Activate while the target profile's host is stopped after its work finishes. The helper does not stop DSH or approve real prompts. Use an explicit profile and inspect the proposed changes first.
+The package contains prebuilt ESM JavaScript and its resources. Both installation sources use that runtime. The plugin checks its supported DSH, Purge and OPS versions before changing configuration.
 
-Run `node lib/cli.js --help` for exact options. `doctor` inspects compatibility; `plan` prints activation changes. Configuration commands preview unless explicit write and stopped-host acknowledgements are supplied. Acknowledgement does not independently prove a host is idle.
+Automatic setup uses the Desktop profile's native HMR service (DSH's configuration reloader). Configuration and provider loading are asynchronous; the plugin logs when configuration is saved, and DSH reports provider-loading errors through its normal plugin diagnostics. A profile with HMR disabled requires its native reload service for this automatic flow.
+
+New chats use the updated tool preset after automatic reload. DSH retains each existing agent's preset revision, including the revision inherited by its children. To refresh all existing chats, finish ongoing work and restart DSH normally; a genuine cold resume also mounts the current preset. Opening a tab for an agent that is still live retains that agent's revision. Installation and removal follow DSH's native resource lifecycle.
+
+The CLI is optional diagnostics and recovery tooling. `doctor` inspects compatibility and owned configuration; `plan` shows the proposed changes. Offline recovery commands retain their explicit profile and stopped-host acknowledgements. See CONFIGURATION.md.
 
 The host must provide the matching packaged Windows ACL runner. The upstream source-tree fallback is not a portable deployment substitute.
 
 ## Upgrade and rollback
 
-Keep the last verified package until its replacement passes compatibility and isolated acceptance. Upgrade while the target profile is stopped. If the upgrade fails, restore that package and review the recorded configuration transaction.
+Upgrade, disable and uninstall through DSH's plugin manager. Automatic setup is idempotent: a valid existing configuration is reused. Disabling or removing the bundle restores the previous providers through the same owned-change transaction and DSH reload process. Ordinary application shutdown keeps the active configuration for the next startup.
 
-Removal restores only owned values still matching recorded installed values. Later edits are preserved or reported as conflicts. Restoring the previous providers can reintroduce Purge's Workspace conflict. Remove the owned configuration before uninstalling the package.
+Removal preserves later edits or reports conflicts. An edited owned identity or conflicting configuration field needs review; its contents are retained. The CLI remains available to inspect and recover such configurations. Restoring the previous providers also restores their behavior with Purge.
+
+DSH 0.2.1-rc.5 can finish uninstalling after a cleanup error. If manually edited ownership records cause this, retain the patch and receipt and follow CONFIGURATION.md's offline recovery procedure. Normal disable and uninstall restore configuration automatically.
+
+Version 0.2.0's active version-2 receipts remain supported. An installed but inactive 0.2.0 bundle becomes configured on upgrade. Use the previous verified package when rolling back an unsuccessful upgrade, and retain its ownership receipt until recovery completes.
 
 The plugin introduces no separate ACL reset procedure. Native ACL resource lifecycle remains native; do not perform blanket ACL resets.
 
-Normal-profile activation, publication and hosted installation remain deferred. README authoring is separately owned by Antigravity; consult this directory for current implementation and acceptance information.
+README authoring remains with Antigravity. The automatic-installation update for the English and Chinese READMEs is pending; this directory describes the current implementation.
 Developer builds use pnpm build:release. A bare build script is intentionally absent because npm treats that name as a Git-dependency preparation trigger and installs development dependencies.

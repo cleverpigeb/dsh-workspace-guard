@@ -10,6 +10,8 @@ Native filesystem checks, approvals, permission expansion, sandbox policy and pe
 
 Formal configuration selects replacement providers. Purge alone receives an isolated permission facade connected through a separate root-service bridge. It suppresses automatic Full Access promotion; the native root service continues to serve the selector. Existing session selections and manual Full Access retain native behavior.
 
+Installing or enabling the bundle automatically applies that configuration through an owned, atomic transaction. DSH's profile watcher loads the unique replacement entries using its normal reload mechanism. Disabling or uninstalling reverses the owned changes; shutdown retains them. CLI commands serve optional inspection and offline recovery. Readiness after installation is an acceptance requirement.
+
 Purge's increased reading limits (#22), simplified delete/move guidance (#48), and disabling of Auto Review (#59) are preserved. The first two require checked build transformations. Auto Review and unrelated packages remain supplied by the host.
 
 There is no additional tool admission system, blacklist, permission lease, subprocess wrapper, or custom mode-draining protocol. Tools, subagents, terminals and background work use native lifecycles. Lack of validation does not disable a route.
@@ -22,4 +24,4 @@ Windows enforcement remains native partial write restriction. Read/network isola
 
 ## Documentation ownership
 
-README.md is maintained separately by Antigravity. Its existing Codex-authored text is preserved and may describe the superseded implementation. Engineering documents here describe this release; the README refresh is pending. Codex does not create or edit either language's README.
+The English and Chinese READMEs are maintained by Antigravity. Their automatic-installation update is pending. Engineering documents here describe this implementation.

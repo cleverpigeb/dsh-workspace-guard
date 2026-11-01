@@ -24,7 +24,7 @@
       "file": "approval.js",
       "imports": [
         "lib-KC55FOau.js",
-        "runtime-version-Df1UH3du.js"
+        "runtime-version-C8e7Atkv.js"
       ],
       "exports": [
         "APPROVAL_POLICIES",
@@ -38,14 +38,42 @@
     {
       "file": "cli.js",
       "imports": [
-        "compatibility-xXJmL-DL.js",
-        "node:module",
-        "node:crypto",
-        "node:fs",
-        "node:path"
+        "configuration-V6WqhvsR.js"
       ],
       "exports": [
         "main"
+      ],
+      "modules": []
+    },
+    {
+      "file": "compatibility-B7mVajJk.js",
+      "imports": [
+        "node:module",
+        "node:path",
+        "node:fs",
+        "node:url"
+      ],
+      "exports": [
+        "n",
+        "r",
+        "t"
+      ],
+      "modules": []
+    },
+    {
+      "file": "configuration-V6WqhvsR.js",
+      "imports": [
+        "compatibility-B7mVajJk.js",
+        "node:module",
+        "node:path",
+        "node:crypto",
+        "node:fs"
+      ],
+      "exports": [
+        "i",
+        "n",
+        "r",
+        "t"
       ],
       "modules": [
         "yaml/dist/compose/compose-collection.js",
@@ -123,25 +151,10 @@
       ]
     },
     {
-      "file": "compatibility-xXJmL-DL.js",
-      "imports": [
-        "node:module",
-        "node:fs",
-        "node:path",
-        "node:url"
-      ],
-      "exports": [
-        "n",
-        "r",
-        "t"
-      ],
-      "modules": []
-    },
-    {
       "file": "fs.js",
       "imports": [
         "lib-DWBq_88x.js",
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "node:path",
         "@deepseek-ai/dsh-fs-local",
         "@deepseek-ai/dsh-fs",
@@ -157,9 +170,13 @@
     },
     {
       "file": "index.js",
-      "imports": [],
+      "imports": [
+        "configuration-V6WqhvsR.js",
+        "node:path"
+      ],
       "exports": [
         "apply",
+        "inject",
         "name"
       ],
       "modules": []
@@ -291,7 +308,7 @@
     {
       "file": "permission-bridge.js",
       "imports": [
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -304,7 +321,7 @@
       "imports": [
         "lib-BFoXg-Us.js",
         "lib-KC55FOau.js",
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-commands/brand",
         "@deepseek-ai/dsh-typert-protocol"
@@ -324,7 +341,7 @@
       "imports": [
         "lib-DWBq_88x.js",
         "lib-BDj20byz.js",
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "@deepseek-ai/dsh-util-values",
         "@deepseek-ai/dsh-app-boot"
       ],
@@ -340,7 +357,7 @@
       "file": "policy.js",
       "imports": [
         "lib-BFoXg-Us.js",
-        "runtime-version-Df1UH3du.js"
+        "runtime-version-C8e7Atkv.js"
       ],
       "exports": [
         "SANDBOX_MODES",
@@ -353,8 +370,8 @@
     {
       "file": "purge-permission.js",
       "imports": [
-        "runtime-version-Df1UH3du.js",
-        "compatibility-xXJmL-DL.js",
+        "runtime-version-C8e7Atkv.js",
+        "compatibility-B7mVajJk.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -363,9 +380,9 @@
       "modules": []
     },
     {
-      "file": "runtime-version-Df1UH3du.js",
+      "file": "runtime-version-C8e7Atkv.js",
       "imports": [
-        "compatibility-xXJmL-DL.js"
+        "compatibility-B7mVajJk.js"
       ],
       "exports": [],
       "modules": []
@@ -374,9 +391,9 @@
       "file": "sandbox.js",
       "imports": [
         "lib-DWBq_88x.js",
-        "runtime-version-Df1UH3du.js",
-        "node:fs",
+        "runtime-version-C8e7Atkv.js",
         "node:path",
+        "node:fs",
         "node:url",
         "node:child_process",
         "node:os",
@@ -398,7 +415,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -419,7 +436,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-fs",
@@ -452,7 +469,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-Df1UH3du.js",
+        "runtime-version-C8e7Atkv.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -472,7 +489,7 @@
       "file": "tools.js",
       "imports": [
         "lib-BDj20byz.js",
-        "runtime-version-Df1UH3du.js"
+        "runtime-version-C8e7Atkv.js"
       ],
       "exports": [
         "CodeRunFailedError",

@@ -1,4 +1,4 @@
-# Review-only additive native pair delta. Append guard bundle selection after installation.
+# Example owned native pair delta generated automatically when the bundle is installed/enabled.
 # No normal profile/installed package changed. Values are sanitized if marked <USER_WORKSPACE>.
 - id: tool-plugin-manager
   name: "@deepseek-ai/dsh-plugin-manager/tools"

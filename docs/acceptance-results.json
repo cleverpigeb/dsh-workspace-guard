@@ -1,5 +1,46 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
+  "nativeBaselineVersion": "0.2.0",
+  "automaticInstallation": {
+    "transactionScenarioGroupsPassed": 10,
+    "nativeHostLifecycle": {
+      "installation": "passed",
+      "disable": "passed",
+      "restart": "passed",
+      "removal": "passed",
+      "scope": "Actual Loader/app-boot/HMR/PluginManager and built lifecycle; explicit package-operation and provider fixtures",
+      "laterEditsPreserved": true,
+      "restoredBeforePackageDeletion": true
+    },
+    "actualProviderInstallation": {
+      "status": "passed",
+      "actualBuiltProviders": 9,
+      "cliActivationUsed": false,
+      "freshSessionMode": "workspace-write",
+      "opsBashInsideWrite": "passed",
+      "opsBashOutsideWrite": "rejected; sentinel unchanged",
+      "nativeFileTool": "inside written; outside rejected",
+      "windowsEnforcement": "partial",
+      "approvalRequests": 0,
+      "remainingOwnedProcesses": 0,
+      "scope": "Real compiled Guard, DSH services, HMR and OPS; isolated base metadata and safe Purge fresh-session hook fixture"
+    },
+    "conflictRemovalRefusal": {
+      "status": "failed-native-boundary",
+      "observation": "Cordis logs teardown rejection; package manager can remove the package while the edited configuration and receipt remain",
+      "configurationPreserved": true,
+      "offlineRecoveryAfterPackageRemoval": "passed"
+    },
+    "nativeSmoke": {
+      "filesystemAllModes": "passed",
+      "opsWorkspaceAndFullAccess": "passed",
+      "opsReadOnly": "initial abort timeout; one bounded repeat passed; cause unconfirmed"
+    },
+    "retainedAgentPreset": "Native source confirms existing agents and their children retain preset revisions; cold resume uses current revision",
+    "generatedEntryEquivalence": "12 entry bodies/imports equal after generated-filename and import-order normalization",
+    "normalDesktopActivated": false,
+    "readmeAutomaticInstallationUpdate": "pending Antigravity"
+  },
   "platform": "Windows x64",
   "runtime": {
     "design": "native replacement providers; original retained resources and tool families preserved",

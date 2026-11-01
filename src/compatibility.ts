@@ -10,7 +10,7 @@ export const SUPPORTED = {
   dsh: "0.2.1-rc.5",
   purge: "1.6.67",
   ops: "0.4.4",
-  guard: "0.2.0",
+  guard: "0.2.1",
 } as const;
 export function validateBundleVersion(
   name: string,

@@ -11,7 +11,8 @@ import {
 
 const HELP = `dsh-workspace-guard <doctor|plan|activate|deactivate|rollback> --profile <directory>
   [--home <DSH home>] [--host-modules <host node_modules>] [--apply --host-stopped]
-All commands preview by default. No package installation is performed.
+DSH installation/enabling configures the plugin automatically.
+These optional diagnostics/recovery commands preview by default.
 --host-stopped acknowledges every DSH host using this profile is stopped.
 deactivate and rollback restore native providers and preserve later unrelated edits.
 Launcher --patch/flag overlays are outside this offline check; do not use conflicting overrides.`;

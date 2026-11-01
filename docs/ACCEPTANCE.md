@@ -1,4 +1,26 @@
-# Acceptance — 0.2.0 review build
+# Acceptance — 0.2.1 automatic installation
+
+This revision moves the owned configuration transaction into the plugin lifecycle. Installing/enabling applies it automatically; disabling/removing restores it through DSH's normal configuration watcher.
+
+## Automatic configuration and native reload
+
+- Ten focused transaction scenario groups passed: automatic activation, repeat-load idempotence, shutdown retention, version-2 receipt reuse, later-edit preservation, disable/removal, launch-overlay conflicts, dynamic-state diagnostics, interrupted-journal recovery, and acknowledged offline recovery after package removal.
+- Actual Cordis Loader, DSH app-boot, HMR and PluginManager passed isolated install, disable, restart and removal tests. The installed Guard lifecycle was the built release. Provider implementations and package-manager execution were explicit fixture stubs in this lifecycle test; loaded provider fibers and resulting files were checked.
+- A separate end-to-end test used the actual copied Guard package, native DSH services and HMR. Bundle selection automatically started nine real Guard providers. The safe copied Purge fresh-session hook retained Workspace Write; actual `ops_bash` and the native file tool wrote inside the fixture workspace and rejected the external sentinel. Windows reported native partial enforcement. Zero approval prompts and zero owned processes after disposal were observed. Only the base-bundle metadata and Purge hook wrapper were fixtures.
+- Normal removal restored the owned configuration before the fixture package was deleted. A later edit to an owned tools configuration migrated back to the native provider; unrelated settings survived.
+- Native filesystem effects passed in Read Only, Workspace Write and Full Access. Actual OPS Bash passed Workspace Write and Full Access; its initial Read Only startup timed out, and one bounded repeat passed. The timeout cause is unconfirmed and retained in local evidence.
+- Twelve generated provider/consumer entry bodies and imports match the prior release after normalizing generated shared-module filenames and import order. The pinned official inputs and preservation transformations still pass verification.
+- Strict TypeScript and Oxlint passed.
+
+## Native behavior and recovery observations
+
+DSH retains preset revisions per agent. Source inspection confirms newly mounted agents receive the updated preset, while existing agents and their children can retain the earlier static tool consumers. A genuine cold resume mounts the current revision; reopening a still-live tab reuses its agent. A normal restart refreshes surviving sessions after the user finishes ongoing work.
+
+An ownership-conflict removal test exposed a DSH teardown limitation: Cordis logs a disposer rejection and the plugin manager can still remove the package. The edited patch and receipt were preserved, and the manager returned provider warnings. Refusal of package removal in this case failed the test. Optional offline recovery now works with a valid receipt after the package has been removed, whether its bundle remains selected or has been deselected. Conflicting identities continue to require review before restoration.
+
+The normal Desktop profile and its running tasks were left untouched. The English and Chinese READMEs retain their prior contents; their automatic-installation update is assigned to Antigravity.
+
+## Native baseline — 0.2.0
 
 Validated on Windows x64 with Node 26.7.0, DSH 0.2.1-rc.5, Purge 1.6.67 and OPS 0.4.4. This is isolated functional evidence, not normal Desktop activation or a hosted installation.
 

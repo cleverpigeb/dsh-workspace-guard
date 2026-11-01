@@ -1,4 +1,5 @@
-# Installation is inert. The CLI creates scoped native pairs only after explicit activation.
+# DSH selects this lifecycle entry on installation and enabling.
+# Its owned configuration transaction triggers DSH's normal profile reload.
 - insert:
     - id: workspace-guard-status
       name: dsh-workspace-guard

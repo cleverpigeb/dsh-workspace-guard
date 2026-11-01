@@ -1,8 +1,8 @@
 # Configuration lifecycle
 
-The installed bundle adds an informational entry only. Native provider selection changes only through an explicit, idle-profile activation transaction.
+The installed bundle adds a lifecycle entry. Installing or enabling it automatically creates the owned native-provider configuration. DSH's existing profile-file watcher performs the subsequent serialized reload. Disabling or removing the bundle automatically restores its owned changes. Ordinary shutdown retains the configuration for the next startup.
 
-The helper reads selected bundle layers, the profile patch, and the later home patch using DSH's formal insertion/name-guard semantics. It preserves JavaScript-valued YAML expressions without evaluating them. Activation creates paired rows: disable each affected original entry and insert a uniquely named generated entry with the original scope, settings and enabled/platform state. Preset plugin lists receive equivalent paired entries.
+The helper reads selected bundle layers, the profile patch, the later home patch and launch overlays using DSH's formal insertion/name-guard semantics. It preserves JavaScript-valued YAML expressions without evaluating them. Activation creates paired rows: disable each affected original entry and insert a uniquely named generated entry with the original scope, settings and enabled/platform state. Preset plugin lists receive equivalent paired entries.
 
 A root bridge exposes the native permission service to a facade isolated for Purge. The Purge row receives that scope and an explicit permission dependency. Native UI callers use the root service. No other Purge configuration or unrelated provider is disabled.
 
@@ -10,19 +10,29 @@ Fresh default behavior is native Workspace Write with approval; explicit user co
 
 ## Commands
 
-All require an explicit profile directory. Use the package's `node lib/cli.js --help` for options.
+These optional diagnostic and offline recovery commands require an explicit profile directory. Normal installation and enabling apply configuration automatically. Use the package's `node lib/cli.js --help` for options.
 
 - doctor: inspect supported bundle versions and composition.
 - plan: print the proposed activation patch.
-- activate: preview activation; write only with --apply --host-stopped.
+- activate: inspect or repair offline activation; write only with --apply --host-stopped.
 - deactivate / rollback: preview removal of owned changes; the same write acknowledgements apply.
 
 Use --home and --host-modules when the DSH home or host package root cannot be inferred. The helper does not install packages or stop any host. --host-stopped is an operator acknowledgement.
 
 ## Ownership and recovery
 
-The receipt lives in the target profile's .workspace-guard directory. Writes use a lock, temporary files, atomic replacement and a transaction journal. A concurrent configuration change or an ambiguous interrupted transaction is reported instead of overwritten.
+The receipt lives in the target profile's .workspace-guard directory. Writes use a lock, temporary files, atomic replacement and a transaction journal. An already valid configuration produces no additional write. A concurrent configuration change or an ambiguous interrupted transaction is reported with the existing contents retained.
 
-Removal restores the previous native providers and removes the scoped adapter. It preserves later unrelated settings and reports conflicting changes to owned identities. No deliberate tool disables remain after managed removal. Removing the package before removing its configuration can leave unresolved entries; use managed removal first.
+DSH bundle removal first deselects the bundle and reloads it, allowing the lifecycle disposer to restore the previous native providers and remove the scoped adapter. The manager then removes the package and reloads the restored configuration. Later unrelated settings are preserved; conflicting changes to owned identities are reported. Direct filesystem deletion bypasses DSH's lifecycle and requires receipt-based recovery.
+
+If an ownership conflict prevents restoration, DSH 0.2.1-rc.5 logs the disposer error and can still finish package removal. The patch and receipt are retained. Resolve the reported ownership conflict, then run the optional `deactivate --apply --host-stopped` recovery command from a downloaded matching package, with the explicit profile directory. This recovery also works after the bundle has been deselected or removed. Ordinary removal with intact ownership completes automatically.
 
 Old prototype receipts require separate explicit migration. The normal profile was never activated by the prototype in this development session. Never infer running-host use from an offline composition check.
+
+## Native reload integration
+
+The lifecycle entry depends on `profileContext` and `hmr`. It writes the configuration transaction and returns; DSH's already registered patch watcher queues the next reconciliation. This follows the host's serialization and application-readiness behavior. Calling HMR from plugin initialization, including an inherited timer context, would nest a transaction and is deliberately avoided.
+
+This integration uses native provider lifecycles for active tools and retained resources. It adds no tool admission or process-control mechanism. Configuration conflicts and failed provider loading are distinct outcomes and retain their normal diagnostics.
+
+Native preset revisions are retained per agent. Re-registering an updated preset affects new mounts; existing agents and their children can retain the earlier static tool consumers until their scopes end. A cold session resume mounts the current revision. A normal application restart refreshes the surviving sessions once the user has finished ongoing work.

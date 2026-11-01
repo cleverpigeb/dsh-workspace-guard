@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "project": {
     "name": "dsh-workspace-guard",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "license": "GPL-3.0-or-later"
   },
   "inputs": [
@@ -155,7 +155,7 @@
     },
     {
       "file": "approval.js",
-      "sha256": "89408c1da52bc5d8b5472b236a7559498259b85fef94efb75798ada6569e10f1"
+      "sha256": "ff6effeef1620b98f6440c6d272c084fe52942738292b21ff0ef8f622b0aeb30"
     },
     {
       "file": "build-lock.yaml",
@@ -163,19 +163,23 @@
     },
     {
       "file": "build-manifest.json",
-      "sha256": "4676f9246bf1029790e30b2e7136b25e0c0dc1c8cc2aee3ea25c3266df0ebeaa"
+      "sha256": "7ce5dcfec611da555d24a386d438f09ae7fbf9c8ec38eb189c3dc6a9a9f85c17"
     },
     {
       "file": "cli.js",
-      "sha256": "08f6c5af02afa6c5a2aad61155a4f82c4b5e2cf552a95708bedd463762de4492"
+      "sha256": "e3001c63a54b004024b715e345325f2081007b42ad0dd83e0ea10c231d5ede47"
     },
     {
-      "file": "compatibility-xXJmL-DL.js",
-      "sha256": "2b736c51446b5e42b6fb1cbc14ec84a5377ab393951969dd01a9b0dde62caf06"
+      "file": "compatibility-B7mVajJk.js",
+      "sha256": "293fbc3c1f072dc244ffde2204316f1e8a4cffc1ddd1c705457b756254be95dc"
+    },
+    {
+      "file": "configuration-V6WqhvsR.js",
+      "sha256": "cf2c67e9e6e894f5ca99624d585b0c5256422304b6ea1c2fce0589be31cdfd00"
     },
     {
       "file": "fs.js",
-      "sha256": "7bb6f3c87fa0fd2e7d0d206ea38d2d89f0603f8e4fb610cdfde75e1bb4c1f663"
+      "sha256": "81a0ea0eb7d741f4e883cbd9a1ecedd3e6930e4811c567b31ed321a8fdade0f3"
     },
     {
       "file": "host-identities.json",
@@ -183,7 +187,7 @@
     },
     {
       "file": "index.js",
-      "sha256": "b36f23d7cdd09820c7569a83d37b5bcefb772c88336eda9ed1ac760784e937e4"
+      "sha256": "78cede833b64ee07a1b045dffbcf84c9aa356a2a2e482adebc3eb5e7a914a813"
     },
     {
       "file": "lib-BDj20byz.js",
@@ -203,47 +207,47 @@
     },
     {
       "file": "permission-bridge.js",
-      "sha256": "94e22f961553e45b067c3064d8b0b16a36d5a64e16ecd94ac497c3539d1896f2"
+      "sha256": "5eb1a397d91463dc9f9e257dba9439f633b59454963fa2635737ab0d0fc4f5b0"
     },
     {
       "file": "permission.js",
-      "sha256": "4ad78776b28ece36bacaaceec057e2df59905ea5cec194625edf82e615545694"
+      "sha256": "41bba7f1f53b21ec28d3294c7af3f0ef6ee3ed1617094fac64e1b1186b259a59"
     },
     {
       "file": "plugin-tools.js",
-      "sha256": "84a32cd8b4d4ccbc7e4ef67cb1dd31e6a83a5731e62c9f2420fa4e0992fee717"
+      "sha256": "6a22fe2558534ffb042046385fb67765a1025c9c3cdfb4cbe45cae5e0b4d6d9d"
     },
     {
       "file": "policy.js",
-      "sha256": "5fc8597426c7ff4d0c22932d7c5c1d26154d55a64bc4358186de244ac9fbfedb"
+      "sha256": "2bf1fdfc3f30fd8d8681f498a6332bba6b06ebc68906c8e70df57b415a018275"
     },
     {
       "file": "purge-permission.js",
-      "sha256": "e309f9661d7e3c3b164c315fc6288da0a81df71d496220b6c39e17a33662a651"
+      "sha256": "454b11d81036630b38b010ff08fbd0342db2529b1f66ff7e00f4be73c005e9dc"
     },
     {
-      "file": "runtime-version-Df1UH3du.js",
-      "sha256": "a6542648aa2c606e9b222895bf15669402d265cfe0794f892bb327ad820ed366"
+      "file": "runtime-version-C8e7Atkv.js",
+      "sha256": "cf31fb9a494aab95bc39f22c85fba399787045aeb34a7006cd8cfc3c056f4d0d"
     },
     {
       "file": "sandbox.js",
-      "sha256": "f33c5ffbdcc66334afd6028db20408e6d2f2a5dafc85fca3e3db1f09a5e6160a"
+      "sha256": "c6aaab42f3fb4aeff675de53077bfdba5c0b9ffe59f854a06e9ca7f938507bac"
     },
     {
       "file": "tool-bash.js",
-      "sha256": "7947b109460b8e8ca3300a3536b68e8597fc40f8af22a7a94b9a86c7eafd0803"
+      "sha256": "48c7741fefe68bdc053c9fe2b33c0ee132caa1b31abc70c2e1ac759072693b65"
     },
     {
       "file": "tool-fs.js",
-      "sha256": "d1d48dbaf9dc8bc5c4c9d9b4d6af42abe82095a9e66845a3c0415389e1d5fcfd"
+      "sha256": "4c36a4107d4b60fefb27106935e5309b4bde3ecc24a7414a08ed6decc6e57f7d"
     },
     {
       "file": "tool-pwsh.js",
-      "sha256": "594f3c291bd7cef93049248ef3afa100bf598af1905a3995dc0965261f88760f"
+      "sha256": "19a42801b65991fbd55acc8c84a23b1702f95af3be795829f82baa5bb4f50177"
     },
     {
       "file": "tools.js",
-      "sha256": "2bf587b831b26aaad9a0d4e7e7f1d8c9a5d57543ad6102240c311370b4e1fab1"
+      "sha256": "07f86cd3f45e10bfe5726c4085a5c86f001ff471a3ee588a3835c1c4361ba955"
     }
   ]
 }

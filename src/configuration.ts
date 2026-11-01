@@ -43,6 +43,7 @@ export type PreviewInput = {
   patch: string;
   bundleLayers: string[];
   homePatch?: string;
+  overlays?: Row[];
   profile: string;
   receipt?: GuardReceipt;
 };
@@ -52,7 +53,13 @@ export type GuardPlan = {
   changed: boolean;
   summary: string[];
 };
-export type ProfileOptions = { profile: string; home?: string; hostModules?: string };
+export type ProfileOptions = {
+  profile: string;
+  home?: string;
+  hostModules?: string;
+  /** Launcher patches, applied after the home layer and never persisted. */
+  overlays?: Row[];
+};
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 const same = (a: any, b: any): boolean => JSON.stringify(a) === JSON.stringify(b);
 const clone = <T>(value: T): T => structuredClone(value);
@@ -78,6 +85,14 @@ function document(source: string): Document {
 }
 function rows(source: string): Row[] {
   return document(source).toJS({ maxAliasCount: 100 });
+}
+function overlaySource(overlays: Row[] = []): string {
+  const doc = document("[]\n");
+  for (const row of overlays) append(doc, row);
+  return String(doc);
+}
+function laterLayers(input: PreviewInput): string[] {
+  return [input.homePatch ?? "[]", overlaySource(input.overlays)];
 }
 function indexRows(entries: Row[], result = new Map<string, Row>()): Map<string, Row> {
   for (const row of entries) {
@@ -311,7 +326,7 @@ function ownId(scope: string, row: Row): string {
   return `workspace-guard-${row.id}-${hash(scope + ":" + row.id).slice(0, 8)}`;
 }
 function explicitConfig(input: PreviewInput, id: string, key: string): boolean {
-  return [input.patch, input.homePatch ?? "[]"].some((source) =>
+  return [input.patch, ...laterLayers(input)].some((source) =>
     rows(source).some((row) => row.id === id && row.config && key in row.config),
   );
 }
@@ -352,7 +367,7 @@ function homeConflicts(source: string, affected: Set<string>): void {
             (typeof row.name === "string" && row.name.startsWith(PACKAGE_NAME + "/"))))
       )
         throw new Error(
-          `Later home overlay conflicts with paired configuration: ${row.id ?? row.name}.`,
+          `Later home/launcher overlay conflicts with paired configuration: ${row.id ?? row.name}.`,
         );
       if (Array.isArray(row.insert)) inspect(row.insert);
       if (row.group && Array.isArray(row.config)) inspect(row.config);
@@ -403,7 +418,7 @@ function requireRootPermissionAuthority(tree: Row[]): void {
     );
 }
 function verifyActive(input: PreviewInput, receipt: GuardReceipt): void {
-  const current = composeLayers([...input.bundleLayers, input.patch, input.homePatch ?? "[]"]),
+  const current = composeLayers([...input.bundleLayers, input.patch, ...laterLayers(input)]),
     index = indexRows(current);
   const origins = new Map(
     receipt.owned
@@ -422,7 +437,7 @@ function verifyActive(input: PreviewInput, receipt: GuardReceipt): void {
       .filter((item) => item.kind === "preset" || item.kind === "purge")
       .map((item) => item.installed.id),
   ]);
-  homeConflicts(input.homePatch ?? "[]", affected);
+  for (const source of laterLayers(input)) homeConflicts(source, affected);
   const lowerDoc = document(input.patch);
   for (const item of receipt.owned) {
     const node = marked(lowerDoc, item),
@@ -663,9 +678,9 @@ export function previewConfiguration(
   for (const item of owned)
     if (item.kind === "replacement" || item.kind === "service")
       touched.add(item.installed.insert[0].id);
-  homeConflicts(input.homePatch ?? "[]", touched);
+  for (const source of laterLayers(input)) homeConflicts(source, touched);
   const finalIndex = indexRows(
-    composeLayers([...input.bundleLayers, String(doc), input.homePatch ?? "[]"]),
+    composeLayers([...input.bundleLayers, String(doc), ...laterLayers(input)]),
   );
   for (const id of replacedIds)
     if (finalIndex.get(id)?.disabled !== true)
@@ -692,7 +707,26 @@ async function noLink(path: string): Promise<void> {
   if ((await fs.lstat(path)).isSymbolicLink())
     throw new Error(`Refusing symbolic-link write target: ${path}`);
 }
-async function loadProfile(options: ProfileOptions, validateVersions = true) {
+function recoverReceipt(text: string, patch: string): GuardReceipt | undefined {
+  let receipt: GuardReceipt | undefined = text ? JSON.parse(text) : undefined;
+  if (receipt?.transaction) {
+    const current = hash(patch);
+    if (current === receipt.transaction.after) {
+      receipt = { ...receipt };
+      delete receipt.transaction;
+    } else if (current === receipt.transaction.before) receipt = receipt.transaction.previous;
+    else
+      throw new Error(
+        "Interrupted transaction has an externally changed third state; manual recovery required.",
+      );
+  }
+  return receipt;
+}
+async function loadProfile(
+  options: ProfileOptions,
+  validateVersions = true,
+  lifecycle?: "load" | "dispose",
+) {
   const profile = resolve(options.profile),
     patchPath = join(profile, "cordis.patch.yml"),
     stateDir = join(profile, ".workspace-guard"),
@@ -712,7 +746,10 @@ async function loadProfile(options: ProfileOptions, validateVersions = true) {
     new Set(bundles).size !== bundles.length
   )
     throw new Error("Invalid selected bundle list.");
-  if (!bundles.includes(PACKAGE_NAME))
+  const selected = bundles.includes(PACKAGE_NAME);
+  // Offline removal may be needed after the host already deselected/uninstalled
+  // the bundle. previewConfiguration still requires its matching ownership receipt.
+  if (!selected && !lifecycle && validateVersions)
     throw new Error(
       "Select the installed guard bundle explicitly first; no packages are installed by this helper.",
     );
@@ -721,6 +758,12 @@ async function loadProfile(options: ProfileOptions, validateVersions = true) {
     resolvers.unshift(createRequire(join(resolve(options.hostModules), "..", "package.json")));
   const bundleLayers: string[] = [];
   for (const name of bundles) {
+    // Removal must work after the package itself has gone. Its only bundle row
+    // is this lifecycle entry; keep it for evaluating explicit disable patches.
+    if (!validateVersions && name === PACKAGE_NAME) {
+      bundleLayers.push(overlaySource([{ insert: [{ id: "workspace-guard-status", name }] }]));
+      continue;
+    }
     let manifestFile: string | undefined;
     for (const resolver of resolvers) {
       for (const search of resolver.resolve.paths(name) ?? []) {
@@ -751,20 +794,10 @@ async function loadProfile(options: ProfileOptions, validateVersions = true) {
       true,
     );
   const receiptText = await read(receiptPath, true);
-  let receipt: GuardReceipt | undefined = receiptText ? JSON.parse(receiptText) : undefined;
-  if (receipt?.transaction) {
-    const current = hash(patch);
-    if (current === receipt.transaction.after) {
-      receipt = { ...receipt };
-      delete receipt.transaction;
-    } else if (current === receipt.transaction.before) receipt = receipt.transaction.previous;
-    else
-      throw new Error(
-        "Interrupted transaction has an externally changed third state; manual recovery required.",
-      );
-  }
+  const receipt = recoverReceipt(receiptText, patch);
   return {
-    input: { profile, patch, homePatch, bundleLayers, receipt },
+    input: { profile, patch, homePatch, bundleLayers, receipt, overlays: options.overlays },
+    selected,
     watched,
     patchPath,
     stateDir,
@@ -813,7 +846,78 @@ export async function applyConfiguration(
     throw new Error(
       "Writing requires both --apply and --host-stopped; every host using this profile must be idle and stopped.",
     );
-  await inspectConfiguration(options, action);
+  return (await transactConfiguration(options, action))!;
+}
+type LoadedProfile = Awaited<ReturnType<typeof loadProfile>>;
+type ConfigurationAction = "activate" | "deactivate" | "rollback";
+function lifecycleAction(
+  loaded: LoadedProfile,
+  phase: "load" | "dispose",
+): ConfigurationAction | undefined {
+  const tree = composeLayers([
+    ...loaded.input.bundleLayers,
+    loaded.input.patch,
+    ...laterLayers(loaded.input),
+  ]);
+  let enabled = false,
+    disabled = false,
+    found = false;
+  const visit = (entries: Row[], parentEnabled = true, parentDisabled = false): void => {
+    for (const row of entries) {
+      const off = parentDisabled || row.disabled === true,
+        on = parentEnabled && (row.disabled === undefined || row.disabled === false);
+      if (row.id === "workspace-guard-status" && row.name === PACKAGE_NAME) {
+        found = true;
+        enabled = on;
+        disabled = off;
+      }
+      if (row.group && Array.isArray(row.config)) visit(row.config, on, off);
+    }
+  };
+  visit(tree);
+  if (phase === "load") {
+    if (loaded.selected && found && !enabled && !disabled)
+      throw new Error(
+        "Unsupported dynamic lifecycle state: workspace-guard-status must be statically enabled or disabled before automatic configuration can run.",
+      );
+    return loaded.selected && enabled ? "activate" : undefined;
+  }
+  return loaded.input.receipt?.status === "active" && (!loaded.selected || disabled)
+    ? "deactivate"
+    : undefined;
+}
+/** The installed lifecycle is authorization; manual CLI callers still need acknowledgements. */
+export async function synchronizeInstalledConfiguration(
+  options: ProfileOptions,
+  phase: "load" | "dispose",
+): Promise<GuardPlan | undefined> {
+  if (phase === "dispose") {
+    const profile = resolve(options.profile),
+      receipt = recoverReceipt(
+        await optional(join(profile, ".workspace-guard", "receipt.json")),
+        await optional(join(profile, "cordis.patch.yml")),
+      );
+    if (receipt?.status !== "active") return undefined;
+  }
+  return transactConfiguration(options, (loaded) => lifecycleAction(loaded, phase), phase);
+}
+async function transactConfiguration(
+  options: ProfileOptions,
+  select: ConfigurationAction | ((loaded: LoadedProfile) => ConfigurationAction | undefined),
+  lifecycle?: "load" | "dispose",
+): Promise<GuardPlan | undefined> {
+  const prepare = async () => {
+    const loaded = await loadProfile(
+        options,
+        lifecycle ? lifecycle === "load" : select === "activate",
+        lifecycle,
+      ),
+      action = typeof select === "function" ? select(loaded) : select;
+    return { loaded, plan: action ? previewConfiguration(loaded.input, action) : undefined };
+  };
+  const initial = await prepare();
+  // A repeated host load must not touch the patch, receipt or lock directory.
+  if (!initial.plan?.changed) return initial.plan;
   const profile = resolve(options.profile),
     stateDir = join(profile, ".workspace-guard");
   const canonical = await fs.realpath(profile),
@@ -831,8 +935,8 @@ export async function applyConfiguration(
   try {
     lock = await fs.open(lockPath, "wx", 0o600);
     await lock.writeFile(JSON.stringify({ pid: process.pid, createdAt: new Date().toISOString() }));
-    const loaded = await loadProfile(options, action === "activate"),
-      plan = previewConfiguration(loaded.input, action);
+    const { loaded, plan } = await prepare();
+    if (!plan?.changed) return plan;
     for (const [path, content] of loaded.watched)
       if ((await optional(path)) !== content)
         throw new Error(`Configuration changed during planning: ${path}.`);
