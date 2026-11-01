@@ -1,0 +1,236 @@
+{
+  "formatVersion": 1,
+  "inputs": [
+    {
+      "name": "@deepseek-ai/dsh-sandbox-local",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-sandbox-local",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-sandbox-local/-/dsh-sandbox-local-0.2.1-rc.5.tgz",
+      "integrity": "sha512-8LQa8REsIBtxNGgWdl80EbKe3aGOr/K/1rb/y28UwGQXtNm1kdnUoqwBOsEgkwNvGoSjeQ2rFh+hEZCum9DXOw==",
+      "archiveSha256": "9c7b60fa7291999fb23381d8f95ceb0abacb356d8634ff01f1aa68e2f3fc0cdb",
+      "sourceSha256": "be6e1107871cf8d94c040090b13c405bc833822e2f51ed5280e93eececf762be",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-sandbox-policy",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-sandbox-policy",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-sandbox-policy/-/dsh-sandbox-policy-0.2.1-rc.5.tgz",
+      "integrity": "sha512-DUEe4ld/OMlpMWLshQc2HDgWQhd7i+3+l+/5cx2vtoy/M4cFdMp1l6Foi+VfGQMaBDr9ZBCGVjaOLW8StSoyYw==",
+      "archiveSha256": "98a9dffbe30d169c5cc1b5fc49f1198fad0cf31c041c38269a7359b065532ef3",
+      "sourceSha256": "772ca58f0f786d6cb4d839deb621634c31097c13228d81b14e3f3153d0524924",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-user-approval",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-user-approval",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-user-approval/-/dsh-user-approval-0.2.1-rc.5.tgz",
+      "integrity": "sha512-3lwcH3SBnBLO07qLlPXYjuerMRDcXcJFPIdqwgliC6J5SAdrbi7Vx9rCYhz2aWcrpwmxhR3yXYiaNkvSnHHCJQ==",
+      "archiveSha256": "adf17f1b6f6414bfc4a4041914a1a8d66308ee7ada32b8257de2cdf42b8a2150",
+      "sourceSha256": "6a5ad1ba3c3dc3abbbae52e6c8c4463970ee0c1c8988cebb0d5cf2acd17ee90b",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-permission-presets",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-permission-presets",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-permission-presets/-/dsh-permission-presets-0.2.1-rc.5.tgz",
+      "integrity": "sha512-D3om2TP4YOi+5FkiNtmqtk4PQ4ESZEe/vVLvWmSVZmTGF5TGVbIHtnHMOf3wzu6/0iqY2/vDDW/9RfhwPVYPQA==",
+      "archiveSha256": "c87dbf8664eb835fd5479b0f4dc3af877ece95a16d42446b25d7d963e3c7a4a1",
+      "sourceSha256": "4f23c620145098d611d04d8363bc6716f49b26930c9141a21dc9a8df2b72ba63",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-fs-sandbox",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-fs-sandbox",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-fs-sandbox/-/dsh-fs-sandbox-0.2.1-rc.5.tgz",
+      "integrity": "sha512-BGXoq20Ea5GVlShOhLlv8sTy14zVZ202sxoLuSXwgeox0k5j6AdyCJmjzDrmltJ2wDne4pwVAu+mR55ag7cCng==",
+      "archiveSha256": "2607b8c67c357e7660617e3c06019df4f797dec44480827d8f25f317ff0b4f31",
+      "sourceSha256": "cac65e21a0f0895b073cb9a447196ac265f2a171cc7f67c7434a6b3b7782caf5",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-tools",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-tools",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-tools/-/dsh-tools-0.2.1-rc.5.tgz",
+      "integrity": "sha512-tOEMsbG1jH4EV80xcGucfeWsKHLjnETjRLtSnyFrVl2oma95tzTHBjti5MK60IvT2ijcCWhx8CrUKcqRksfDPA==",
+      "archiveSha256": "9614366d61214a304f937d0f3b8481d5827d2aef4529f3bff9eb49ef8ac65283",
+      "sourceSha256": "1e53932e7c4213ea24a7d87f06960b7a7702cb21f8a5741c97242b4a470a442a",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-tool-bash",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-tool-bash",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-tool-bash/-/dsh-tool-bash-0.2.1-rc.5.tgz",
+      "integrity": "sha512-qkS+DdxPa8xLx8KGVwPHeyzCfwTZLZKSXZeBMAYeOy98x4A3PdjeRVRKc/3ppzwJH6Vcs2ImbT47gaRTkeMpyQ==",
+      "archiveSha256": "dba454dedaa0c3f69588e21f89ecf477f3b95013a2fd8377268b5964b9c997c2",
+      "sourceSha256": "a1215d7bcaf82c0755be48321ef6bb45075f1cb33296d6263009e9d10fd596f6",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-tool-pwsh",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-tool-pwsh",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-tool-pwsh/-/dsh-tool-pwsh-0.2.1-rc.5.tgz",
+      "integrity": "sha512-xndrPzeVUwYkrPEFtl9X6ap96zpwjMRQthH2PlInqX4KKxs2LzXr6cf5velkdbdnIU83yd+KJWtC0uuC4n9jDQ==",
+      "archiveSha256": "48e425fac7501aaee28abeb87a30219cb73455700b56d9486c057eb344a40b84",
+      "sourceSha256": "94c7f68c425e62c8006907b3f4fea771935321581fd2327b7ee1f0ba8d15eec1",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-tool-fs",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-tool-fs",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-tool-fs/-/dsh-tool-fs-0.2.1-rc.5.tgz",
+      "integrity": "sha512-pbx61taI8p9vZEvKfiF8WFbg41omleod+SvOBR9c7rPRh3QNkRljkNxDm13FPR7GmLhN6hW2RA8Y0+tLBt5LxA==",
+      "archiveSha256": "06f7224294c347ec0f777dfa137ad5b78371ed563fbebf5603e3297a76f22405",
+      "sourceSha256": "b11d3fa50b9042019a91cc38a6abe35d74ed651374278f95e60b42734e079df1",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-plugin-manager",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-plugin-manager/tools",
+      "file": "lib/types/tools.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-plugin-manager/-/dsh-plugin-manager-0.2.1-rc.5.tgz",
+      "integrity": "sha512-VRfuEhPcZLh+ASO8WLEulShvNKZ0GvZquiO8/AzfFNnublSiEGKdZZU7j7R4+on16IbJtoUthYz1Re6QpoBepw==",
+      "archiveSha256": "8c3056d14832e1e5fecd2571e1be0a4552cd2f400865f38a00580b3d62dc2331",
+      "sourceSha256": "07438d86ae290c0add52f2dd3863ee128be8739d35dc4599208e1387028431bd",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    },
+    {
+      "name": "@deepseek-ai/dsh-sandbox",
+      "version": "0.2.1-rc.5",
+      "specifier": "@deepseek-ai/dsh-sandbox",
+      "file": "lib/index.js",
+      "license": "MIT",
+      "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-sandbox/-/dsh-sandbox-0.2.1-rc.5.tgz",
+      "integrity": "sha512-QokCxazz+xB9jaSVog6flKQwaNZF9iPak86k9wgeB5m7cki5XFkcKyf3+36G/y3rjGVAMqbmxL86WoP4gLp6xw==",
+      "archiveSha256": "7c033bd900f6935d11bb3077da96a80942f9ef233595c1c8a447b19d1206b1af",
+      "sourceSha256": "b56373befbfcfe281c17c8892e9a4b2cdcb96851290b3ed0ff56b08915e2f743",
+      "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+    }
+  ],
+  "lockfileSha256": "d84b56ccc7b0b0af154aaa2e966b725e8b94b9962b2e85912c37b4397bddfaa2",
+  "preservedPurgePatches": [
+    22,
+    48
+  ],
+  "outputs": [
+    {
+      "file": "THIRD_PARTY_LICENSES.txt",
+      "sha256": "6980403be1d2148cb06ef197bef216594f3ed0654a35a1168ffa1fd2927ccd3c"
+    },
+    {
+      "file": "approval.js",
+      "sha256": "04cbae7c229a751a680b46cbb19be92d4769cc576d14c51563470ebbe486df55"
+    },
+    {
+      "file": "build-manifest.json",
+      "sha256": "a693a7fe82a4ee021072fddc3a634467bc492b2bcbe5ef4df577f484980123e3"
+    },
+    {
+      "file": "cli.js",
+      "sha256": "ce8a851c9b7a0537e8b72e4623a2356f91130e4601f0019a97775cee8550e637"
+    },
+    {
+      "file": "compatibility-DgfB-Kno.js",
+      "sha256": "03cfa098667fe82f9493014a4198b8f2125bd04350636d681914ea1f531947cd"
+    },
+    {
+      "file": "fs.js",
+      "sha256": "5c900460113361c8e2e2334e19f0a26fe0b2388184dc48cea45fe2cc120be3cb"
+    },
+    {
+      "file": "host-identities.json",
+      "sha256": "7f73d3ca6825c5c0d251ebab5a0e5b44ec1b634892b1d76a9feed19d5aa089fc"
+    },
+    {
+      "file": "index.js",
+      "sha256": "e872ffd90b43c09e4e6781582096da355188d6d655e56d1b501079fa3279cb46"
+    },
+    {
+      "file": "lib-5qu6ZlSr.js",
+      "sha256": "2def46aafc498a56d09c2a064ddee23fb6cce77595987405a4692bc1029dc368"
+    },
+    {
+      "file": "lib-B_A0IXaB.js",
+      "sha256": "16c270641a8ab4694af712e40e3683b726f958c5c12613ed9b13cc0e78bc2aff"
+    },
+    {
+      "file": "lib-CcpZWnEJ.js",
+      "sha256": "69e8df433aabd1fdccb72a21d0828318a1099f8d9b2ccc65a75ee7c26911dcc2"
+    },
+    {
+      "file": "lib-DpUORC-p.js",
+      "sha256": "35bb1871ecb9806a59c6a7fc25c7911be9347ff249888c9f9555749238151c89"
+    },
+    {
+      "file": "permission-bridge.js",
+      "sha256": "502dc400623e604af5f6988c2a87fdd8423f496f781e33032b8b98f7ee7f758f"
+    },
+    {
+      "file": "permission.js",
+      "sha256": "652132d138ab1941181fe76cdfdc45826720a1dc1ae33e4ae62877747d142bfd"
+    },
+    {
+      "file": "plugin-tools.js",
+      "sha256": "2e60a4764b1a18b6959df1777181e0027183d7a3f8d50a23c3b91304f3cb2309"
+    },
+    {
+      "file": "policy.js",
+      "sha256": "496ebbe0b84f101e0e3be18eaeba7aeb302fe98c1716c7989d6a502e891c7442"
+    },
+    {
+      "file": "purge-permission.js",
+      "sha256": "6dad5980702e2ece4fc0c34a6f9588bef66e3795387ce78c91c1c41fa88c80c0"
+    },
+    {
+      "file": "runtime-version-CNudQvOj.js",
+      "sha256": "e9128d9340749cc78784d1fa39a4e5883215c83d209fb8d873b10e3d3c8dd952"
+    },
+    {
+      "file": "sandbox.js",
+      "sha256": "6cd29ec506470a41b70d7475d60f44bb313863f5bd39bfcbeecc6b44a2807e16"
+    },
+    {
+      "file": "tool-bash.js",
+      "sha256": "975ab0d48cff12a99c5366f68aebcbb7fc156f5072f1dd58165ef430e94c0ea0"
+    },
+    {
+      "file": "tool-fs.js",
+      "sha256": "2bd12a5ab6de2e646dbea212b36619cf17f03e0c01594f6e7c7916f65f64bef7"
+    },
+    {
+      "file": "tool-pwsh.js",
+      "sha256": "2ffe5e4c9b517ececd22cb3384ddf2ce3c3a72178dda107c0ac10962b00fffa0"
+    },
+    {
+      "file": "tools.js",
+      "sha256": "2e67b5fde7bd6a318551750eceb566a35f79eb444e2e60bbc6dd70654f23a46d"
+    }
+  ]
+}

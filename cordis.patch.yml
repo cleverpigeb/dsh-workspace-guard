@@ -1,0 +1,4 @@
+# Installation is inert. The CLI creates scoped native pairs only after explicit activation.
+- insert:
+    - id: workspace-guard-status
+      name: dsh-workspace-guard

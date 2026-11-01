@@ -1,0 +1,14 @@
+[
+  {
+    "specifier": "@deepseek-ai/dsh-sandbox",
+    "exported": "SandboxUnavailableError",
+    "sourceSha256": "b56373befbfcfe281c17c8892e9a4b2cdcb96851290b3ed0ff56b08915e2f743",
+    "transformedSha256": "450ef1016e074e61cc99292dd5fb8f8fd3c54d4fb7f3695538463be626a1a56c"
+  },
+  {
+    "specifier": "@deepseek-ai/dsh-tools",
+    "exported": "TOOL_RUNTIME_SCHEDULER",
+    "sourceSha256": "1e53932e7c4213ea24a7d87f06960b7a7702cb21f8a5741c97242b4a470a442a",
+    "transformedSha256": "df6fb00780b949f81b2d62d8861e35a07a86bf6a93de9c2d9c38489dc8bbc986"
+  }
+]

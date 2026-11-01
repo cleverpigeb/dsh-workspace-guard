@@ -1,0 +1,505 @@
+{
+  "preservedPurgePatches": [
+    {
+      "specifier": "@deepseek-ai/dsh-tool-bash",
+      "patch": 48,
+      "sourceSha256": "a1215d7bcaf82c0755be48321ef6bb45075f1cb33296d6263009e9d10fd596f6",
+      "transformedSha256": "ef39bea3e20eea0c3fcacc4355136e84a4b1c9c114ca8cbb9b4e9526d923ea1f"
+    },
+    {
+      "specifier": "@deepseek-ai/dsh-tool-fs",
+      "patch": 22,
+      "sourceSha256": "b11d3fa50b9042019a91cc38a6abe35d74ed651374278f95e60b42734e079df1",
+      "transformedSha256": "7ee1ea54182d70916ae9fa670da568d8dde8715318ca11c2c3d5e5f2aa663c3b"
+    },
+    {
+      "specifier": "@deepseek-ai/dsh-tool-pwsh",
+      "patch": 48,
+      "sourceSha256": "94c7f68c425e62c8006907b3f4fea771935321581fd2327b7ee1f0ba8d15eec1",
+      "transformedSha256": "1df8d71d16322986115cc8ab81a5db71a43ae2d7d0f4b6417fc7781f25817476"
+    }
+  ],
+  "chunks": [
+    {
+      "file": "approval.js",
+      "imports": [
+        "lib-B_A0IXaB.js",
+        "runtime-version-CNudQvOj.js"
+      ],
+      "exports": [
+        "APPROVAL_POLICIES",
+        "ApprovalRequestId",
+        "ApprovalService",
+        "default",
+        "setApprovalPolicy"
+      ],
+      "modules": []
+    },
+    {
+      "file": "cli.js",
+      "imports": [
+        "compatibility-DgfB-Kno.js",
+        "node:module",
+        "node:crypto",
+        "node:fs",
+        "node:path"
+      ],
+      "exports": [
+        "main"
+      ],
+      "modules": [
+        "yaml/dist/compose/compose-collection.js",
+        "yaml/dist/compose/compose-doc.js",
+        "yaml/dist/compose/compose-node.js",
+        "yaml/dist/compose/compose-scalar.js",
+        "yaml/dist/compose/composer.js",
+        "yaml/dist/compose/resolve-block-map.js",
+        "yaml/dist/compose/resolve-block-scalar.js",
+        "yaml/dist/compose/resolve-block-seq.js",
+        "yaml/dist/compose/resolve-end.js",
+        "yaml/dist/compose/resolve-flow-collection.js",
+        "yaml/dist/compose/resolve-flow-scalar.js",
+        "yaml/dist/compose/resolve-props.js",
+        "yaml/dist/compose/util-contains-newline.js",
+        "yaml/dist/compose/util-empty-scalar-position.js",
+        "yaml/dist/compose/util-flow-indent-check.js",
+        "yaml/dist/compose/util-map-includes.js",
+        "yaml/dist/doc/Document.js",
+        "yaml/dist/doc/anchors.js",
+        "yaml/dist/doc/applyReviver.js",
+        "yaml/dist/doc/createNode.js",
+        "yaml/dist/doc/directives.js",
+        "yaml/dist/errors.js",
+        "yaml/dist/index.js",
+        "yaml/dist/log.js",
+        "yaml/dist/nodes/Alias.js",
+        "yaml/dist/nodes/Collection.js",
+        "yaml/dist/nodes/Node.js",
+        "yaml/dist/nodes/Pair.js",
+        "yaml/dist/nodes/Scalar.js",
+        "yaml/dist/nodes/YAMLMap.js",
+        "yaml/dist/nodes/YAMLSeq.js",
+        "yaml/dist/nodes/addPairToJSMap.js",
+        "yaml/dist/nodes/identity.js",
+        "yaml/dist/nodes/toJS.js",
+        "yaml/dist/parse/cst-scalar.js",
+        "yaml/dist/parse/cst-stringify.js",
+        "yaml/dist/parse/cst-visit.js",
+        "yaml/dist/parse/cst.js",
+        "yaml/dist/parse/lexer.js",
+        "yaml/dist/parse/line-counter.js",
+        "yaml/dist/parse/parser.js",
+        "yaml/dist/public-api.js",
+        "yaml/dist/schema/Schema.js",
+        "yaml/dist/schema/common/map.js",
+        "yaml/dist/schema/common/null.js",
+        "yaml/dist/schema/common/seq.js",
+        "yaml/dist/schema/common/string.js",
+        "yaml/dist/schema/core/bool.js",
+        "yaml/dist/schema/core/float.js",
+        "yaml/dist/schema/core/int.js",
+        "yaml/dist/schema/core/schema.js",
+        "yaml/dist/schema/json/schema.js",
+        "yaml/dist/schema/tags.js",
+        "yaml/dist/schema/yaml-1.1/binary.js",
+        "yaml/dist/schema/yaml-1.1/bool.js",
+        "yaml/dist/schema/yaml-1.1/float.js",
+        "yaml/dist/schema/yaml-1.1/int.js",
+        "yaml/dist/schema/yaml-1.1/merge.js",
+        "yaml/dist/schema/yaml-1.1/omap.js",
+        "yaml/dist/schema/yaml-1.1/pairs.js",
+        "yaml/dist/schema/yaml-1.1/schema.js",
+        "yaml/dist/schema/yaml-1.1/set.js",
+        "yaml/dist/schema/yaml-1.1/timestamp.js",
+        "yaml/dist/stringify/foldFlowLines.js",
+        "yaml/dist/stringify/stringify.js",
+        "yaml/dist/stringify/stringifyCollection.js",
+        "yaml/dist/stringify/stringifyComment.js",
+        "yaml/dist/stringify/stringifyDocument.js",
+        "yaml/dist/stringify/stringifyNumber.js",
+        "yaml/dist/stringify/stringifyPair.js",
+        "yaml/dist/stringify/stringifyString.js",
+        "yaml/dist/visit.js"
+      ]
+    },
+    {
+      "file": "compatibility-DgfB-Kno.js",
+      "imports": [
+        "node:module",
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "exports": [
+        "n",
+        "r",
+        "t"
+      ],
+      "modules": []
+    },
+    {
+      "file": "fs.js",
+      "imports": [
+        "lib-5qu6ZlSr.js",
+        "runtime-version-CNudQvOj.js",
+        "node:path",
+        "@deepseek-ai/dsh-fs-local",
+        "@deepseek-ai/dsh-fs",
+        "node:fs/promises"
+      ],
+      "exports": [
+        "SandboxedFileSystem",
+        "default"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-fs-sandbox/lib/index.js"
+      ]
+    },
+    {
+      "file": "index.js",
+      "imports": [],
+      "exports": [
+        "apply",
+        "name"
+      ],
+      "modules": []
+    },
+    {
+      "file": "lib-5qu6ZlSr.js",
+      "imports": [
+        "node:fs",
+        "@deepseek-ai/cordis",
+        "node:os",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-sandbox"
+      ],
+      "exports": [
+        "a",
+        "c",
+        "i",
+        "l",
+        "n",
+        "o",
+        "r",
+        "s",
+        "t",
+        "u"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox/lib/index.js"
+      ]
+    },
+    {
+      "file": "lib-B_A0IXaB.js",
+      "imports": [
+        "node:crypto",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-scope",
+        "@deepseek-ai/dsh-session"
+      ],
+      "exports": [
+        "i",
+        "n",
+        "r",
+        "t"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-user-approval/lib/index.js"
+      ]
+    },
+    {
+      "file": "lib-CcpZWnEJ.js",
+      "imports": [
+        "node:path",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery"
+      ],
+      "exports": [
+        "a",
+        "c",
+        "i",
+        "n",
+        "o",
+        "r",
+        "s",
+        "t"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox-policy/lib/index.js",
+        "zod/v4/classic/errors.js",
+        "zod/v4/classic/iso.js",
+        "zod/v4/classic/parse.js",
+        "zod/v4/classic/schemas.js",
+        "zod/v4/core/api.js",
+        "zod/v4/core/checks.js",
+        "zod/v4/core/core.js",
+        "zod/v4/core/doc.js",
+        "zod/v4/core/errors.js",
+        "zod/v4/core/json-schema-processors.js",
+        "zod/v4/core/parse.js",
+        "zod/v4/core/regexes.js",
+        "zod/v4/core/registries.js",
+        "zod/v4/core/schemas.js",
+        "zod/v4/core/to-json-schema.js",
+        "zod/v4/core/util.js",
+        "zod/v4/core/versions.js"
+      ]
+    },
+    {
+      "file": "lib-DpUORC-p.js",
+      "imports": [
+        "lib-5qu6ZlSr.js",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-scope",
+        "@deepseek-ai/dsh-brand",
+        "@deepseek-ai/dsh-tools"
+      ],
+      "exports": [
+        "S",
+        "_",
+        "a",
+        "b",
+        "c",
+        "d",
+        "f",
+        "g",
+        "h",
+        "i",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "x",
+        "y"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tools/lib/index.js"
+      ]
+    },
+    {
+      "file": "permission-bridge.js",
+      "imports": [
+        "runtime-version-CNudQvOj.js",
+        "@deepseek-ai/cordis"
+      ],
+      "exports": [
+        "default"
+      ],
+      "modules": []
+    },
+    {
+      "file": "permission.js",
+      "imports": [
+        "lib-CcpZWnEJ.js",
+        "lib-B_A0IXaB.js",
+        "runtime-version-CNudQvOj.js",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-commands/brand",
+        "@deepseek-ai/dsh-typert-protocol"
+      ],
+      "exports": [
+        "AUTO_PRESET",
+        "CUSTOM_PRESET",
+        "PermissionPresetService",
+        "default"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-permission-presets/lib/index.js"
+      ]
+    },
+    {
+      "file": "plugin-tools.js",
+      "imports": [
+        "lib-5qu6ZlSr.js",
+        "lib-DpUORC-p.js",
+        "runtime-version-CNudQvOj.js",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-app-boot"
+      ],
+      "exports": [
+        "apply",
+        "inject"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-plugin-manager/lib/types/tools.js"
+      ]
+    },
+    {
+      "file": "policy.js",
+      "imports": [
+        "lib-CcpZWnEJ.js",
+        "runtime-version-CNudQvOj.js"
+      ],
+      "exports": [
+        "SANDBOX_MODES",
+        "SandboxPolicyService",
+        "default",
+        "setSandboxMode"
+      ],
+      "modules": []
+    },
+    {
+      "file": "purge-permission.js",
+      "imports": [
+        "runtime-version-CNudQvOj.js",
+        "compatibility-DgfB-Kno.js",
+        "@deepseek-ai/cordis"
+      ],
+      "exports": [
+        "default"
+      ],
+      "modules": []
+    },
+    {
+      "file": "runtime-version-CNudQvOj.js",
+      "imports": [
+        "compatibility-DgfB-Kno.js"
+      ],
+      "exports": [],
+      "modules": []
+    },
+    {
+      "file": "sandbox.js",
+      "imports": [
+        "lib-5qu6ZlSr.js",
+        "runtime-version-CNudQvOj.js",
+        "node:fs",
+        "node:path",
+        "node:url",
+        "node:child_process",
+        "node:os",
+        "@deepseek-ai/node-addon-system/landlock-run",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-sandbox-windows-acl"
+      ],
+      "exports": [
+        "LocalSandboxProvider",
+        "default"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox-local/lib/index.js"
+      ]
+    },
+    {
+      "file": "tool-bash.js",
+      "imports": [
+        "lib-DpUORC-p.js",
+        "lib-5qu6ZlSr.js",
+        "runtime-version-CNudQvOj.js",
+        "node:path",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-shell"
+      ],
+      "exports": [
+        "Config",
+        "apply",
+        "inject",
+        "name"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tool-bash/lib/index.js"
+      ]
+    },
+    {
+      "file": "tool-fs.js",
+      "imports": [
+        "lib-DpUORC-p.js",
+        "lib-5qu6ZlSr.js",
+        "runtime-version-CNudQvOj.js",
+        "node:path",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-fs",
+        "@deepseek-ai/dsh-util-code-language",
+        "@deepseek-ai/dsh-attachment"
+      ],
+      "exports": [
+        "Config",
+        "apply",
+        "inject",
+        "name"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tool-fs/lib/index.js",
+        "diff/libesm/diff/array.js",
+        "diff/libesm/diff/base.js",
+        "diff/libesm/diff/character.js",
+        "diff/libesm/diff/css.js",
+        "diff/libesm/diff/json.js",
+        "diff/libesm/diff/line.js",
+        "diff/libesm/diff/sentence.js",
+        "diff/libesm/diff/word.js",
+        "diff/libesm/index.js",
+        "diff/libesm/patch/create.js",
+        "diff/libesm/util/string.js"
+      ]
+    },
+    {
+      "file": "tool-pwsh.js",
+      "imports": [
+        "lib-DpUORC-p.js",
+        "lib-5qu6ZlSr.js",
+        "runtime-version-CNudQvOj.js",
+        "node:path",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-shell"
+      ],
+      "exports": [
+        "Config",
+        "apply",
+        "inject",
+        "name"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tool-pwsh/lib/index.js"
+      ]
+    },
+    {
+      "file": "tools.js",
+      "imports": [
+        "lib-DpUORC-p.js",
+        "runtime-version-CNudQvOj.js"
+      ],
+      "exports": [
+        "CodeRunFailedError",
+        "JsonSchemaError",
+        "RUN_CODE_NAME",
+        "TOOL_ABORTED",
+        "TOOL_ABORTED_BEFORE_DISPATCH",
+        "TOOL_RUNTIME_SCHEDULER",
+        "ToolArgsError",
+        "ToolNotFoundError",
+        "ToolOutputError",
+        "ToolRuntime",
+        "assertObjectJsonSchema",
+        "assertSupportedJsonSchema",
+        "default",
+        "defineContentToolFixture",
+        "defineTool",
+        "jsonSchemaToPy",
+        "jsonSchemaToTs",
+        "parameterSchemaSpecToJsonSchema",
+        "renderToolsSdk",
+        "renderToolsSdkPy",
+        "validateArgs",
+        "validateJsonSchemaValue",
+        "valueSchemaSpecToJsonSchema"
+      ],
+      "modules": []
+    }
+  ]
+}
