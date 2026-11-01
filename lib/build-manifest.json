@@ -24,7 +24,7 @@
       "file": "approval.js",
       "imports": [
         "lib-KC55FOau.js",
-        "runtime-version-D1EyPG3q.js"
+        "runtime-version-D-pGGZ-P.js"
       ],
       "exports": [
         "APPROVAL_POLICIES",
@@ -38,7 +38,7 @@
     {
       "file": "cli.js",
       "imports": [
-        "configuration-Bft6bRuf.js"
+        "configuration-Bdncr0Xc.js"
       ],
       "exports": [
         "main"
@@ -46,7 +46,7 @@
       "modules": []
     },
     {
-      "file": "compatibility-zi2_qmFw.js",
+      "file": "compatibility-Wuy-0_a1.js",
       "imports": [
         "node:module",
         "node:path",
@@ -61,9 +61,9 @@
       "modules": []
     },
     {
-      "file": "configuration-Bft6bRuf.js",
+      "file": "configuration-Bdncr0Xc.js",
       "imports": [
-        "compatibility-zi2_qmFw.js",
+        "compatibility-Wuy-0_a1.js",
         "node:module",
         "node:path",
         "node:crypto",
@@ -154,7 +154,7 @@
       "file": "fs.js",
       "imports": [
         "lib-DWBq_88x.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "node:path",
         "@deepseek-ai/dsh-fs-local",
         "@deepseek-ai/dsh-fs",
@@ -171,7 +171,7 @@
     {
       "file": "index.js",
       "imports": [
-        "configuration-Bft6bRuf.js",
+        "configuration-Bdncr0Xc.js",
         "node:path"
       ],
       "exports": [
@@ -308,7 +308,7 @@
     {
       "file": "permission-bridge.js",
       "imports": [
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -321,7 +321,7 @@
       "imports": [
         "lib-BFoXg-Us.js",
         "lib-KC55FOau.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-commands/brand",
         "@deepseek-ai/dsh-typert-protocol"
@@ -341,7 +341,7 @@
       "imports": [
         "lib-DWBq_88x.js",
         "lib-BDj20byz.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "@deepseek-ai/dsh-util-values",
         "@deepseek-ai/dsh-app-boot"
       ],
@@ -357,7 +357,7 @@
       "file": "policy.js",
       "imports": [
         "lib-BFoXg-Us.js",
-        "runtime-version-D1EyPG3q.js"
+        "runtime-version-D-pGGZ-P.js"
       ],
       "exports": [
         "SANDBOX_MODES",
@@ -370,8 +370,8 @@
     {
       "file": "purge-permission.js",
       "imports": [
-        "runtime-version-D1EyPG3q.js",
-        "compatibility-zi2_qmFw.js",
+        "runtime-version-D-pGGZ-P.js",
+        "compatibility-Wuy-0_a1.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -380,9 +380,9 @@
       "modules": []
     },
     {
-      "file": "runtime-version-D1EyPG3q.js",
+      "file": "runtime-version-D-pGGZ-P.js",
       "imports": [
-        "compatibility-zi2_qmFw.js"
+        "compatibility-Wuy-0_a1.js"
       ],
       "exports": [],
       "modules": []
@@ -391,7 +391,7 @@
       "file": "sandbox.js",
       "imports": [
         "lib-DWBq_88x.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "node:path",
         "node:fs",
         "node:url",
@@ -415,7 +415,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -436,7 +436,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-fs",
@@ -469,7 +469,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-D1EyPG3q.js",
+        "runtime-version-D-pGGZ-P.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -489,7 +489,7 @@
       "file": "tools.js",
       "imports": [
         "lib-BDj20byz.js",
-        "runtime-version-D1EyPG3q.js"
+        "runtime-version-D-pGGZ-P.js"
       ],
       "exports": [
         "CodeRunFailedError",

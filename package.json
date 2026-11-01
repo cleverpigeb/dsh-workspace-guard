@@ -1,8 +1,12 @@
 {
-  "name": "dsh-workspace-guard",
+  "name": "@cleverpig/dsh-workspace-guard",
   "version": "0.2.1",
   "description": "Restore compatibility between Purge and DSH Workspace mode",
   "license": "GPL-3.0-or-later",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cleverpigeb/dsh-workspace-guard.git"

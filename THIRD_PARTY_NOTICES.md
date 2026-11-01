@@ -2,7 +2,7 @@
 
 ## Project License (`GPL-3.0-or-later`)
 
-**DSH Workspace Guard (`dsh-workspace-guard`)**
+**DSH Workspace Guard (`@cleverpig/dsh-workspace-guard`)**
 Copyright (C) 2026 DSH Workspace Guard contributors
 `SPDX-License-Identifier: GPL-3.0-or-later`
 
@@ -16,7 +16,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 The generated runtime in `lib/` bundles selected official DeepSeek Harness modules (`0.2.1-rc.5`) and standalone JavaScript libraries (`diff@9.0.0`, `yaml@2.9.0`, and `zod@4.4.3`) under GPL-3.0-compatible permissive licenses (`MIT`, `BSD-3-Clause`, and `ISC`). These modules are generated from locked build dependencies rather than maintained as hand-copied source files:
 
-| Component | Version | License | Copyright Holder | Role in `dsh-workspace-guard` |
+| Component | Version | License | Copyright Holder | Role in `@cleverpig/dsh-workspace-guard` |
 | --- | --- | --- | --- | --- |
 | `@deepseek-ai/dsh-sandbox-local` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored local sandbox provider (`./sandbox`) |
 | `@deepseek-ai/dsh-sandbox-policy` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored sandbox policy provider (`./policy`) |
@@ -48,7 +48,7 @@ The npm package includes the project's TypeScript and build scripts. Before rebu
 
 For each distributed prebuilt release, recipients must also have access to the corresponding source under GPL terms. Maintainers should publish the matching source companion alongside the release and place clear download directions beside the package. This archive does not require a compiler during plugin installation.
 
-Run `pnpm source:release` from the Git checkout after adding maintained release files to Git's index, with Git and `tar` available on PATH. It reads the current working-tree contents of tracked files and creates `.local/artifacts/dsh-workspace-guard-0.2.0-source.tar.gz`. Use `pnpm source:release --output <directory>` for another destination; existing archives are not overwritten. The archive contains `project/`, four unextracted upstream archives under `upstream/`, and a checksum manifest. Local tests, receipts, and agent working files remain untracked and outside the project source archive.
+Run `pnpm source:release` from the Git checkout after adding maintained release files to Git's index, with Git and `tar` available on PATH. It reads the current working-tree contents of tracked files and creates `.local/artifacts/cleverpig-dsh-workspace-guard-0.2.1-source.tar.gz`. Use `pnpm source:release --output <directory>` for another destination; existing archives are not overwritten. The archive contains `project/`, four unextracted upstream archives under `upstream/`, and a checksum manifest. Local tests, receipts, and agent working files remain untracked and outside the project source archive.
 
 Pinned upstream download URLs, revisions, versions, and SHA-256 values are in [build/source-lock.json](build/source-lock.json). DSH's release tag and package versions match `0.2.1-rc.5`, but its npm metadata supplies no `gitHead`; byte-equivalent rebuilding has not been verified. The source companion does not by itself establish completeness for every combined-host distribution. Assess the corresponding-source requirements of the actual distribution, including required host components, before publishing it.
 

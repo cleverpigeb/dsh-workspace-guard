@@ -1,0 +1,74 @@
+name: Publish tested npm release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published stable release tag to retry (for example v0.2.1)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'cleverpigeb/dsh-workspace-guard' && (github.event_name == 'workflow_dispatch' || (!github.event.release.draft && !github.event.release.prerelease))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      RELEASE_REPOSITORY: cleverpigeb/dsh-workspace-guard
+      RELEASE_ASSETS_DIR: ${{ runner.temp }}/npm-release-assets
+    steps:
+      - name: Validate published stable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          gh release view "$RELEASE_TAG" --repo "$RELEASE_REPOSITORY" --json tagName,isDraft,isPrerelease,publishedAt > "$RUNNER_TEMP/release.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const release = JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/release.json`, 'utf8'));
+          if (release.tagName !== process.env.RELEASE_TAG || release.isDraft || release.isPrerelease || !release.publishedAt) {
+            throw new Error('An existing published stable release is required');
+          }
+          NODE
+      - name: Check out exact release tag
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Set up supported npm CLI
+        run: npm install --global npm@11.5.1 --ignore-scripts
+      - name: Download exact release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          mkdir -p "$RELEASE_ASSETS_DIR"
+          gh release download "$RELEASE_TAG" --repo "$RELEASE_REPOSITORY" --dir "$RELEASE_ASSETS_DIR" \
+            --pattern "cleverpig-dsh-workspace-guard-${version}.tgz" \
+            --pattern "cleverpig-dsh-workspace-guard-${version}-source.tar.gz" \
+            --pattern SHA256SUMS
+      - name: Verify and publish the tested archive
+        run: node build/publish-release.mjs

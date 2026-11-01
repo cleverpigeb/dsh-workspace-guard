@@ -2,4 +2,4 @@
 # Its owned configuration transaction triggers DSH's normal profile reload.
 - insert:
     - id: workspace-guard-status
-      name: dsh-workspace-guard
+      name: "@cleverpig/dsh-workspace-guard"

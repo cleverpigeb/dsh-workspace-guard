@@ -23,7 +23,8 @@ const output = resolve(root, args[1] ?? ".local/artifacts");
 const cache = join(root, ".local/licensing/upstream");
 mkdirSync(output, { recursive: true });
 mkdirSync(cache, { recursive: true });
-const destination = join(output, `${manifest.name}-${manifest.version}-source.tar.gz`);
+const archiveName = manifest.name.replace(/^@/, "").replaceAll("/", "-");
+const destination = join(output, `${archiveName}-${manifest.version}-source.tar.gz`);
 if (existsSync(destination)) throw new Error(`Source archive already exists: ${destination}`);
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 function run(command, argv) {
@@ -41,7 +42,8 @@ const outputPath = realpathSync(output);
 if (!stagePath.startsWith(outputPath + sep)) throw new Error("Unexpected source staging directory");
 try {
   const project = files.map(file => {
-    if (file.split("/").some(part => part === ".." || part.startsWith(".")) || /(^|\/)(AGENTS|CLAUDE|GEMINI)(\.|$)/i.test(file)) {
+    const publishingWorkflow = file === ".github/workflows/publish.yml";
+    if ((!publishingWorkflow && file.split("/").some(part => part === ".." || part.startsWith("."))) || /(^|\/)(AGENTS|CLAUDE|GEMINI)(\.|$)/i.test(file)) {
       if (file === ".gitignore" || file === ".gitattributes") return null;
       throw new Error(`Unexpected local/agent file in release source: ${file}`);
     }

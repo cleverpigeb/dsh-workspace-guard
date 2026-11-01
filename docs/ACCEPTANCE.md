@@ -2,6 +2,14 @@
 
 This revision moves the owned configuration transaction into the plugin lifecycle. Installing/enabling applies it automatically; disabling/removing restores it through DSH's normal configuration watcher.
 
+## Scoped package release
+
+The release package is `@cleverpig/dsh-workspace-guard@0.2.1`. Eleven scoped configuration groups passed, including refusal to reuse an active receipt with the earlier unscoped module names and successful activation after explicit restoration. The actual Loader/HMR/PluginManager install, disable, restart and removal checks passed again with the scoped name; provider and package-operation fixtures remained explicit. The existing native ownership-conflict teardown limitation was reproduced.
+
+The scoped real-provider smoke loaded nine compiled providers automatically. The Purge hook preserved Workspace Write; shell and filesystem writes succeeded inside the fixture workspace and left the rejected external sentinel unchanged. The first shell attempt aborted at the 15-second tool deadline. One repeat with a 40-second tool deadline passed; the original timeout cause remains unconfirmed. Both runs disposed all owned processes. The normal Desktop profile was untouched.
+
+Eleven isolated publishing checks passed for archive identity, version, runtime contents, checksums, registry failures and identical-version retries. The workflow and helper are prepared; hosted GitHub Actions execution and npm OIDC authorization await a real publication. Package verification and publication dry runs are recorded with the local release artifacts.
+
 ## Automatic configuration and native reload
 
 - Ten focused transaction scenario groups passed: automatic activation, repeat-load idempotence, shutdown retention, version-2 receipt reuse, later-edit preservation, disable/removal, launch-overlay conflicts, dynamic-state diagnostics, interrupted-journal recovery, and acknowledged offline recovery after package removal.

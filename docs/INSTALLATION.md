@@ -1,6 +1,6 @@
 # Installation and removal
 
-Install `dsh-workspace-guard` through DSH's plugin manager using its npm or Git source. The manager enables the bundle by default. The plugin then records its configuration changes and DSH's normal profile watcher loads the repaired native providers automatically. Installation and enabling are the complete setup flow.
+Install `@cleverpig/dsh-workspace-guard` through DSH's plugin manager using its npm or Git source. The manager enables the bundle by default. The plugin then records its configuration changes and DSH's normal profile watcher loads the repaired native providers automatically. Installation and enabling are the complete setup flow.
 
 The package contains prebuilt ESM JavaScript and its resources. Both installation sources use that runtime. The plugin checks its supported DSH and Purge versions before changing configuration.
 
@@ -20,7 +20,7 @@ Removal preserves later edits or reports conflicts. An edited owned identity or 
 
 DSH 0.2.1-rc.5 can finish uninstalling after a cleanup error. If manually edited ownership records cause this, retain the patch and receipt and follow CONFIGURATION.md's offline recovery procedure. Normal disable and uninstall restore configuration automatically.
 
-Version 0.2.0's active version-2 receipts remain supported. An installed but inactive 0.2.0 bundle becomes configured on upgrade. Use the previous verified package when rolling back an unsuccessful upgrade, and retain its ownership receipt until recovery completes.
+Updates to the scoped package reuse its valid version-2 receipts. For an earlier unscoped development build, first remove that bundle through DSH, then install `@cleverpig/dsh-workspace-guard`. An active receipt containing a different package name is reported before configuration writes. Use the previous verified package when rolling back an unsuccessful upgrade, and retain its ownership receipt until recovery completes.
 
 The plugin introduces no separate ACL reset procedure. Native ACL resource lifecycle remains native; do not perform blanket ACL resets.
 

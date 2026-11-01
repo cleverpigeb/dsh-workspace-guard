@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "project": {
-    "name": "dsh-workspace-guard",
+    "name": "@cleverpig/dsh-workspace-guard",
     "version": "0.2.1",
     "license": "GPL-3.0-or-later"
   },
@@ -155,7 +155,7 @@
     },
     {
       "file": "approval.js",
-      "sha256": "fe5b09fde019184c63fe560e020eb9ede5cfe346311dff31a6a27e044da73a70"
+      "sha256": "cbd84cad2d0c26deb2834b5e09f0f5648452df44fc253449ac967c7be96ca87c"
     },
     {
       "file": "build-lock.yaml",
@@ -163,23 +163,23 @@
     },
     {
       "file": "build-manifest.json",
-      "sha256": "bed2c8c3d575a097ed45d95467e4994d686cb3840a17540b5c182da1aa790b2d"
+      "sha256": "d88c3830a5bf298958340fd1ea34d949b393c7005258356fc4ce7f2b2907530a"
     },
     {
       "file": "cli.js",
-      "sha256": "5009900829a05bf11ced47bb9e789681ef3ec81da53430dfbe46dde15d09e98b"
+      "sha256": "1574152ca22509c152145994b69ac1c0bebd1bf4dd85782d58bdcd0a144e4247"
     },
     {
-      "file": "compatibility-zi2_qmFw.js",
-      "sha256": "fa8dfeb96840772bdcc1a677fcbd593c8cbc5ddfbe8be4e09336db3cfc475104"
+      "file": "compatibility-Wuy-0_a1.js",
+      "sha256": "82293c850d7591ed006135adfded2ec970d45b76d98a45689198997545298369"
     },
     {
-      "file": "configuration-Bft6bRuf.js",
-      "sha256": "30702a6c4d54acd3a0dd119483a041fcc014d162bcb3793b0b848bef8c422bbb"
+      "file": "configuration-Bdncr0Xc.js",
+      "sha256": "054c6104eacbfe5299e974a746745068309103a1d3931764d34417cb5d6a2638"
     },
     {
       "file": "fs.js",
-      "sha256": "5c41e4e51215f32851ce3d651e77197c0882c44c575933931ed31220799c3982"
+      "sha256": "4d83b769a6d6319e7c05a1d62b374b0c00c79e19dd23afeb242682f429ff2de9"
     },
     {
       "file": "host-identities.json",
@@ -187,7 +187,7 @@
     },
     {
       "file": "index.js",
-      "sha256": "f8a2fc51913ffb50e026c0bb92907d631e95ad2f43e62b603ba6b7cba258be86"
+      "sha256": "4ab8acd6f54598bcbc4d0443dccfa4ff22d653b98d330e6d2bf69fa0f4f99a92"
     },
     {
       "file": "lib-BDj20byz.js",
@@ -207,47 +207,47 @@
     },
     {
       "file": "permission-bridge.js",
-      "sha256": "69de6bc5f6d35d4e4b8031974a7573a7eb405e95aadc1e34a8feeb3550b4d578"
+      "sha256": "ea7f0ad0271c81b99c460a27cc07b77c6236b2e643a6cf9699c470d5ab8bbb77"
     },
     {
       "file": "permission.js",
-      "sha256": "b76e2c6fb4099e5a4bac4b35ac3ddd83cec7efd7cae3db375dd85e6e12e62dc4"
+      "sha256": "e74dd74aa953db24044782333765be27c3c785d28a07ab826373a56eced4bfb6"
     },
     {
       "file": "plugin-tools.js",
-      "sha256": "130f2abbd94ccc48c3754233384f0cfde3ab03e6723dea5a0131df75d3c4ca85"
+      "sha256": "8ee9b236cae8b51ffcc9eca91500e842c0c91c92503648660791769da94fd649"
     },
     {
       "file": "policy.js",
-      "sha256": "3e8c0eaac7156adb226c767e60369bae0c0befed244261237b96ede6f60f0b48"
+      "sha256": "4acdc316591f5d13ddd87802721c2f936796dcc310928446cdbcc2f25d179b78"
     },
     {
       "file": "purge-permission.js",
-      "sha256": "c0a055ce1ed01724a1e718ac5590d4a6dcfe1fa030528f78f454667e79d16852"
+      "sha256": "22ed7dffebd75fe2c7a4f926525453ad04da98109f750cf3373c4b7e15a55cde"
     },
     {
-      "file": "runtime-version-D1EyPG3q.js",
-      "sha256": "a10599d7ee058fc927452e49be58d462c3287d599e734d9e7e7c35f5942e2926"
+      "file": "runtime-version-D-pGGZ-P.js",
+      "sha256": "179141ab93f23505f4621a7a076c859d2a2c4b058f5abe3a5e8ee1636c216e8c"
     },
     {
       "file": "sandbox.js",
-      "sha256": "cad09386c79520a191bc320777f1df03f8ce06d2ab8ec6cc12e2b4672f601f11"
+      "sha256": "6bcb6910d3065f33175e07ee73e5cb4802a9dc67c02b477857130ab35fd5062b"
     },
     {
       "file": "tool-bash.js",
-      "sha256": "af6f4e7ff81b0d5500330dd31b260ab1b70b0cced72a30f55f67d5ae0bac660f"
+      "sha256": "3feac7914048eb799186894fe01c6d895e1884456a303f9bc0b4af39b335e90b"
     },
     {
       "file": "tool-fs.js",
-      "sha256": "ffa24e58dbbc3fe59bfb6ece4b169a167bf7ecfbc69e615e744e04b918263481"
+      "sha256": "247269dc43393a1edd0d245b6cb2e5f65f8ea6381bdaaf7f7b0032bd99beb530"
     },
     {
       "file": "tool-pwsh.js",
-      "sha256": "6fc27d37f7f53992c991bb5c545ce38fb1cc2312189af90bb16819719e21c20a"
+      "sha256": "c9aab7a2d13e47c5faeeb46cbfa3c6efa565dd7aad7257dabc9c2cf098ec26f0"
     },
     {
       "file": "tools.js",
-      "sha256": "ae7172b8f1335e77ee6f59134871d0f039f39594fef4e839fe05edd2edfd6f3a"
+      "sha256": "97359ea9f0f68aaf6f6e57818bf68e53cc080a4ed24a8976f0f4124c23afecc5"
     }
   ]
 }

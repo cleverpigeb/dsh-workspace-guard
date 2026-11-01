@@ -244,5 +244,20 @@
     ],
     "unrelatedPluginVersionGate": false,
     "normalProfileChanged": false
+  },
+  "package": "@cleverpig/dsh-workspace-guard",
+  "scopedRelease": {
+    "version": "0.2.1",
+    "configurationGroupsPassed": 11,
+    "legacyActiveReceipt": "rejected before writes; explicit restoration then scoped activation passed",
+    "nativeLifecycle": "install/disable/restart/removal passed with actual Loader/HMR/PluginManager and fixture providers/package execution",
+    "realProviders": 9,
+    "nativeWorkspaceEffects": "inside writes succeeded; external sentinel unchanged",
+    "shellObservation": "initial 15-second tool deadline aborted; one 40-second bounded retry passed; cause unconfirmed",
+    "remainingOwnedProcesses": 0,
+    "normalProfileChanged": false,
+    "publishingFixtureChecksPassed": 11,
+    "hostedWorkflow": "not yet run",
+    "npmOidcAuthorization": "not yet exercised"
   }
 }

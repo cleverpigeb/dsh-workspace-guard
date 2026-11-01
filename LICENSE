@@ -677,7 +677,7 @@ Public License instead of this License.  But first, please read
 DSH Workspace Guard Licensing Notice (GPL-3.0-or-later)
 ========================================================================
 
-DSH Workspace Guard (dsh-workspace-guard) — Restore compatibility between
+DSH Workspace Guard (@cleverpig/dsh-workspace-guard) — Restore compatibility between
 Purge and DSH Workspace mode.
 Copyright (C) 2026 DSH Workspace Guard contributors
 SPDX-License-Identifier: GPL-3.0-or-later

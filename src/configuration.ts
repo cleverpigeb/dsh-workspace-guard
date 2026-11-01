@@ -8,7 +8,7 @@ import { join, resolve } from "node:path";
 import { isMap, isSeq, parseDocument, type Document, type YAMLMap, type YAMLSeq } from "yaml";
 import { validateBundleVersion } from "./compatibility.js";
 
-export const PACKAGE_NAME = "dsh-workspace-guard";
+export const PACKAGE_NAME = "@cleverpig/dsh-workspace-guard";
 export const REPLACEMENTS: Record<string, string> = {
   "@deepseek-ai/dsh-sandbox-local": "sandbox",
   "@deepseek-ai/dsh-sandbox-policy": "policy",
@@ -524,6 +524,16 @@ export function previewConfiguration(
   if (action !== "activate" && !receipt)
     throw new Error("No ownership receipt exists for this profile.");
   if (action === "activate" && receipt?.status === "active") {
+    if (
+      receipt.owned.some(
+        (item) =>
+          (item.kind === "replacement" || item.kind === "service") &&
+          !item.installed.insert?.[0]?.name?.startsWith(PACKAGE_NAME + "/"),
+      )
+    )
+      throw new Error(
+        `The active receipt belongs to a different package name. Remove the earlier development bundle through DSH before installing ${PACKAGE_NAME}; existing configuration was preserved.`,
+      );
     const probe = document(input.patch);
     restoreOwned(probe, receipt, input.bundleLayers);
     verifyActive(input, receipt);

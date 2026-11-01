@@ -16,7 +16,7 @@ export function validateBundleVersion(
   manifest: { name?: string; version?: string },
 ): void {
   const expected =
-    name === "dsh-workspace-guard"
+    name === "@cleverpig/dsh-workspace-guard"
       ? SUPPORTED.guard
       : name === "@deepseek-ai/dsh" || name.startsWith("@deepseek-ai/dsh-")
         ? SUPPORTED.dsh

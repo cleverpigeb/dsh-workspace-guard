@@ -5,20 +5,20 @@
   disabled: true
 - insert:
     - id: workspace-guard-tool-plugin-manager-2f3a2ef4
-      name: dsh-workspace-guard/plugin-tools
+      name: "@cleverpig/dsh-workspace-guard/plugin-tools"
       disabled: true
 - id: sandbox
   name: "@deepseek-ai/dsh-sandbox-local"
   disabled: true
 - insert:
     - id: workspace-guard-sandbox-8d8ebad1
-      name: dsh-workspace-guard/sandbox
+      name: "@cleverpig/dsh-workspace-guard/sandbox"
 - id: sandbox-policy
   name: "@deepseek-ai/dsh-sandbox-policy"
   disabled: true
 - insert:
     - id: workspace-guard-sandbox-policy-63ef2768
-      name: dsh-workspace-guard/policy
+      name: "@cleverpig/dsh-workspace-guard/policy"
       config:
         mode: !!js "process.env.DSH_PERMISSION_MODE ?? 'workspace-write'"
         workspaceRoot: !!js "process.cwd()"
@@ -27,7 +27,7 @@
   disabled: true
 - insert:
     - id: workspace-guard-approval-682cffe7
-      name: dsh-workspace-guard/approval
+      name: "@cleverpig/dsh-workspace-guard/approval"
       config:
         policy: !!js "(process.env.DSH_PERMISSION_MODE ?? 'workspace-write') === 'danger-full-access' ? 'never' : 'ask'"
 - id: permission
@@ -35,7 +35,7 @@
   disabled: true
 - insert:
     - id: workspace-guard-permission-8bfcb65f
-      name: dsh-workspace-guard/permission
+      name: "@cleverpig/dsh-workspace-guard/permission"
       config:
         presets:
           read-only:
@@ -52,28 +52,28 @@
   disabled: true
 - insert:
     - id: workspace-guard-tool-bash-7ef87a67
-      name: dsh-workspace-guard/tool-bash
+      name: "@cleverpig/dsh-workspace-guard/tool-bash"
       disabled: true
 - id: tool-pwsh
   name: "@deepseek-ai/dsh-tool-pwsh"
   disabled: true
 - insert:
     - id: workspace-guard-tool-pwsh-001648a9
-      name: dsh-workspace-guard/tool-pwsh
+      name: "@cleverpig/dsh-workspace-guard/tool-pwsh"
       disabled: true
 - id: tool-fs
   name: "@deepseek-ai/dsh-tool-fs"
   disabled: true
 - insert:
     - id: workspace-guard-tool-fs-ea86fc5a
-      name: dsh-workspace-guard/tool-fs
+      name: "@cleverpig/dsh-workspace-guard/tool-fs"
       disabled: true
 - id: tools
   name: "@deepseek-ai/dsh-tools"
   disabled: true
 - insert:
     - id: workspace-guard-tools-19d6939c
-      name: dsh-workspace-guard/tools
+      name: "@cleverpig/dsh-workspace-guard/tools"
       config:
         mode: !!js "process.env.DSH_TOOLS_MODE"
 - id: fs-sandbox
@@ -81,7 +81,7 @@
   disabled: true
 - insert:
     - id: workspace-guard-fs-sandbox-cb466d2c
-      name: dsh-workspace-guard/fs
+      name: "@cleverpig/dsh-workspace-guard/fs"
 - id: preset-standard
   name: "@deepseek-ai/dsh-agent-preset"
   config:
@@ -102,19 +102,19 @@
         name: "@deepseek-ai/dsh-tool-bash"
         disabled: true
       - id: workspace-guard-tool-bash-1bba4172
-        name: dsh-workspace-guard/tool-bash
+        name: "@cleverpig/dsh-workspace-guard/tool-bash"
         disabled: !!js "process.platform === 'win32'"
       - id: tool-pwsh
         name: "@deepseek-ai/dsh-tool-pwsh"
         disabled: true
       - id: workspace-guard-tool-pwsh-44323a56
-        name: dsh-workspace-guard/tool-pwsh
+        name: "@cleverpig/dsh-workspace-guard/tool-pwsh"
         disabled: !!js "process.platform !== 'win32'"
       - id: tool-fs
         name: "@deepseek-ai/dsh-tool-fs"
         disabled: true
       - id: workspace-guard-tool-fs-d9fe19d1
-        name: dsh-workspace-guard/tool-fs
+        name: "@cleverpig/dsh-workspace-guard/tool-fs"
       - id: tool-fs-search
         name: "@deepseek-ai/dsh-tool-fs-search"
         config:
@@ -255,7 +255,7 @@
         name: "@deepseek-ai/dsh-plugin-manager/tools"
         disabled: true
       - id: workspace-guard-tool-plugin-manager-f0a769f5
-        name: dsh-workspace-guard/plugin-tools
+        name: "@cleverpig/dsh-workspace-guard/plugin-tools"
         disabled: true
       - id: tool-plugin-market
         name: "@deepseek-ai/dsh-plugin-market/tools"
@@ -280,19 +280,19 @@
         name: "@deepseek-ai/dsh-tool-bash"
         disabled: true
       - id: workspace-guard-tool-bash-d25e429e
-        name: dsh-workspace-guard/tool-bash
+        name: "@cleverpig/dsh-workspace-guard/tool-bash"
         disabled: !!js "process.platform === 'win32'"
       - id: tool-pwsh
         name: "@deepseek-ai/dsh-tool-pwsh"
         disabled: true
       - id: workspace-guard-tool-pwsh-6314da8a
-        name: dsh-workspace-guard/tool-pwsh
+        name: "@cleverpig/dsh-workspace-guard/tool-pwsh"
         disabled: !!js "process.platform !== 'win32'"
       - id: tool-fs
         name: "@deepseek-ai/dsh-tool-fs"
         disabled: true
       - id: workspace-guard-tool-fs-3f9426ca
-        name: dsh-workspace-guard/tool-fs
+        name: "@cleverpig/dsh-workspace-guard/tool-fs"
       - id: tool-fs-search
         name: "@deepseek-ai/dsh-tool-fs-search"
         config:
@@ -439,7 +439,7 @@
         name: "@deepseek-ai/dsh-plugin-manager/tools"
         disabled: true
       - id: workspace-guard-tool-plugin-manager-34f957c6
-        name: dsh-workspace-guard/plugin-tools
+        name: "@cleverpig/dsh-workspace-guard/plugin-tools"
         disabled: true
       - id: tool-plugin-market
         name: "@deepseek-ai/dsh-plugin-market/tools"
@@ -465,7 +465,7 @@
           edit: false
         disabled: true
       - id: workspace-guard-tool-fs-68f8d061
-        name: dsh-workspace-guard/tool-fs
+        name: "@cleverpig/dsh-workspace-guard/tool-fs"
         config:
           read: false
           readImage: true
@@ -567,19 +567,19 @@
         name: "@deepseek-ai/dsh-tool-bash"
         disabled: true
       - id: workspace-guard-tool-bash-505d1576
-        name: dsh-workspace-guard/tool-bash
+        name: "@cleverpig/dsh-workspace-guard/tool-bash"
         disabled: !!js "process.platform === 'win32'"
       - id: tool-pwsh
         name: "@deepseek-ai/dsh-tool-pwsh"
         disabled: true
       - id: workspace-guard-tool-pwsh-32868d98
-        name: dsh-workspace-guard/tool-pwsh
+        name: "@cleverpig/dsh-workspace-guard/tool-pwsh"
         disabled: !!js "process.platform !== 'win32'"
       - id: tool-fs
         name: "@deepseek-ai/dsh-tool-fs"
         disabled: true
       - id: workspace-guard-tool-fs-3dd4e42e
-        name: dsh-workspace-guard/tool-fs
+        name: "@cleverpig/dsh-workspace-guard/tool-fs"
       - id: tool-fs-search
         name: "@deepseek-ai/dsh-tool-fs-search"
         config:
@@ -725,17 +725,17 @@
         name: "@deepseek-ai/dsh-plugin-manager/tools"
         disabled: true
       - id: workspace-guard-tool-plugin-manager-414f7ed2
-        name: dsh-workspace-guard/plugin-tools
+        name: "@cleverpig/dsh-workspace-guard/plugin-tools"
         disabled: !!js "!ctx.get('profileContext')"
       - id: tool-plugin-market
         name: "@deepseek-ai/dsh-plugin-market/tools"
         disabled: !!js "!ctx.get('profileContext')"
 - insert:
     - id: workspace-guard-permission-bridge
-      name: dsh-workspace-guard/permission-bridge
+      name: "@cleverpig/dsh-workspace-guard/permission-bridge"
 - insert:
     - id: workspace-guard-purge-permission
-      name: dsh-workspace-guard/purge-permission
+      name: "@cleverpig/dsh-workspace-guard/purge-permission"
       isolate:
         permissionPresets: workspace-guard-purge
 - id: dsh-purge

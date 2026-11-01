@@ -1,4 +1,4 @@
-# DSH Workspace Guard (`dsh-workspace-guard`)
+# DSH Workspace Guard (`@cleverpig/dsh-workspace-guard`)
 
 **English** | [简体中文](README.zh-CN.md)
 
@@ -103,8 +103,8 @@ DSH Workspace Guard consists of four coordinated mechanisms:
    - **Shared Host Identities**: Rewrites `TOOL_RUNTIME_SCHEDULER` to import from the host's `@deepseek-ai/dsh-tools` (so unmodified `AgentLoop` resolves the active `ToolRuntime` scheduler) and `SandboxUnavailableError` to import from the host's `@deepseek-ai/dsh-sandbox` (so `instanceof` checks succeed across module boundaries), audited in `lib/host-identities.json`.
 
 3. **Purge Permission Isolation ([`src/permission-bridge.ts`](src/permission-bridge.ts) & [`src/purge-permission.ts`](src/purge-permission.ts))**
-   - `dsh-workspace-guard/permission-bridge` captures the root `permissionPresets` service on `workspaceGuardPermissions`.
-   - `dsh-workspace-guard/purge-permission` registers a `permissionPresets` facade inside the `workspace-guard-purge` Cordis isolation scope (`isolate: { permissionPresets: "workspace-guard-purge" }`), which is applied exclusively to `dsh-purge`.
+   - `@cleverpig/dsh-workspace-guard/permission-bridge` captures the root `permissionPresets` service on `workspaceGuardPermissions`.
+   - `@cleverpig/dsh-workspace-guard/purge-permission` registers a `permissionPresets` facade inside the `workspace-guard-purge` Cordis isolation scope (`isolate: { permissionPresets: "workspace-guard-purge" }`), which is applied exclusively to `dsh-purge`.
    - The facade forwards all queries and updates to the root service except `set(session, "danger-full-access")`, which becomes a synchronous no-op when called by `dsh-purge`. Host UI controls and operator actions still access the root `permissionPresets` service directly.
 
 4. **Paired Cordis Configuration and Transaction Receipt ([`src/index.ts`](src/index.ts) & [`src/configuration.ts`](src/configuration.ts))**
@@ -144,19 +144,19 @@ DSH Workspace Guard (`0.2.1`) retains the following native routes. This summary 
 
 | # | Capability Route | Upstream Package (`0.2.1-rc.5`) | Package Export | Status in `0.2.1` |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | **Permission Presets** (`read-only`, `workspace-write`, `danger-full-access`) | `@deepseek-ai/dsh-permission-presets` | `dsh-workspace-guard/permission` | Native default and selector restored; explicit settings retained |
-| 2 | **Purge Session Isolation** (`permissionPresets` facade) | `@deepseek-ai/dsh-permission-presets` + selected Purge package | `dsh-workspace-guard/permission-bridge`, `dsh-workspace-guard/purge-permission` | Suppresses Purge auto-promotion to Full Access |
-| 3 | **File-System Policy & Provider** (`fs`, `policy`, realpath checks) | `@deepseek-ai/dsh-fs-sandbox`, `@deepseek-ai/dsh-sandbox-policy` | `dsh-workspace-guard/fs`, `dsh-workspace-guard/policy` | Native write checks restored |
-| 4 | **Sandbox Policy & Approval Broker** | `@deepseek-ai/dsh-sandbox-policy`, `@deepseek-ai/dsh-user-approval` | `dsh-workspace-guard/policy`, `dsh-workspace-guard/approval` | Native approval outcomes restored |
-| 5 | **Native Windows ACL Sandbox** | `@deepseek-ai/dsh-sandbox-local` | `dsh-workspace-guard/sandbox` | Restored; requires host Windows runner |
-| 6 | **Built-in File Tools** (`read`, `read_image`, `write`, `edit`) | `@deepseek-ai/dsh-tool-fs` | `dsh-workspace-guard/tool-fs` | Restored + Purge patch `#22` preserved |
-| 7 | **PowerShell Tool (`pwsh`)** (one-shot, background, and persistent terminal paths) | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | Native implementation + Purge patch `#48` retained; persistent startup failed in the fixture (see [acceptance report](docs/ACCEPTANCE.md)) |
-| 8 | **Bash Tool (`bash`)** | `@deepseek-ai/dsh-tool-bash` | `dsh-workspace-guard/tool-bash` | Restored + Purge patch `#48` preserved |
-| 9 | **Tool Runtime & Python `run_code` (`preset-ptc`)** | `@deepseek-ai/dsh-tools`, `@deepseek-ai/dsh-sandbox` | `dsh-workspace-guard/tools` | Restored (shares host `TOOL_RUNTIME_SCHEDULER`) |
+| 1 | **Permission Presets** (`read-only`, `workspace-write`, `danger-full-access`) | `@deepseek-ai/dsh-permission-presets` | `@cleverpig/dsh-workspace-guard/permission` | Native default and selector restored; explicit settings retained |
+| 2 | **Purge Session Isolation** (`permissionPresets` facade) | `@deepseek-ai/dsh-permission-presets` + selected Purge package | `@cleverpig/dsh-workspace-guard/permission-bridge`, `@cleverpig/dsh-workspace-guard/purge-permission` | Suppresses Purge auto-promotion to Full Access |
+| 3 | **File-System Policy & Provider** (`fs`, `policy`, realpath checks) | `@deepseek-ai/dsh-fs-sandbox`, `@deepseek-ai/dsh-sandbox-policy` | `@cleverpig/dsh-workspace-guard/fs`, `@cleverpig/dsh-workspace-guard/policy` | Native write checks restored |
+| 4 | **Sandbox Policy & Approval Broker** | `@deepseek-ai/dsh-sandbox-policy`, `@deepseek-ai/dsh-user-approval` | `@cleverpig/dsh-workspace-guard/policy`, `@cleverpig/dsh-workspace-guard/approval` | Native approval outcomes restored |
+| 5 | **Native Windows ACL Sandbox** | `@deepseek-ai/dsh-sandbox-local` | `@cleverpig/dsh-workspace-guard/sandbox` | Restored; requires host Windows runner |
+| 6 | **Built-in File Tools** (`read`, `read_image`, `write`, `edit`) | `@deepseek-ai/dsh-tool-fs` | `@cleverpig/dsh-workspace-guard/tool-fs` | Restored + Purge patch `#22` preserved |
+| 7 | **PowerShell Tool (`pwsh`)** (one-shot, background, and persistent terminal paths) | `@deepseek-ai/dsh-tool-pwsh` | `@cleverpig/dsh-workspace-guard/tool-pwsh` | Native implementation + Purge patch `#48` retained; persistent startup failed in the fixture (see [acceptance report](docs/ACCEPTANCE.md)) |
+| 8 | **Bash Tool (`bash`)** | `@deepseek-ai/dsh-tool-bash` | `@cleverpig/dsh-workspace-guard/tool-bash` | Restored + Purge patch `#48` preserved |
+| 9 | **Tool Runtime & Python `run_code` (`preset-ptc`)** | `@deepseek-ai/dsh-tools`, `@deepseek-ai/dsh-sandbox` | `@cleverpig/dsh-workspace-guard/tools` | Restored (shares host `TOOL_RUNTIME_SCHEDULER`) |
 | 10 | **Agent Presets** (`preset-standard`, `preset-ptc`, `preset-minimal`, `preset-cordis`) | Native host preset bundles | Paired nested entries in `cordis.patch.yml` | All 4 presets rewired |
 | 11 | **Subagents & Background Work** | Native host consumers | Root replacement services | Native behaviour retained; adapter dispatch and background job execution tested, full child lifecycle unverified |
 | 12 | **Git Worktree Adapter** | Native host VCS consumers | Native workspace policy | Adapter dispatch tested; real Git worktree operations unverified |
-| 13 | **LSP & Plugin Tool Bridges** | Native LSP consumers; `@deepseek-ai/dsh-plugin-manager/tools` | `dsh-workspace-guard/plugin-tools`; root `fs` | Static helper restored; live LSP transport unverified |
+| 13 | **LSP & Plugin Tool Bridges** | Native LSP consumers; `@deepseek-ai/dsh-plugin-manager/tools` | `@cleverpig/dsh-workspace-guard/plugin-tools`; root `fs` | Static helper restored; live LSP transport unverified |
 
 ### Preserved Purge Compatibility Rules
 
@@ -170,7 +170,7 @@ DSH Workspace Guard (`0.2.1`) retains the following native routes. This summary 
 
 ## Installation and Configuration Lifecycle
 
-Installing and enabling `dsh-workspace-guard` through DSH's plugin manager is the complete setup flow:
+Installing and enabling `@cleverpig/dsh-workspace-guard` through DSH's plugin manager is the complete setup flow:
 
 - **Automatic Configuration on Install / Enable**: DSH's plugin manager enables the bundle by default. The plugin's lifecycle entry (`workspace-guard-lifecycle`) checks supported host and Purge versions, writes the owned paired configuration to `<profile>/cordis.patch.yml` and `<profile>/.workspace-guard/receipt.json`, and DSH's native profile watcher (HMR) loads the repaired providers automatically.
 - **Automatic Restoration on Disable / Uninstall**: Disabling or uninstalling the bundle in DSH's plugin manager automatically restores the previous native providers and removes the scoped Purge adapter through the same owned-change transaction and native profile reload. Ordinary application shutdown retains the active configuration for the next startup.
@@ -184,13 +184,13 @@ Installing and enabling `dsh-workspace-guard` through DSH's plugin manager is th
 2. Install from the official npm registry using the package name:
    - **Latest release**:
      ```text
-     dsh-workspace-guard
+     @cleverpig/dsh-workspace-guard
      ```
    - **Version-pinned installation (matching current package metadata `0.2.1`)**:
      ```text
-     dsh-workspace-guard@0.2.1
+     @cleverpig/dsh-workspace-guard@0.2.1
      ```
-3. Keep the **`dsh-workspace-guard`** bundle enabled (the default in DSH's plugin manager). The plugin automatically saves its configuration changes and DSH's profile watcher loads the repaired providers.
+3. Keep the **`@cleverpig/dsh-workspace-guard`** bundle enabled (the default in DSH's plugin manager). The plugin automatically saves its configuration changes and DSH's profile watcher loads the repaired providers.
 
 > **Note**: The package includes prebuilt `lib/` artefacts with `diff`, `yaml`, and `zod` bundled. Shared host dependencies and native resources remain external. Installation requires no compiler or installation-time build; maintainer builds use `build:release`. Automatic setup uses the Desktop profile's native HMR service.
 
@@ -224,7 +224,7 @@ If you are installing directly from a Git repository URL or a local Git checkout
 
 Manage upgrades, enabling, disabling, and uninstallation directly through **DSH's normal plugin manager**:
 
-- **Upgrading**: Install or update to `dsh-workspace-guard@0.2.1` in DSH's plugin manager. Automatic setup is idempotent and reuses a valid existing configuration (including active `0.2.0` version-2 receipts, while an installed but inactive `0.2.0` bundle is configured automatically on upgrade). To refresh existing live chat tabs after an upgrade, finish ongoing work and restart DSH normally.
+- **Upgrading**: Install or update to `@cleverpig/dsh-workspace-guard@0.2.1` in DSH's plugin manager. Automatic setup is idempotent and reuses valid receipts belonging to the scoped package. If you used an earlier unscoped development build, remove that bundle through DSH before installing `@cleverpig/dsh-workspace-guard`. To refresh existing live chat tabs after an upgrade, finish ongoing work and restart DSH normally.
 - **Ordinary Shutdown**: Closing DSH normally keeps the active configuration in `<profile>/cordis.patch.yml` for the next startup.
 - **Disabling and Uninstalling**: Disabling or removing the bundle in DSH's plugin manager automatically restores the previous native providers and removes the scoped Purge adapter before package deletion. Restoring the previous providers also restores their behaviour with Purge.
 - **Configuration Ownership and Conflict Handling**:
@@ -243,10 +243,10 @@ Set your target profile and host module paths in PowerShell (this example uses t
 $ProfileDir  = "$env:USERPROFILE\.dsh\profiles\desktop"
 $DshHome     = "$env:USERPROFILE\.dsh"
 $HostModules = "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\app\dsh\node_modules"
-$Cli         = "$ProfileDir\node_modules\dsh-workspace-guard\lib\cli.js"
+$Cli         = "$ProfileDir\node_modules\@cleverpig\dsh-workspace-guard\lib\cli.js"
 ```
 
-*(After package removal, set `$Cli` to `lib\cli.js` inside a downloaded matching `dsh-workspace-guard@0.2.1` package or checkout, then proceed directly to step 4. Steps 1–3 inspect or configure an installed, selected bundle.)*
+*(After package removal, set `$Cli` to `lib\cli.js` inside a downloaded matching `@cleverpig/dsh-workspace-guard@0.2.1` package or checkout, then proceed directly to step 4. Steps 1–3 inspect or configure an installed, selected bundle.)*
 
 1. **Inspect Compatibility and Owned Status (`doctor`)**:
    ```powershell
@@ -384,7 +384,7 @@ dsh-workspace-guard/
 
 ### Project License (`GPL-3.0-or-later`)
 
-**DSH Workspace Guard (`dsh-workspace-guard`)** is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License** as published by the Free Software Foundation, **either version 3 of the License, or (at your option) any later version** (`GPL-3.0-or-later`).
+**DSH Workspace Guard (`@cleverpig/dsh-workspace-guard`)** is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License** as published by the Free Software Foundation, **either version 3 of the License, or (at your option) any later version** (`GPL-3.0-or-later`).
 
 The complete, unmodified text of the GNU General Public License version 3 and the project's explicit "version 3 or any later version" licensing notice are provided in [`LICENSE`](LICENSE).
 
@@ -408,4 +408,4 @@ Complete upstream copyright notices and the full, unmodified `MIT`, `BSD-3-Claus
 
 The npm package includes project TypeScript and build scripts. To rebuild its contents, first copy `lib/build-lock.yaml` to `pnpm-lock.yaml`, then use the development commands above.
 
-Maintainers run `pnpm source:release` in the Git checkout to generate `.local/artifacts/dsh-workspace-guard-0.2.1-source.tar.gz`; `pnpm source:release --output <directory>` selects another destination. It includes the current tracked project files, four pinned upstream archives, and a checksum manifest. Publish that companion archive beside the matching release and link it from the package’s release documentation. Upstream archive URLs and checksums are also available in [`build/source-lock.json`](build/source-lock.json). See [the source-distribution details and verification limits](THIRD_PARTY_NOTICES.md#source-access-and-redistribution).
+Maintainers run `pnpm source:release` in the Git checkout to generate `.local/artifacts/cleverpig-dsh-workspace-guard-0.2.1-source.tar.gz`; `pnpm source:release --output <directory>` selects another destination. It includes the current tracked project files, four pinned upstream archives, and a checksum manifest. Publish that companion archive beside the matching release and link it from the package’s release documentation. Upstream archive URLs and checksums are also available in [`build/source-lock.json`](build/source-lock.json). See [the source-distribution details and verification limits](THIRD_PARTY_NOTICES.md#source-access-and-redistribution).
