@@ -1,6 +1,6 @@
 # Upstream generation and provenance
 
-The release is generated from exact official npm build dependencies at DSH 0.2.1-rc.5. The eleven selected module entries are listed in build/upstream.mjs. They are not maintained as copied source files.
+The release is generated from exact official npm build dependencies at DSH 0.2.1-rc.5. The twelve selected module inputs are listed in build/upstream.mjs, including the stateless atomic-write lock helper bundled for standalone offline recovery. They are not maintained as copied source files.
 
 ## Build
 
@@ -12,7 +12,7 @@ For an intentional supported-upstream update, review the dependency changes, ref
 
 The checked transformations retain Purge #22 and #48. A changed input hash or unexpected transformation count fails the development build. It does not install another runtime tool restriction.
 
-All eleven selected official entries have no relative ESM imports in the inspected release. Their package imports connect selected native implementations in one graph. Build allowlists control bundled packages; host service contracts and native resources remain external. Standalone diff, yaml and zod are bundled from locked development dependencies.
+The selected official inputs have no relative ESM imports in the inspected release. Their package imports connect selected native implementations in one graph. Build allowlists control bundled packages; host service contracts and native resources remain external. Standalone diff, yaml and zod are bundled from locked development dependencies. The lock helper adds no runtime peer requirement.
 
 ## Release records
 

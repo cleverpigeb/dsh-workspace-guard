@@ -8,7 +8,7 @@ Automatic setup uses the Desktop profile's native HMR service (DSH's configurati
 
 New chats use the updated tool preset after automatic reload. DSH retains each existing agent's preset revision, including the revision inherited by its children. To refresh all existing chats, finish ongoing work and restart DSH normally; a genuine cold resume also mounts the current preset. Opening a tab for an agent that is still live retains that agent's revision. Installation and removal follow DSH's native resource lifecycle.
 
-The CLI is optional diagnostics and recovery tooling. `doctor` inspects compatibility and owned configuration; `plan` shows the proposed changes. Offline recovery commands retain their explicit profile and stopped-host acknowledgements. See CONFIGURATION.md.
+The CLI is optional diagnostics and recovery tooling. `doctor` inspects compatibility and owned configuration; `plan` shows the proposed changes. `recover-lock` previews residual lock records and supplies the snapshot digest needed for explicit offline cleanup. Offline recovery commands retain their explicit profile and stopped-host acknowledgements. See CONFIGURATION.md.
 
 The host must provide the matching packaged Windows ACL runner. The upstream source-tree fallback is not a portable deployment substitute.
 
@@ -20,9 +20,9 @@ Removal preserves later edits or reports conflicts. An edited owned identity or 
 
 DSH 0.2.1-rc.5 can finish uninstalling after a cleanup error. If manually edited ownership records cause this, retain the patch and receipt and follow CONFIGURATION.md's offline recovery procedure. Normal disable and uninstall restore configuration automatically.
 
-Updates to the scoped package reuse its valid version-2 receipts. For an earlier unscoped development build, first remove that bundle through DSH, then install `@cleverpig/dsh-workspace-guard`. An active receipt containing a different package name is reported before configuration writes. Use the previous verified package when rolling back an unsuccessful upgrade, and retain its ownership receipt until recovery completes.
+Version 1.0.0 reuses valid version-2 receipts from scoped v0.2.1. For an earlier unscoped development build, first remove that bundle through DSH, then install `@cleverpig/dsh-workspace-guard`. An active receipt containing a different package name is reported before configuration writes. Use the previous verified package when rolling back an unsuccessful upgrade, and retain its ownership receipt until recovery completes.
 
 The plugin introduces no separate ACL reset procedure. Native ACL resource lifecycle remains native; do not perform blanket ACL resets.
 
-README authoring remains with Antigravity. The English and Chinese installation guidance has been reviewed against this implementation.
+README authoring remains with Antigravity. Its v1.0.0 update follows implementation validation.
 Developer builds use pnpm build:release. A bare build script is intentionally absent because npm treats that name as a Git-dependency preparation trigger and installs development dependencies.

@@ -5,8 +5,19 @@ import { createHash, randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
-import { isMap, isSeq, parseDocument, type Document, type YAMLMap, type YAMLSeq } from "yaml";
+import {
+  isMap,
+  isNode,
+  isSeq,
+  parseDocument,
+  visit,
+  type Document,
+  type YAMLMap,
+  type YAMLSeq,
+} from "yaml";
 import { validateBundleVersion } from "./compatibility.js";
+import { withConfigurationLock } from "./configuration-lock.js";
+export { recoverConfigurationLocks } from "./configuration-lock.js";
 
 export const PACKAGE_NAME = "@cleverpig/dsh-workspace-guard";
 export const REPLACEMENTS: Record<string, string> = {
@@ -91,9 +102,6 @@ function overlaySource(overlays: Row[] = []): string {
   for (const row of overlays) append(doc, row);
   return String(doc);
 }
-function laterLayers(input: PreviewInput): string[] {
-  return [input.homePatch ?? "[]", overlaySource(input.overlays)];
-}
 function indexRows(entries: Row[], result = new Map<string, Row>()): Map<string, Row> {
   for (const row of entries) {
     if (row.id) {
@@ -104,28 +112,56 @@ function indexRows(entries: Row[], result = new Map<string, Row>()): Map<string,
   }
   return result;
 }
-/** Mirror the formal boot loader's replacement, insertion and name-guard rules. */
-export function composeLayers(layers: string[]): Row[] {
+/** The addressing map intentionally follows native insertion-time indexing. */
+function composition(layers: Row[][] = []) {
   const tree: Row[] = [],
-    index = new Map<string, Row>();
-  for (const source of layers)
-    for (const patch of rows(source)) {
+    address = new Map<string, Row>();
+  let finalIndex: Map<string, Row> | undefined;
+  const apply = (entries: Row[], applied?: (patch: Row, target: Row) => void): void => {
+    for (const patch of entries) {
       const { id, name, insert, ...fields } = patch;
       if (insert) {
         if (!Array.isArray(insert)) throw new Error("insert must be an array.");
-        const parent = id ? index.get(id) : undefined;
+        const parent = id ? address.get(id) : undefined;
         if (id && (!parent || !parent.group))
           throw new Error(`Insert target is missing or not a group: ${id}`);
         const added = clone(insert);
-        (parent ? (parent.config ??= []) : tree).push(...added);
-        indexRows(added, index);
+        if (parent && !Array.isArray(parent.config)) parent.config = [];
+        (parent ? parent.config : tree).push(...added);
+        indexRows(added, address);
       } else {
-        const target = index.get(id);
-        if (target && (!name || target.name === name)) Object.assign(target, clone(fields));
+        const target = address.get(id);
+        if (target && (!name || target.name === name)) {
+          applied?.(patch, target);
+          Object.assign(target, clone(fields));
+        }
       }
     }
-  return tree;
+    finalIndex = undefined;
+  };
+  for (const layer of layers) apply(layer);
+  return { tree, apply, index: () => (finalIndex ??= indexRows(tree)) };
 }
+/** Mirror the formal boot loader's replacement, insertion and name-guard rules. */
+export function composeLayers(layers: string[]): Row[] {
+  return composition(layers.map(rows)).tree;
+}
+function planning(input: PreviewInput) {
+  const doc = document(input.patch),
+    profileRows = doc.toJS({ maxAliasCount: 100 }) as Row[];
+  const bundles = input.bundleLayers.map(rows),
+    later = [rows(input.homePatch ?? "[]"), clone(input.overlays ?? [])];
+  const explicit = new Map<string, Set<string>>();
+  for (const list of [profileRows, ...later])
+    for (const row of list) {
+      if (!row.id || !row.config || typeof row.config !== "object") continue;
+      const keys = explicit.get(row.id) ?? new Set<string>();
+      for (const key of Object.keys(row.config)) keys.add(key);
+      explicit.set(row.id, keys);
+    }
+  return { doc, profileRows, bundles, later, explicit };
+}
+type Planning = ReturnType<typeof planning>;
 function append(doc: Document, entry: Row, key?: string): void {
   const node = doc.createNode(entry) as YAMLMap;
   if (key) node.commentBefore = MARKER + key;
@@ -246,29 +282,145 @@ function undoPreset(config: Row, pairs: Pair[]): Row {
   }
   return result;
 }
-function restoreOwned(doc: Document, receipt: GuardReceipt | undefined, layers: string[]): void {
+function restoreOwned(
+  doc: Document,
+  receipt: GuardReceipt | undefined,
+  plan: Planning,
+): Row[] | undefined {
   if (!receipt || receipt.status !== "active") return;
+  const nodes = (doc.contents as YAMLSeq).items;
   const saved = receipt.owned.map((owned) => ({ owned, node: marked(doc, owned) }));
-  for (const { node } of saved) {
-    const list = (doc.contents as YAMLSeq).items;
-    list.splice(list.indexOf(node), 1);
+  const ownedNodes = new Set(saved.map((item) => item.node));
+  const residuals = new Map<unknown, YAMLMap>();
+  for (const { owned, node } of saved)
+    if (owned.kind === "replacement") {
+      const residual = node.clone() as YAMLMap,
+        inserted = residual.get("insert", true);
+      if (!isSeq(inserted)) continue; // The ownership validation below reports this.
+      const ownedId = owned.installed.insert[0].id;
+      inserted.items = inserted.items.filter((item) => !isMap(item) || item.get("id") !== ownedId);
+      if (inserted.items.length) {
+        residual.commentBefore =
+          residual.commentBefore
+            ?.split("\n")
+            .filter((line) => line.trim() !== MARKER + owned.key)
+            .join("\n") || undefined;
+        residuals.set(node, residual);
+      }
+    }
+  const disappearing = new Set(
+    receipt.owned
+      .filter((item) => item.kind === "replacement" || item.kind === "service")
+      .map((item) => item.installed.insert[0].id),
+  );
+  const ownedPositions = new Map(
+    saved
+      .filter((item) => item.owned.kind === "preset" || item.owned.kind === "purge")
+      .map((item) => [item.owned.installed.id, nodes.indexOf(item.node)]),
+  );
+  const effective = composition(plan.bundles),
+    consumed = new Set<unknown>();
+  // Only consume overrides which really matched at their position in the native
+  // patch stream. Earlier unmatched and name-mismatched patches remain untouched.
+  nodes.forEach((node, position) => {
+    const row = plan.profileRows[position];
+    if (row.insert && disappearing.has(row.id))
+      throw new Error(`Cannot migrate an insertion targeting an owned provider: ${row.id}.`);
+    effective.apply([row], (_patch, target) => {
+      if (
+        !ownedNodes.has(node as YAMLMap) &&
+        (disappearing.has(target.id) || position > (ownedPositions.get(target.id) ?? Infinity))
+      )
+        consumed.add(node);
+    });
+  });
+  const effectiveIndex = effective.index();
+  verifyEffectiveServices(receipt, effectiveIndex);
+  for (const source of plan.later)
+    homeConflicts(
+      source,
+      new Set([
+        ...disappearing,
+        ...receipt.owned
+          .filter(
+            (item) => item.kind === "preset" || item.kind === "purge" || item.kind === "disable",
+          )
+          .map((item) => item.installed.id),
+      ]),
+    );
+  const retained: Row[] = [];
+  const comments: string[] = [];
+  const collectComments = (node: unknown, marker?: string): void => {
+    if (isNode(node))
+      visit(node, (_key, item) => {
+        if (isNode(item)) {
+          for (const text of [item.commentBefore, item.comment])
+            if (text) {
+              const kept = text
+                .split("\n")
+                .filter((line) => line.trim() !== marker)
+                .join("\n");
+              if (kept) comments.push(kept);
+            }
+        }
+      });
+  };
+  const savedByNode = new Map(saved.map((item) => [item.node, item.owned]));
+  for (const node of nodes) {
+    const owned = savedByNode.get(node as YAMLMap);
+    if (!owned) {
+      if (consumed.has(node)) collectComments(node);
+    } else if (!residuals.has(node)) collectComments(node, MARKER + owned.key);
+    else {
+      // The residual clone already retains wrapper/sequence/unrelated-child
+      // comments. Only the removed owned child's comments need relocating.
+      const inserted = (node as YAMLMap).get("insert", true);
+      if (isSeq(inserted))
+        for (const child of inserted.items)
+          if (isMap(child) && child.get("id") === owned.installed.insert[0].id)
+            collectComments(child, MARKER + owned.key);
+    }
   }
+  if (comments.length) doc.comment = [doc.comment, ...comments].filter(Boolean).join("\n");
+  for (let position = nodes.length - 1; position >= 0; position--) {
+    const node = nodes[position];
+    const residual = residuals.get(node);
+    if (residual) {
+      // Unrelated children stay at the original insertion position so later
+      // native overrides still see them, with their YAML comments intact.
+      nodes[position] = residual;
+      retained.unshift(residual.toJSON() as Row);
+    } else if (ownedNodes.has(node as YAMLMap) || consumed.has(node)) {
+      // Non-marker comments survive in a readable trailing block, including
+      // comments inside owned nodes when native deltas replace those nodes.
+      nodes.splice(position, 1);
+    } else retained.unshift(plan.profileRows[position]);
+  }
+  const live = composition([...plan.bundles, retained]);
+  const lowerTree = clone(live.tree);
+  const emit = (row: Row): void => {
+    append(doc, row);
+    live.apply([row]);
+  };
   for (const { owned, node } of saved) {
     const current = node.toJSON() as Row,
       installed = owned.installed,
-      liveIndex = indexRows(composeLayers([...layers, String(doc)]));
+      liveIndex = live.index();
     if (owned.kind === "disable") {
       identity(current, installed);
       if (current.disabled !== true)
         throw new Error(`Owned native disable changed: ${installed.id}.`);
       const extras = { ...current };
       delete extras.disabled;
-      if (Object.keys(extras).some((key) => key !== "id" && key !== "name")) append(doc, extras);
+      if (Object.keys(extras).some((key) => key !== "id" && key !== "name")) emit(extras);
     } else if (owned.kind === "replacement") {
       if (current.id !== installed.id || !Array.isArray(current.insert))
         throw new Error(`Owned insertion changed: ${owned.key}.`);
       const expected = installed.insert[0],
-        replacement = current.insert.find((row: Row) => row.id === expected.id);
+        markedReplacement = current.insert.find((row: Row) => row.id === expected.id),
+        replacement = effectiveIndex.get(expected.id);
+      if (!markedReplacement) throw new Error(`Owned replacement removed: ${expected.id}.`);
+      identity(markedReplacement, expected);
       if (!replacement) throw new Error(`Owned replacement removed: ${expected.id}.`);
       identity(replacement, expected);
       const live = liveIndex.get(owned.origin!.id);
@@ -278,62 +430,53 @@ function restoreOwned(doc: Document, receipt: GuardReceipt | undefined, layers: 
       updated.id = live.id;
       updated.name = live.name;
       const fields = changedFields(live, updated);
-      if (Object.keys(fields).length) append(doc, { id: live.id, name: live.name, ...fields });
-      const unrelated = current.insert.filter((row: Row) => row !== replacement);
-      if (unrelated.length) append(doc, { ...current, insert: unrelated });
+      if (Object.keys(fields).length) emit({ id: live.id, name: live.name, ...fields });
     } else if (owned.kind === "preset") {
       identity(current, installed);
       const live = liveIndex.get(installed.id);
       if (!live || live.name !== installed.name)
         throw new Error(`Preset origin changed: ${installed.id}.`);
+      const effectivePreset = effectiveIndex.get(installed.id);
+      if (!effectivePreset) throw new Error(`Preset origin changed: ${installed.id}.`);
       const merged = mergeDelta(
           owned.origin!.config,
-          undoPreset(current.config, owned.pairs!),
+          undoPreset(effectivePreset.config, owned.pairs!),
           live.config,
         ),
-        extra = changedFields(installed, current);
+        extra = changedFields({ ...owned.origin, ...installed }, effectivePreset);
       delete extra.config;
       if (!same(merged, live.config) || Object.keys(extra).length)
-        append(doc, { id: live.id, name: live.name, ...extra, config: merged });
+        emit({ id: live.id, name: live.name, ...extra, config: merged });
     } else if (owned.kind === "purge") {
       identity(current, installed);
       if (current.isolate?.permissionPresets !== LABEL)
         throw new Error("Owned Purge isolation changed.");
-      const cleaned = clone(current);
+      const cleaned = clone(effectiveIndex.get(installed.id)!);
       if (owned.origin!.isolate?.permissionPresets === undefined)
         delete cleaned.isolate.permissionPresets;
       else cleaned.isolate.permissionPresets = clone(owned.origin!.isolate.permissionPresets);
       if (!Object.keys(cleaned.isolate).length && !owned.origin!.isolate) delete cleaned.isolate;
       if (!owned.origin!.inject?.includes("permissionPresets"))
         cleaned.inject = cleaned.inject.filter((name: string) => name !== "permissionPresets");
-      const baseline = {
-        id: installed.id,
-        name: installed.name,
-        inject: owned.origin!.inject,
-        ...(owned.origin!.isolate ? { isolate: owned.origin!.isolate } : {}),
-      };
+      const baseline = owned.origin!;
       const live = liveIndex.get(installed.id);
       if (!live || live.name !== installed.name) throw new Error("Purge origin changed.");
       const fields = changedFields(live, mergeDelta(baseline, cleaned, live));
-      if (Object.keys(fields).length) append(doc, { id: live.id, name: live.name, ...fields });
+      if (Object.keys(fields).length) emit({ id: live.id, name: live.name, ...fields });
     } else if (!same(current, installed))
       throw new Error(
         `Guard bridge/facade was edited: ${owned.key}; preserve and resolve before removal.`,
       );
   }
+  return lowerTree;
 }
 function ownId(scope: string, row: Row): string {
   return `workspace-guard-${row.id}-${hash(scope + ":" + row.id).slice(0, 8)}`;
 }
-function explicitConfig(input: PreviewInput, id: string, key: string): boolean {
-  return [input.patch, ...laterLayers(input)].some((source) =>
-    rows(source).some((row) => row.id === id && row.config && key in row.config),
-  );
-}
-function freshDefaults(input: PreviewInput, original: Row, replacement: Row): void {
+function freshDefaults(plan: Planning, original: Row, replacement: Row): void {
   if (
     original.name === "@deepseek-ai/dsh-sandbox-policy" &&
-    !explicitConfig(input, original.id, "mode") &&
+    !plan.explicit.get(original.id)?.has("mode") &&
     (!original.config?.mode ||
       (js(original.config.mode) && /DSH_PERMISSION_MODE/.test(original.config.mode.__jsExpr)))
   )
@@ -343,7 +486,7 @@ function freshDefaults(input: PreviewInput, original: Row, replacement: Row): vo
     };
   if (
     original.name === "@deepseek-ai/dsh-user-approval" &&
-    !explicitConfig(input, original.id, "policy") &&
+    !plan.explicit.get(original.id)?.has("policy") &&
     (!original.config?.policy ||
       (js(original.config.policy) && /DSH_PERMISSION_MODE/.test(original.config.policy.__jsExpr)))
   )
@@ -357,7 +500,7 @@ function freshDefaults(input: PreviewInput, original: Row, replacement: Row): vo
   // Native permission presets infer their fresh default from the composed shell
   // and approval knobs. Explicit configuration/settings and existing logs win.
 }
-function homeConflicts(source: string, affected: Set<string>): void {
+function homeConflicts(source: Row[], affected: Set<string>): void {
   const inspect = (entries: Row[]): void => {
     for (const row of entries) {
       if (
@@ -374,10 +517,13 @@ function homeConflicts(source: string, affected: Set<string>): void {
       if (Array.isArray(row.config?.plugins)) inspect(row.config.plugins);
     }
   };
-  inspect(rows(source));
+  inspect(source);
 }
 /** The bridge must bind one available root authority without changing Purge eligibility. */
-function requireRootPermissionAuthority(tree: Row[]): void {
+function requireRootPermissionAuthority(
+  tree: Row[],
+  permissionName = "@deepseek-ai/dsh-permission-presets",
+): void {
   type Eligibility = "enabled" | "disabled" | "dynamic";
   type Realm = "root" | "scoped" | "dynamic";
   const rootAuthorities: string[] = [],
@@ -404,7 +550,7 @@ function requireRootPermissionAuthority(tree: Row[]): void {
             ? "scoped"
             : "dynamic";
       }
-      if (row.name === "@deepseek-ai/dsh-permission-presets" && state !== "disabled") {
+      if (row.name === permissionName && state !== "disabled") {
         if (state === "enabled" && realm === "root") rootAuthorities.push(row.id ?? "<anonymous>");
         else if (realm !== "scoped") ambiguous.push(row.id ?? "<anonymous>");
       }
@@ -417,9 +563,38 @@ function requireRootPermissionAuthority(tree: Row[]): void {
       "Unsupported composition: activation requires exactly one statically enabled root permission authority; disabled, scoped-away or dynamically eligible authority cannot be bridged without changing Purge behavior.",
     );
 }
-function verifyActive(input: PreviewInput, receipt: GuardReceipt): void {
-  const current = composeLayers([...input.bundleLayers, input.patch, ...laterLayers(input)]),
+function verifyEffectiveServices(receipt: GuardReceipt, index: Map<string, Row>): void {
+  for (const owned of receipt.owned) {
+    if (owned.kind === "service") {
+      const expected = owned.installed.insert[0],
+        current = index.get(expected.id);
+      const normalized = current && { ...current };
+      if (normalized?.disabled === false) delete normalized.disabled;
+      if (!same(normalized, expected))
+        throw new Error(
+          `Effective Guard bridge/facade was edited: ${owned.key}; preserve and resolve before removal.`,
+        );
+    } else if (owned.kind === "purge") {
+      const current = index.get(owned.installed.id);
+      if (
+        !current ||
+        current.name !== owned.installed.name ||
+        current.isolate?.permissionPresets !== LABEL ||
+        !Array.isArray(current.inject) ||
+        !current.inject.every((item: unknown) => typeof item === "string") ||
+        !current.inject.includes("permissionPresets")
+      )
+        throw new Error(
+          "Effective Purge permission isolation/dependency changed; preserve and resolve before removal.",
+        );
+    }
+  }
+}
+function verifyActive(plan: Planning, receipt: GuardReceipt, lowerTree: Row[]): void {
+  const current = composition([...plan.bundles, plan.profileRows, ...plan.later]).tree,
     index = indexRows(current);
+  verifyEffectiveServices(receipt, index);
+  requireRootPermissionAuthority(current, `${PACKAGE_NAME}/permission`);
   const origins = new Map(
     receipt.owned
       .filter((item) => item.kind === "replacement")
@@ -437,15 +612,9 @@ function verifyActive(input: PreviewInput, receipt: GuardReceipt): void {
       .filter((item) => item.kind === "preset" || item.kind === "purge")
       .map((item) => item.installed.id),
   ]);
-  for (const source of laterLayers(input)) homeConflicts(source, affected);
-  const lowerDoc = document(input.patch);
-  for (const item of receipt.owned) {
-    const node = marked(lowerDoc, item),
-      list = (lowerDoc.contents as YAMLSeq).items;
-    list.splice(list.indexOf(node), 1);
-  }
-  const lower = indexRows(composeLayers([...input.bundleLayers, String(lowerDoc)]));
-  requireRootPermissionAuthority(composeLayers([...input.bundleLayers, String(lowerDoc)]));
+  for (const source of plan.later) homeConflicts(source, affected);
+  const lower = indexRows(lowerTree);
+  requireRootPermissionAuthority(lowerTree);
   for (const [id, item] of origins) {
     const native = index.get(id),
       guard = index.get(item.installed.insert[0].id);
@@ -484,14 +653,15 @@ function verifyActive(input: PreviewInput, receipt: GuardReceipt): void {
       throw new Error(
         `Underlying preset changed after activation: ${owned.installed.id}; review after removal.`,
       );
+    const pairKey = (path: string[], id: string) => JSON.stringify([...path, id]);
+    const pairs = new Map(owned.pairs!.map((item) => [pairKey(item.path, item.original.id), item]));
+    const guards = new Map(
+      owned.pairs!.map((item) => [pairKey(item.path, item.replacement.id), item]),
+    );
     const inspect = (entries: Row[], path: string[]): void => {
       for (const row of entries) {
-        const pair = owned.pairs!.find(
-          (item) => same(item.path, path) && item.original.id === row.id,
-        );
-        const guard = owned.pairs!.find(
-          (item) => same(item.path, path) && item.replacement.id === row.id,
-        );
+        const pair = pairs.get(pairKey(path, row.id));
+        const guard = guards.get(pairKey(path, row.id));
         if (REPLACEMENTS[row.name] && row.disabled !== true)
           throw new Error(`New unpaired native preset row: ${owned.installed.id}/${row.id}.`);
         if (pair) {
@@ -514,7 +684,14 @@ export function previewConfiguration(
   input: PreviewInput,
   action: "activate" | "deactivate" | "rollback",
 ): GuardPlan {
-  const doc = document(input.patch),
+  return previewPlanned(input, action, planning(input));
+}
+function previewPlanned(
+  input: PreviewInput,
+  action: ConfigurationAction,
+  plan: Planning,
+): GuardPlan {
+  const doc = plan.doc,
     profile = resolve(input.profile),
     receipt = input.receipt;
   if (receipt && (receipt.version !== 2 || receipt.profile !== profile))
@@ -534,9 +711,9 @@ export function previewConfiguration(
       throw new Error(
         `The active receipt belongs to a different package name. Remove the earlier development bundle through DSH before installing ${PACKAGE_NAME}; existing configuration was preserved.`,
       );
-    const probe = document(input.patch);
-    restoreOwned(probe, receipt, input.bundleLayers);
-    verifyActive(input, receipt);
+    const probe = doc.clone();
+    const lowerTree = restoreOwned(probe, receipt, plan)!;
+    verifyActive(plan, receipt, lowerTree);
     return {
       patch: input.patch,
       changed: false,
@@ -544,7 +721,7 @@ export function previewConfiguration(
       summary: ["Already active; native pairs and ownership remain in place."],
     };
   }
-  restoreOwned(doc, receipt, input.bundleLayers);
+  restoreOwned(doc, receipt, plan);
   if (action !== "activate")
     return {
       patch: String(doc),
@@ -559,7 +736,7 @@ export function previewConfiguration(
         "Remove owned pairs and facade, restore native providers, preserve later unrelated edits. No safety disables remain.",
       ],
     };
-  const tree = composeLayers([...input.bundleLayers, String(doc)]),
+  const tree = composition([...plan.bundles, doc.toJS({ maxAliasCount: 100 })]).tree,
     index = indexRows(tree),
     owned: Owned[] = [];
   requireRootPermissionAuthority(tree);
@@ -582,7 +759,7 @@ export function previewConfiguration(
           id: ownId(group ?? "root", original),
           name: `${PACKAGE_NAME}/${REPLACEMENTS[original.name]}`,
         };
-        freshDefaults(input, original, replacement);
+        freshDefaults(plan, original, replacement);
         if (index.has(replacement.id))
           throw new Error(`Replacement id already exists: ${replacement.id}`);
         add("disable", `native:${original.id}`, {
@@ -688,9 +865,9 @@ export function previewConfiguration(
   for (const item of owned)
     if (item.kind === "replacement" || item.kind === "service")
       touched.add(item.installed.insert[0].id);
-  for (const source of laterLayers(input)) homeConflicts(source, touched);
+  for (const source of plan.later) homeConflicts(source, touched);
   const finalIndex = indexRows(
-    composeLayers([...input.bundleLayers, String(doc), ...laterLayers(input)]),
+    composition([...plan.bundles, doc.toJS({ maxAliasCount: 100 }), ...plan.later]).tree,
   );
   for (const id of replacedIds)
     if (finalIndex.get(id)?.disabled !== true)
@@ -717,8 +894,12 @@ async function noLink(path: string): Promise<void> {
   if ((await fs.lstat(path)).isSymbolicLink())
     throw new Error(`Refusing symbolic-link write target: ${path}`);
 }
-function recoverReceipt(text: string, patch: string): GuardReceipt | undefined {
+function recoverReceipt(
+  text: string,
+  patch: string,
+): { receipt?: GuardReceipt; needsFinalization: boolean } {
   let receipt: GuardReceipt | undefined = text ? JSON.parse(text) : undefined;
+  const needsFinalization = !!receipt?.transaction;
   if (receipt?.transaction) {
     const current = hash(patch);
     if (current === receipt.transaction.after) {
@@ -730,7 +911,7 @@ function recoverReceipt(text: string, patch: string): GuardReceipt | undefined {
         "Interrupted transaction has an externally changed third state; manual recovery required.",
       );
   }
-  return receipt;
+  return { receipt, needsFinalization };
 }
 async function loadProfile(
   options: ProfileOptions,
@@ -804,9 +985,17 @@ async function loadProfile(
       true,
     );
   const receiptText = await read(receiptPath, true);
-  const receipt = recoverReceipt(receiptText, patch);
+  const recovery = recoverReceipt(receiptText, patch);
   return {
-    input: { profile, patch, homePatch, bundleLayers, receipt, overlays: options.overlays },
+    input: {
+      profile,
+      patch,
+      homePatch,
+      bundleLayers,
+      receipt: recovery.receipt,
+      overlays: options.overlays,
+    },
+    needsFinalization: recovery.needsFinalization,
     selected,
     watched,
     patchPath,
@@ -863,12 +1052,9 @@ type ConfigurationAction = "activate" | "deactivate" | "rollback";
 function lifecycleAction(
   loaded: LoadedProfile,
   phase: "load" | "dispose",
+  plan: Planning,
 ): ConfigurationAction | undefined {
-  const tree = composeLayers([
-    ...loaded.input.bundleLayers,
-    loaded.input.patch,
-    ...laterLayers(loaded.input),
-  ]);
+  const tree = composition([...plan.bundles, plan.profileRows, ...plan.later]).tree;
   let enabled = false,
     disabled = false,
     found = false;
@@ -903,17 +1089,23 @@ export async function synchronizeInstalledConfiguration(
 ): Promise<GuardPlan | undefined> {
   if (phase === "dispose") {
     const profile = resolve(options.profile),
-      receipt = recoverReceipt(
+      recovery = recoverReceipt(
         await optional(join(profile, ".workspace-guard", "receipt.json")),
         await optional(join(profile, "cordis.patch.yml")),
       );
-    if (receipt?.status !== "active") return undefined;
+    if (recovery.receipt?.status !== "active" && !recovery.needsFinalization) return undefined;
   }
-  return transactConfiguration(options, (loaded) => lifecycleAction(loaded, phase), phase);
+  return transactConfiguration(
+    options,
+    (loaded, plan) => lifecycleAction(loaded, phase, plan),
+    phase,
+  );
 }
 async function transactConfiguration(
   options: ProfileOptions,
-  select: ConfigurationAction | ((loaded: LoadedProfile) => ConfigurationAction | undefined),
+  select:
+    | ConfigurationAction
+    | ((loaded: LoadedProfile, plan: Planning) => ConfigurationAction | undefined),
   lifecycle?: "load" | "dispose",
 ): Promise<GuardPlan | undefined> {
   const prepare = async () => {
@@ -922,12 +1114,19 @@ async function transactConfiguration(
         lifecycle ? lifecycle === "load" : select === "activate",
         lifecycle,
       ),
-      action = typeof select === "function" ? select(loaded) : select;
-    return { loaded, plan: action ? previewConfiguration(loaded.input, action) : undefined };
+      parsed = planning(loaded.input),
+      action = typeof select === "function" ? select(loaded, parsed) : select;
+    const plan = action ? previewPlanned(loaded.input, action, parsed) : undefined;
+    return {
+      loaded,
+      plan,
+      receiptChanged:
+        loaded.needsFinalization || (!!plan && !same(plan.receipt, loaded.input.receipt)),
+    };
   };
   const initial = await prepare();
   // A repeated host load must not touch the patch, receipt or lock directory.
-  if (!initial.plan?.changed) return initial.plan;
+  if (!initial.plan?.changed && !initial.receiptChanged) return initial.plan;
   const profile = resolve(options.profile),
     stateDir = join(profile, ".workspace-guard");
   const canonical = await fs.realpath(profile),
@@ -940,35 +1139,38 @@ async function transactConfiguration(
   await noLink(join(profile, "cordis.patch.yml"));
   await fs.mkdir(stateDir, { recursive: true, mode: 0o700 });
   await noLink(stateDir);
-  const lockPath = join(stateDir, "configuration.lock");
-  let lock;
-  try {
-    lock = await fs.open(lockPath, "wx", 0o600);
-    await lock.writeFile(JSON.stringify({ pid: process.pid, createdAt: new Date().toISOString() }));
-    const { loaded, plan } = await prepare();
-    if (!plan?.changed) return plan;
-    for (const [path, content] of loaded.watched)
-      if ((await optional(path)) !== content)
-        throw new Error(`Configuration changed during planning: ${path}.`);
-    const pending = {
-      ...plan.receipt,
-      transaction: {
-        before: hash(loaded.input.patch),
-        after: hash(plan.patch),
-        previous: loaded.input.receipt,
-      },
-    };
-    await atomicWrite(loaded.receiptPath, JSON.stringify(pending, null, 2) + "\n");
-    if ((await fs.readFile(loaded.patchPath, "utf8")) !== loaded.input.patch)
-      throw new Error("Patch changed before replacement; journal retained without overwrite.");
-    await noLink(loaded.patchPath);
-    await atomicWrite(loaded.patchPath, plan.patch);
-    await atomicWrite(loaded.receiptPath, JSON.stringify(plan.receipt, null, 2) + "\n");
-    return plan;
-  } finally {
-    if (lock) {
-      await lock.close();
-      await fs.rm(lockPath, { force: true });
-    }
-  }
+  return withConfigurationLock(
+    stateDir,
+    async () => {
+      const { loaded, plan, receiptChanged } = await prepare();
+      if (!plan?.changed && !receiptChanged) return plan;
+      for (const [path, content] of loaded.watched)
+        if ((await optional(path)) !== content)
+          throw new Error(`Configuration changed during planning: ${path}.`);
+      if (!plan?.changed) {
+        // A verified interrupted transaction needs a durable receipt commit even
+        // when the profile patch is already correct. Diagnostics never enter here.
+        const receipt = plan?.receipt ?? loaded.input.receipt;
+        if (receipt) await atomicWrite(loaded.receiptPath, JSON.stringify(receipt, null, 2) + "\n");
+        else await fs.unlink(loaded.receiptPath);
+        return plan;
+      }
+      const pending = {
+        ...plan.receipt,
+        transaction: {
+          before: hash(loaded.input.patch),
+          after: hash(plan.patch),
+          previous: loaded.input.receipt,
+        },
+      };
+      await atomicWrite(loaded.receiptPath, JSON.stringify(pending, null, 2) + "\n");
+      if ((await fs.readFile(loaded.patchPath, "utf8")) !== loaded.input.patch)
+        throw new Error("Patch changed before replacement; journal retained without overwrite.");
+      await noLink(loaded.patchPath);
+      await atomicWrite(loaded.patchPath, plan.patch);
+      await atomicWrite(loaded.receiptPath, JSON.stringify(plan.receipt, null, 2) + "\n");
+      return plan;
+    },
+    atomicWrite,
+  );
 }

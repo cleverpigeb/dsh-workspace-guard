@@ -18,14 +18,17 @@ const rules = [
 ];
 export function preservePurge() {
   const inputs = verifyUpstream();
+  const inputsByFile = new Map(inputs.map(input => [`${input.name}/${input.file}`, input]));
   const observed = new Map();
   const byFile = new Map(rules.map(rule => [pathKey(realpathSync(require.resolve(rule.specifier))), rule]));
   return {
     name: "preserve-unrelated-purge-behavior",
     transform(code, id) {
-      const input = inputs.find(record => pathKey(id).endsWith(`/node_modules/${record.name}/${record.file}`));
+      const key = pathKey(id);
+      const moduleRoot = key.lastIndexOf("/node_modules/");
+      const input = moduleRoot < 0 ? undefined : inputsByFile.get(key.slice(moduleRoot + "/node_modules/".length));
       if (input && sha256(code) !== input.sourceSha256) throw new Error(`Bundled upstream input differs from official source: ${input.specifier}`);
-      const rule = byFile.get(pathKey(id));
+      const rule = byFile.get(key);
       if (!rule) return;
       const original = code;
       for (const [before, after, expected] of rule.edits) {

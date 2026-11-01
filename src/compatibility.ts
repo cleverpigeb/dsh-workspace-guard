@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 export const SUPPORTED = {
   dsh: "0.2.1-rc.5",
   purge: "1.6.67",
-  guard: "0.2.1",
+  guard: "1.0.0",
 } as const;
 export function validateBundleVersion(
   name: string,

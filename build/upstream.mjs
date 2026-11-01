@@ -16,7 +16,7 @@ export const entries = {
   "plugin-tools": "@deepseek-ai/dsh-plugin-manager/tools",
 };
 
-export const selectedModules = [...Object.values(entries), "@deepseek-ai/dsh-sandbox"];
+export const selectedModules = [...Object.values(entries), "@deepseek-ai/dsh-sandbox", "@deepseek-ai/dsh-atomic-write"];
 export const packageName = (id) => id.startsWith("@") ? id.split("/").slice(0, 2).join("/") : id.split("/")[0];
 export const selectedPackages = [...new Set(selectedModules.map(packageName))];
 export const standalonePackages = ["diff", "yaml", "zod"];

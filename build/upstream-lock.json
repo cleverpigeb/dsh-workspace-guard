@@ -130,5 +130,17 @@
     "archiveSha256": "7c033bd900f6935d11bb3077da96a80942f9ef233595c1c8a447b19d1206b1af",
     "sourceSha256": "b56373befbfcfe281c17c8892e9a4b2cdcb96851290b3ed0ff56b08915e2f743",
     "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
+  },
+  {
+    "name": "@deepseek-ai/dsh-atomic-write",
+    "version": "0.2.1-rc.5",
+    "specifier": "@deepseek-ai/dsh-atomic-write",
+    "file": "lib/index.js",
+    "license": "MIT",
+    "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh-atomic-write/-/dsh-atomic-write-0.2.1-rc.5.tgz",
+    "integrity": "sha512-XFN8WAUsBbnfbO+pvL2qgM6Gy1kOqCL0Df01J8Bb7qjL0zSEx7N5IToqOU/tlrryNxp1b+6fxGv+Jvauk9TT8w==",
+    "archiveSha256": "5c5db0e5a2a9eabd66d4dcc4191c40464acbbb53462ffddb21bbcd5e0db1fbe3",
+    "sourceSha256": "872d7c1e6e9b267775199bdd3632870f82780d0a5ba047febc93fde94fde53f7",
+    "licenseSha256": "ebb4f09972aee8608be255debaf78451a68e95c290f55c240dec2ecfa16ea6be"
   }
 ]

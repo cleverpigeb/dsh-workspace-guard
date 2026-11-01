@@ -1,4 +1,40 @@
-# Acceptance — 0.2.1 automatic installation
+# Acceptance — 1.0.0 implementation candidate
+
+Validated locally on Windows x64 with Node 26.7.0, DSH 0.2.1-rc.5 and Purge 1.6.67. This candidate retains automatic installation, native permission selection and receipt schema 2. Antigravity's README/licence update and the final release archives follow this implementation. The records below distinguish current checks from historical results.
+
+## Current repair and build checks
+
+- 26 maintained-source configuration scenarios and 25 generated-runtime scenarios passed. The additional source-only case checks that a transaction callback is never retried. Coverage includes ordered effective overrides and name guards, disabled generated providers, nested preset edits, comments, unrelated insertion children, conflicting permission wiring, scoped v0.2.1 receipts, and native addressing after group configuration replacement.
+- Lock/recovery checks cover live and crashed native holders, dead legacy JSON records, concurrent migration, malformed records, reused process identifiers, takeover claims, canonical paths and changed snapshots. Before/after journal states finalize durably; third states are rejected. Receipt-only commits preserve patch timestamps, diagnostics stay read-only, and finalized no-op loads stay write-free.
+- 36 release/build scenarios passed: valid directory layouts; file/directory and ancestor collisions in both orders; slash-terminated regular files; unsafe members, roots, sizes and checksums; each missing root notice; source archive streaming/hash/size; exact and alternate pnpm input paths; and immutable-version retry behavior.
+- TypeScript, Oxlint, Actionlint and verification of all 12 pinned official inputs passed. Runtime generation and provenance completed. All 25 recorded output hashes, 12 imported provider/adapter namespaces, the shared clean helper, both host identities and preserved Purge #22/#48 transformations passed checks. The bundled lock helper adds one MIT notice, bringing generated licence sections to 15; it adds no runtime peer.
+- Independent final review found no remaining actionable regression in the changed configuration, lock, CLI and release code. The exact local tarball inventory, checksum and extracted-package CLI results are recorded with the ignored implementation artifacts.
+
+## Current isolated host evidence
+
+Actual Cordis Loader, app-boot, HMR and PluginManager passed installation, disable, restart and removal against the rebuilt candidate. Package operations and provider implementations in this lifecycle fixture were explicit stubs. Later settings migrated back to native providers, and restoration occurred before fixture package deletion.
+
+A separate real-provider fixture automatically loaded ten compiled providers/adapters. The exact copied Purge fresh-session hook retained Workspace Write. The native file tool wrote inside the workspace and rejected the external sentinel. Explicit root Full Access allowed an external write, and returning to Workspace succeeded. There were zero approval requests and zero owned processes after disposal. Eighteen sampled normal source/profile hashes had zero drift; normal Desktop configuration and sessions were untouched.
+
+The official Bash smoke did not establish shell effects. Native executable discovery first selected the Windows WSL launcher and failed with `Bash/E_ACCESSDENIED`. A fixture-only subclass then changed only the first command argument to the existing bundled Bash executable; startup failed with `couldn't create signal pipe, Win32 error 5` (exit 3221225794). One clean pinned official sandbox/provider control reproduced that exact failure without Guard, Purge or OPS runtime. This is an inherited native fixture limitation, not a confirmed Guard regression. No new OPS startup/cache run was performed; earlier OPS evidence retains its original version and scope. Initial loader-setup failures and the shell failures remain in local evidence.
+
+## Performance scope
+
+Source inspection and focused checks establish removal of duplicate work in eight places: reuse of the lower composed tree; one parsed planning context and incremental restoration baseline; scope/id maps for nested preset pairs; reuse of explicit-field and overlay data; one normalized transform path and precomputed input lookup; Set membership for tracked source files; one filesystem stat per source input; and streamed archive hashing with metadata size lookup. Inputs are still reread after lock acquisition and checked before writing. Fresh native path checks, facade forwarding/reflection, shared identities and independent integrity checks remain intact.
+
+No comparative benchmarks or numerical speedup claims were made. Archive timestamp reproducibility is outside this work.
+
+## Current limits and release follow-up
+
+Normal Desktop GUI activation, genuine npm OIDC publication and a hosted v1.0.0 installation remain unverified. Native Windows enforcement remains partial; the accepted native PowerShell failure, retained per-agent presets, teardown-error removal behavior and older untested routes remain as recorded below. The native Bash control above adds a current shell limitation, without erasing historical OPS passes.
+
+Hosted Actions run 41318207959 previously verified the immutable v0.2.1 archives and skipped an identical published npm version. It did not exercise trusted publishing. Final v1.0.0 npm/source archives and the tag must represent the revision after Antigravity's documentation changes, with verification repeated against those exact bytes. The local candidate is not a published release.
+
+Local evidence is under `.local/release-1.0.0/`: configuration source/generated results, release fixtures, native lifecycle/smoke/control reports and package verification. Harnesses and implementation records remain ignored. Sanitized current results and unchanged historical data are separated in `acceptance-results.json`.
+
+## Historical record — 0.2.1 automatic installation
+
+The remainder preserves the earlier acceptance snapshot, including its then-current publication status. It is not a claim that all older cases were rerun for 1.0.0.
 
 This revision moves the owned configuration transaction into the plugin lifecycle. Installing/enabling applies it automatically; disabling/removing restores it through DSH's normal configuration watcher.
 

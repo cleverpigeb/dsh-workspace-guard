@@ -16,12 +16,19 @@ These optional diagnostic and offline recovery commands require an explicit prof
 - plan: print the proposed activation patch.
 - activate: inspect or repair offline activation; write only with --apply --host-stopped.
 - deactivate / rollback: preview removal of owned changes; the same write acknowledgements apply.
+- recover-lock: preview the primary/migration locks and takeover claims, returning a snapshot digest. Offline removal requires --apply --host-stopped --expected-snapshot <sha256>.
 
 Use --home and --host-modules when the DSH home or host package root cannot be inferred. The helper does not install packages or stop any host. --host-stopped is an operator acknowledgement.
 
 ## Ownership and recovery
 
 The receipt lives in the target profile's .workspace-guard directory. Writes use a lock, temporary files, atomic replacement and a transaction journal. An already valid configuration produces no additional write. A concurrent configuration change or an ambiguous interrupted transaction is reported with the existing contents retained.
+
+Version 1.0.0 validates effective profile overrides as well as the marked ownership records. Applicable later settings on generated providers, including disabled states and nested preset edits, are restored to native identities. Conflicting effective Purge isolation, bridge/facade wiring or root permission authority is reported before configuration is declared ready.
+
+The bundled official writer lock uses the existing configuration.lock path and a bounded acquisition wait. A legacy JSON lock is converted under a migration mutex only when its recorded process is demonstrably gone. Recognized interrupted transactions are finalized during authorized synchronization even when the patch itself needs no change. Receipt-only finalization does not rewrite the patch; doctor and plan remain read-only. The receipt schema remains version 2.
+
+For malformed locks, reused process identifiers or interrupted takeover claims, first stop every host and writer using the profile. Run recover-lock to inspect the exact files and obtain snapshotSha256, then repeat with --apply --host-stopped --expected-snapshot <snapshotSha256>. Keep the profile exclusively offline throughout recovery. The command removes only the identified lock records and claims, after checking their paths and snapshot; configuration and receipt contents are retained. A changed snapshot requires another preview. It does not stop processes or establish that the host is stopped.
 
 DSH bundle removal first deselects the bundle and reloads it, allowing the lifecycle disposer to restore the previous native providers and remove the scoped adapter. The manager then removes the package and reloads the restored configuration. Later unrelated settings are preserved; conflicting changes to owned identities are reported. Direct filesystem deletion bypasses DSH's lifecycle and requires receipt-based recovery.
 

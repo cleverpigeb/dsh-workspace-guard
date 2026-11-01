@@ -1,6 +1,8 @@
 # Publishing the tested npm archive
 
-The prepared workflow publishes `@cleverpig/dsh-workspace-guard` from the existing GitHub release assets. It does not build or repack them. No npm token is stored in the workflow. Its hosted execution and npm authorization remain unverified until a real run succeeds.
+The workflow publishes `@cleverpig/dsh-workspace-guard` from the existing GitHub release assets. It does not build or repack them. No npm token is stored in the workflow. Hosted run [41318207959](https://github.com/cleverpigeb/dsh-workspace-guard/actions/runs/41318207959) verified the v0.2.1 release checkout and assets, then skipped its identical published npm tarball. This establishes hosted verification and retry behavior; genuine npm OIDC publication remains unexercised.
+
+The v1.0.0 implementation candidate is prepared locally for Antigravity's documentation update. Create and test the final immutable archives after those edits; candidate archives are not the final release assets.
 
 ## One-time npm setup
 
@@ -46,4 +48,4 @@ For local inspection without credentials or publishing, use Node.js with `RELEAS
 
 To retry a published release, use **Actions → Publish to npm → Run workflow** and enter its exact stable tag. The same release, tag, archive and registry checks run again. The workflow must also exist on the default branch for this manual trigger. A retry does not bypass failed checks or missing npm trust configuration.
 
-After the first hosted run, inspect its logs and the public npm package version and record the result. The workflow preparation alone does not establish that hosted CI, trusted authentication or publication has succeeded.
+For the next genuine new-version publication, inspect the workflow logs and public npm tarball and record the result. Recheck the trusted-publisher relationship first because an unvalidated configuration can expire. An identical-version skip does not establish trusted authorization.

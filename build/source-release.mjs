@@ -3,8 +3,9 @@
 
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, createReadStream, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
+import { finished } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
 import { selectedPackages, standalonePackages } from "./upstream.mjs";
 
@@ -48,7 +49,8 @@ try {
       throw new Error(`Unexpected local/agent file in release source: ${file}`);
     }
     const from = join(root, file), to = join(stage, "project", file);
-    if (!lstatSync(from).isFile() || lstatSync(from).isSymbolicLink()) throw new Error(`Source must be a regular file: ${file}`);
+    const stat = lstatSync(from);
+    if (!stat.isFile() || stat.isSymbolicLink()) throw new Error(`Source must be a regular file: ${file}`);
     mkdirSync(dirname(to), { recursive: true });
     copyFileSync(from, to);
     return { file, sha256: sha256(readFileSync(to)) };
@@ -85,9 +87,16 @@ try {
   }, null, 2) + "\n");
   const archive = join(stage, "source.tar.gz");
   run("tar", ["-czf", archive, "-C", stage, "project", "upstream", "source-manifest.json"]);
-  const bytes = readFileSync(archive);
+  const digest = createHash("sha256");
+  const contents = createReadStream(archive);
+  for await (const chunk of contents) {
+    digest.update(chunk);
+  }
+  await finished(contents, { cleanup: true });
+  const bytes = statSync(archive).size;
+  const checksum = digest.digest("hex");
   renameSync(archive, destination);
-  console.log(JSON.stringify({ file: destination, bytes: bytes.length, sha256: sha256(bytes), projectFiles: project.length, upstreamArchives: inputs.length }, null, 2));
+  console.log(JSON.stringify({ file: destination, bytes, sha256: checksum, projectFiles: project.length, upstreamArchives: inputs.length }, null, 2));
 } finally {
   // Only this invocation's directory is removed; archive members are never extracted.
   if (!lstatSync(stage).isSymbolicLink() && realpathSync(stage) === stagePath && stagePath.startsWith(outputPath + sep)) {

@@ -15,9 +15,11 @@ const assert = (condition, message) => { if (!condition) throw new Error(message
 
 // Read regular tar members without extraction or third-party install-time dependencies.
 // Reject links, extensions, duplicates, unexpected roots and unsafe paths.
-export function readArchive(bytes) {
+export function readArchive(bytes, allowedRoots) {
   const tar = gunzipSync(bytes, { maxOutputLength: 512 * 1024 * 1024 });
   const files = new Map();
+  const members = new Map(), parents = new Set();
+  const roots = allowedRoots && new Set(allowedRoots);
   let offset = 0;
   const field = (header, start, length) => header.subarray(start, start + length).toString("utf8").split("\0")[0];
   while (offset + 512 <= tar.length) {
@@ -34,11 +36,21 @@ export function readArchive(bytes) {
     assert(path && !path.includes("\\") && !path.includes(":") && !path.startsWith("/") && !path.split("/").some(part => !part || part === "." || part === ".."), `Unsafe archive path: ${name}`);
     const type = field(header, 156, 1);
     assert(type === "" || type === "0" || type === "5", `Unsupported archive member: ${name}`);
+    assert(type === "5" || !name.endsWith("/"), `Regular archive member has trailing slash: ${name}`);
+    const parts = path.split("/");
+    assert(!roots || roots.has(parts[0]), `Unexpected archive root: ${path}`);
+    assert(!members.has(path), `Duplicate archive member: ${path}`);
+    for (let i = 1; i < parts.length; i++) {
+      const parent = parts.slice(0, i).join("/");
+      assert(members.get(parent) !== "file", `Archive member has a regular-file ancestor: ${path}`);
+      parents.add(parent);
+    }
+    assert(type === "5" || !parents.has(path), `Archive file conflicts with directory: ${path}`);
+    members.set(path, type === "5" ? "directory" : "file");
     const size = octal(field(header, 124, 12));
     assert(Number.isSafeInteger(size) && offset + 512 + size <= tar.length, "Truncated tar member");
     if (type === "5") assert(size === 0, "Directory has unexpected content");
     else {
-      assert(!files.has(path), `Duplicate archive file: ${path}`);
       files.set(path, tar.subarray(offset + 512, offset + 512 + size));
     }
     offset += 512 + Math.ceil(size / 512) * 512;
@@ -65,7 +77,7 @@ export function verifyArtifacts({ root, assets, tag }) {
   for (const [name, bytes] of [[npmName, npmBytes], [sourceName, sourceBytes]]) {
     assert(sums.get(name) === hash("sha256", bytes), `Release checksum mismatch: ${name}`);
   }
-  const packaged = readArchive(npmBytes);
+  const packaged = readArchive(npmBytes, ["package"]);
   const archivedManifest = JSON.parse(packaged.get("package/package.json")?.toString("utf8") ?? "null");
   assert(archivedManifest?.name === packageName && archivedManifest.version === version, "npm archive package identity mismatch");
   const equalCheckout = (path, bytes) => {
@@ -78,16 +90,19 @@ export function verifyArtifacts({ root, assets, tag }) {
   const tracked = spawnSync("git", ["ls-files", "-z"], { cwd: root, encoding: "utf8" });
   assert(tracked.status === 0, "Cannot read tagged Git file list");
   const projectFiles = tracked.stdout.split("\0").filter(path => path && path !== ".gitignore" && path !== ".gitattributes");
-  const runtimeFiles = projectFiles.filter(path => path.startsWith("lib/") || path.startsWith("locale/") || ["cordis.patch.yml", "icon.svg", "package.json"].includes(path));
+  const projectFileSet = new Set(projectFiles);
+  const requiredFiles = ["cordis.patch.yml", "icon.svg", "package.json", "LICENSE", "THIRD_PARTY_NOTICES.md"];
+  for (const path of requiredFiles) assert(projectFileSet.has(path), `Tagged required file is missing: ${path}`);
+  const runtimeFiles = projectFiles.filter(path => path.startsWith("lib/") || path.startsWith("locale/") || requiredFiles.includes(path));
   assert(runtimeFiles.some(path => path === "lib/index.js"), "Tagged runtime is missing");
   for (const path of runtimeFiles) equalCheckout(path, packaged.get(`package/${path}`));
-  const source = readArchive(sourceBytes);
+  const source = readArchive(sourceBytes, ["project", "upstream", "source-manifest.json"]);
   const sourceManifest = JSON.parse(source.get("source-manifest.json")?.toString("utf8") ?? "null");
   assert(sourceManifest?.project?.name === packageName && sourceManifest.project.version === version, "Source archive identity mismatch");
   assert(Array.isArray(sourceManifest.files) && sourceManifest.files.length === projectFiles.length, "Source project file count mismatch");
   const seen = new Set();
   for (const entry of sourceManifest.files) {
-    assert(projectFiles.includes(entry.file) && !seen.has(entry.file), "Unexpected or duplicate source manifest file");
+    assert(projectFileSet.has(entry.file) && !seen.has(entry.file), "Unexpected or duplicate source manifest file");
     seen.add(entry.file);
     const bytes = source.get(`project/${entry.file}`);
     equalCheckout(entry.file, bytes);

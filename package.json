@@ -1,6 +1,6 @@
 {
   "name": "@cleverpig/dsh-workspace-guard",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Restore compatibility between Purge and DSH Workspace mode",
   "license": "GPL-3.0-or-later",
   "publishConfig": {

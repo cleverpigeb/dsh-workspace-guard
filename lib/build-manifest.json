@@ -24,7 +24,7 @@
       "file": "approval.js",
       "imports": [
         "lib-KC55FOau.js",
-        "runtime-version-D-pGGZ-P.js"
+        "runtime-version-B-UUt-jE.js"
       ],
       "exports": [
         "APPROVAL_POLICIES",
@@ -38,7 +38,7 @@
     {
       "file": "cli.js",
       "imports": [
-        "configuration-Bdncr0Xc.js"
+        "configuration-BO-wcl1p.js"
       ],
       "exports": [
         "main"
@@ -46,7 +46,7 @@
       "modules": []
     },
     {
-      "file": "compatibility-Wuy-0_a1.js",
+      "file": "compatibility-BN9a0lpp.js",
       "imports": [
         "node:module",
         "node:path",
@@ -61,21 +61,25 @@
       "modules": []
     },
     {
-      "file": "configuration-Bdncr0Xc.js",
+      "file": "configuration-BO-wcl1p.js",
       "imports": [
-        "compatibility-Wuy-0_a1.js",
+        "compatibility-BN9a0lpp.js",
         "node:module",
         "node:path",
         "node:crypto",
-        "node:fs"
+        "node:fs",
+        "node:fs/promises",
+        "node:timers/promises"
       ],
       "exports": [
+        "a",
         "i",
         "n",
         "r",
         "t"
       ],
       "modules": [
+        "@deepseek-ai/dsh-atomic-write/lib/index.js",
         "yaml/dist/compose/compose-collection.js",
         "yaml/dist/compose/compose-doc.js",
         "yaml/dist/compose/compose-node.js",
@@ -154,11 +158,11 @@
       "file": "fs.js",
       "imports": [
         "lib-DWBq_88x.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "node:path",
+        "node:fs/promises",
         "@deepseek-ai/dsh-fs-local",
-        "@deepseek-ai/dsh-fs",
-        "node:fs/promises"
+        "@deepseek-ai/dsh-fs"
       ],
       "exports": [
         "SandboxedFileSystem",
@@ -171,7 +175,7 @@
     {
       "file": "index.js",
       "imports": [
-        "configuration-Bdncr0Xc.js",
+        "configuration-BO-wcl1p.js",
         "node:path"
       ],
       "exports": [
@@ -308,7 +312,7 @@
     {
       "file": "permission-bridge.js",
       "imports": [
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -321,7 +325,7 @@
       "imports": [
         "lib-BFoXg-Us.js",
         "lib-KC55FOau.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-commands/brand",
         "@deepseek-ai/dsh-typert-protocol"
@@ -341,7 +345,7 @@
       "imports": [
         "lib-DWBq_88x.js",
         "lib-BDj20byz.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "@deepseek-ai/dsh-util-values",
         "@deepseek-ai/dsh-app-boot"
       ],
@@ -357,7 +361,7 @@
       "file": "policy.js",
       "imports": [
         "lib-BFoXg-Us.js",
-        "runtime-version-D-pGGZ-P.js"
+        "runtime-version-B-UUt-jE.js"
       ],
       "exports": [
         "SANDBOX_MODES",
@@ -370,8 +374,8 @@
     {
       "file": "purge-permission.js",
       "imports": [
-        "runtime-version-D-pGGZ-P.js",
-        "compatibility-Wuy-0_a1.js",
+        "runtime-version-B-UUt-jE.js",
+        "compatibility-BN9a0lpp.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -380,9 +384,9 @@
       "modules": []
     },
     {
-      "file": "runtime-version-D-pGGZ-P.js",
+      "file": "runtime-version-B-UUt-jE.js",
       "imports": [
-        "compatibility-Wuy-0_a1.js"
+        "compatibility-BN9a0lpp.js"
       ],
       "exports": [],
       "modules": []
@@ -391,7 +395,7 @@
       "file": "sandbox.js",
       "imports": [
         "lib-DWBq_88x.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "node:path",
         "node:fs",
         "node:url",
@@ -415,7 +419,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -436,7 +440,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-fs",
@@ -469,7 +473,7 @@
       "imports": [
         "lib-BDj20byz.js",
         "lib-DWBq_88x.js",
-        "runtime-version-D-pGGZ-P.js",
+        "runtime-version-B-UUt-jE.js",
         "node:path",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
@@ -489,7 +493,7 @@
       "file": "tools.js",
       "imports": [
         "lib-BDj20byz.js",
-        "runtime-version-D-pGGZ-P.js"
+        "runtime-version-B-UUt-jE.js"
       ],
       "exports": [
         "CodeRunFailedError",
