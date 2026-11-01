@@ -2,13 +2,13 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.2.1-blue.svg)](package.json)
 [![License: GPL v3 or later](https://img.shields.io/badge/License-GPLv3%2B-blue.svg)](LICENSE)
 [![Target DSH](https://img.shields.io/badge/DSH-0.2.1--rc.5-teal.svg)](package.json)
 [![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey.svg)](docs/COVERAGE.md)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22.19.0-brightgreen.svg)](package.json)
 
-**DSH Workspace Guard** is a third-party native-parity compatibility plugin for **DeepSeek Harness (DSH)** on Windows. It restores official **Workspace** mode (`workspace-write`) and **Read Only** mode (`read-only`) when running alongside **Purge** (`dsh-purge` / `dsh-purge-community`) and **OPS** (`dsh-ops`), without modifying host binaries, patching installed `node_modules` files on disk, or disabling Purge itself.
+**DSH Workspace Guard** is a third-party native-parity compatibility plugin for **DeepSeek Harness (DSH)** on Windows. It restores official **Workspace** mode (`workspace-write`) and **Read Only** mode (`read-only`) when running alongside **Purge** (`dsh-purge` / `dsh-purge-community`), without modifying host binaries, patching installed `node_modules` files on disk, or disabling Purge itself.
 
 ---
 
@@ -20,15 +20,14 @@
 - [Permission Modes](#permission-modes)
 - [Functionality and Coverage Matrix](#functionality-and-coverage-matrix)
 - [Installation and Configuration Lifecycle](#installation-and-configuration-lifecycle)
-  - [Step 1: Package Installation (Inert by Default)](#step-1-package-installation-inert-by-default)
-  - [Step 2: Configuration Activation](#step-2-configuration-activation)
-  - [Daily Usage](#daily-usage)
-  - [Upgrading](#upgrading)
-  - [Deactivation, Rollback, and Uninstallation](#deactivation-rollback-and-uninstallation)
+  - [Installation and Automatic Setup](#installation-and-automatic-setup)
+  - [Daily Usage and Native Chat Behaviour](#daily-usage-and-native-chat-behaviour)
+  - [Upgrading, Disabling, and Uninstalling](#upgrading-disabling-and-uninstalling)
+  - [Advanced Diagnostics and Offline Recovery (CLI)](#advanced-diagnostics-and-offline-recovery-cli)
 - [Supported Capabilities and Blocked Actions](#supported-capabilities-and-blocked-actions)
 - [Windows Enforcement Characteristics](#windows-enforcement-characteristics)
 - [Trust Assumptions and Security Boundaries](#trust-assumptions-and-security-boundaries)
-- [Release Status (`0.2.0`)](#release-status-020)
+- [Release Status (`0.2.1`)](#release-status-021)
 - [Development Commands](#development-commands)
 - [Repository Structure](#repository-structure)
 - [Detailed Documentation](#detailed-documentation)
@@ -46,14 +45,14 @@ In official DeepSeek Harness (`0.2.1-rc.5`), the **Workspace** (`workspace-write
 4. **Windows ACL Sandbox Backend** (`sandbox` + `@deepseek-ai/dsh-sandbox-windows-acl`): Applies native Windows SID/ACL write restrictions (`partial` level) to child processes (`pwsh`, `bash`, and Python `run_code`).
 5. **Built-in Tool Consumers** (`tools`, `tool-bash`, `tool-pwsh`, `tool-fs`, `plugin-tools`): Route file operations and command executions through the active policy, approval, and sandbox providers.
 
-When **Purge (`1.6.67`)** is applied to a DSH installation, its patches alter native sandbox, filesystem, approval, permission, and tool modules; its runtime plugin also automatically promotes new sessions to **Full Access** (`danger-full-access`). The original `ops_bash` regression occurs because Purge’s sandbox passthrough starts OPS’s restricted IPC Bash with an ordinary token. Restoring the native launcher repairs that mismatch while the other replacements restore native permission behaviour.
+When **Purge (`1.6.67`)** is applied to a DSH installation, its patches alter native sandbox, filesystem, approval, permission, and tool modules to bypass approval gates and sandbox execution, while its runtime plugin (`dsh-purge`) automatically promotes new sessions to **Full Access** (`danger-full-access`). Restoring the native providers repairs sandbox and policy enforcement while preserving normal session permission behaviour.
 
-**DSH Workspace Guard (`0.2.0`)** resolves this conflict cleanly:
+**DSH Workspace Guard (`0.2.1`)** resolves this conflict cleanly:
 
 - It ships prebuilt, self-contained replacement providers generated directly from official `@deepseek-ai/*@0.2.1-rc.5` packages.
 - It preserves Purge's non-sandbox file-read capacity and delete/move prompt ergonomics inside the replacement tool modules, while leaving Purge's host-level patches (such as Auto Review disabling) untouched.
 - It isolates `dsh-purge`'s `permissionPresets` dependency through a Cordis service facade, suppressing automatic Full Access promotion while preserving the native Workspace fallback and explicit settings.
-- It separates **package installation** from **profile activation**, using reversible Cordis configuration entries and an atomic receipt journal. The repair survived explicit-target Purge Apply/reapply in isolated tests.
+- It integrates directly into DSH's plugin lifecycle: installing or enabling the bundle automatically writes reversible paired Cordis configuration entries and an atomic ownership receipt, and DSH's native profile watcher loads the repaired providers. Disabling or uninstalling the bundle restores the original configuration automatically.
 
 ---
 
@@ -111,10 +110,10 @@ DSH Workspace Guard consists of four coordinated mechanisms:
    - `dsh-workspace-guard/purge-permission` registers a `permissionPresets` facade inside the `workspace-guard-purge` Cordis isolation scope (`isolate: { permissionPresets: "workspace-guard-purge" }`), which is applied exclusively to `dsh-purge`.
    - The facade forwards all queries and updates to the root service except `set(session, "danger-full-access")`, which becomes a synchronous no-op when called by `dsh-purge`. Host UI controls and operator actions still access the root `permissionPresets` service directly.
 
-4. **Paired Cordis Configuration and Transaction Receipt ([`src/configuration.ts`](src/configuration.ts))**
-   - Activation updates `<profile>/cordis.patch.yml` offline while DSH is stopped.
-   - It disables affected original provider rows and inserts uniquely named paired entries, plus the root permission bridge and Purge facade. The exact rows and preserved enabled states are shown by `plan`.
-   - Activation writes an ownership receipt and transaction hashes to `<profile>/.workspace-guard/receipt.json`. Removal restores owned configuration values while preserving unrelated later edits; it reports conflicts rather than overwriting them.
+4. **Paired Cordis Configuration and Transaction Receipt ([`src/index.ts`](src/index.ts) & [`src/configuration.ts`](src/configuration.ts))**
+   - Installing or enabling the bundle activates the `workspace-guard-lifecycle` entry (`cordis.patch.yml`), which automatically writes the owned paired configuration to `<profile>/cordis.patch.yml`. DSH's native profile watcher (HMR) then loads the repaired providers in the next serialized reload. Disabling or removing the bundle automatically restores the owned changes, while ordinary application shutdown retains the active configuration for the next startup.
+   - It disables affected original provider rows and inserts uniquely named paired entries, plus the root permission bridge and Purge facade. The exact rows and preserved enabled states can also be inspected with `plan`.
+   - Activation writes an ownership receipt and transaction hashes to `<profile>/.workspace-guard/receipt.json`. Removal restores owned configuration values while preserving unrelated later edits; it reports conflicts rather than overwriting them. Optional CLI commands remain available for diagnostics and offline recovery.
 
 ---
 
@@ -122,9 +121,8 @@ DSH Workspace Guard consists of four coordinated mechanisms:
 
 | Component / Environment | Supported Version / Requirement | Enforcement & Verification Behaviour |
 | :--- | :--- | :--- |
-| **DeepSeek Harness (`dsh`)** | `0.2.1-rc.5` | Generated runtime entries check the host version. Offline `doctor`, `plan`, and `activate` check selected bundle versions and composition; the status plugin only logs installation information. |
+| **DeepSeek Harness (`dsh`)** | `0.2.1-rc.5` | Checked by automatic lifecycle setup, generated runtime entries, and optional CLI commands (`doctor`, `plan`, `activate`). Automatic setup uses the Desktop profile's native HMR service. |
 | **Purge (`dsh-purge` / `dsh-purge-community`)** | `1.6.67` | The selected consumer is version-checked. Explicit-target Apply/reapply was tested in isolation; all-host maintenance remains unverified. |
-| **OPS (`dsh-ops`)** | `0.4.4` (optional at runtime) | Version-checked when resolved; tested Bash and worker behaviour is detailed in the acceptance report. |
 | **Operating System** | Windows x64 (`win32`) | Validated target for this release. Offline `doctor` does not verify OS, architecture, or native-backend availability. |
 | **Node.js** | `>=22.19.0` (tested on `26.7.0`) | Required for offline CLI and build scripts (`package.json` `engines.node`). |
 | **Native Windows ACL Addon** | `@deepseek-ai/dsh-sandbox-windows-acl` | The generated sandbox resolves the host package’s `./runner` export with `import.meta.resolve`. Actual restricted execution requires that packaged runner and its native resources. |
@@ -145,9 +143,9 @@ Once activated in a profile, DSH Workspace Guard supports all three official DSH
 
 ## Functionality and Coverage Matrix
 
-DSH Workspace Guard (`0.2.0`) retains the following native routes. This summary distinguishes source restoration from executed acceptance; consult [`docs/COVERAGE.md`](docs/COVERAGE.md) and [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md) for the recorded evidence.
+DSH Workspace Guard (`0.2.1`) retains the following native routes. This summary distinguishes source restoration from executed acceptance; consult [`docs/COVERAGE.md`](docs/COVERAGE.md) and [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md) for the recorded evidence.
 
-| # | Capability Route | Upstream Package (`0.2.1-rc.5`) | Package Export | Status in `0.2.0` |
+| # | Capability Route | Upstream Package (`0.2.1-rc.5`) | Package Export | Status in `0.2.1` |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | **Permission Presets** (`read-only`, `workspace-write`, `danger-full-access`) | `@deepseek-ai/dsh-permission-presets` | `dsh-workspace-guard/permission` | Native default and selector restored; explicit settings retained |
 | 2 | **Purge Session Isolation** (`permissionPresets` facade) | `@deepseek-ai/dsh-permission-presets` + selected Purge package | `dsh-workspace-guard/permission-bridge`, `dsh-workspace-guard/purge-permission` | Suppresses Purge auto-promotion to Full Access |
@@ -155,11 +153,11 @@ DSH Workspace Guard (`0.2.0`) retains the following native routes. This summary 
 | 4 | **Sandbox Policy & Approval Broker** | `@deepseek-ai/dsh-sandbox-policy`, `@deepseek-ai/dsh-user-approval` | `dsh-workspace-guard/policy`, `dsh-workspace-guard/approval` | Native approval outcomes restored |
 | 5 | **Native Windows ACL Sandbox** | `@deepseek-ai/dsh-sandbox-local` | `dsh-workspace-guard/sandbox` | Restored; requires host Windows runner |
 | 6 | **Built-in File Tools** (`read`, `read_image`, `write`, `edit`) | `@deepseek-ai/dsh-tool-fs` | `dsh-workspace-guard/tool-fs` | Restored + Purge patch `#22` preserved |
-| 7 | **PowerShell Tool (`pwsh`)** (one-shot, background, and persistent terminal paths) | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | Native implementation + Purge patch `#48` retained; persistent startup failed in the fixture (see [Release Status](#release-status-020)) |
+| 7 | **PowerShell Tool (`pwsh`)** (one-shot, background, and persistent terminal paths) | `@deepseek-ai/dsh-tool-pwsh` | `dsh-workspace-guard/tool-pwsh` | Native implementation + Purge patch `#48` retained; persistent startup failed in the fixture (see [Release Status](#release-status-021)) |
 | 8 | **Bash Tool (`bash`)** | `@deepseek-ai/dsh-tool-bash` | `dsh-workspace-guard/tool-bash` | Restored + Purge patch `#48` preserved |
 | 9 | **Tool Runtime & Python `run_code` (`preset-ptc`)** | `@deepseek-ai/dsh-tools`, `@deepseek-ai/dsh-sandbox` | `dsh-workspace-guard/tools` | Restored (shares host `TOOL_RUNTIME_SCHEDULER`) |
 | 10 | **Agent Presets** (`preset-standard`, `preset-ptc`, `preset-minimal`, `preset-cordis`) | Native host preset bundles | Paired nested entries in `cordis.patch.yml` | All 4 presets rewired |
-| 11 | **Subagents & Background Work** | Native host consumers | Root replacement services | Native behaviour retained; adapter dispatch and an OPS job tested, full child lifecycle unverified |
+| 11 | **Subagents & Background Work** | Native host consumers | Root replacement services | Native behaviour retained; adapter dispatch and background job execution tested, full child lifecycle unverified |
 | 12 | **Git Worktree Adapter** | Native host VCS consumers | Native workspace policy | Adapter dispatch tested; real Git worktree operations unverified |
 | 13 | **LSP & Plugin Tool Bridges** | Native LSP consumers; `@deepseek-ai/dsh-plugin-manager/tools` | `dsh-workspace-guard/plugin-tools`; root `fs` | Static helper restored; live LSP transport unverified |
 
@@ -175,12 +173,13 @@ DSH Workspace Guard (`0.2.0`) retains the following native routes. This summary 
 
 ## Installation and Configuration Lifecycle
 
-DSH Workspace Guard uses a **two-step design**:
+Installing and enabling `dsh-workspace-guard` through DSH's plugin manager is the complete setup flow:
 
-1. **Step 1 — Package Installation (Inert by Default)**: Installing the plugin package and enabling it in the DSH UI registers only the informational `workspace-guard-status` entry (`cordis.patch.yml`). It does **not** alter `sandbox`, `policy`, `approval`, `permission`, `fs`, or `dsh-purge` until you explicitly activate it for a profile.
-2. **Step 2 — Configuration Activation**: Running the offline `dsh-workspace-guard` CLI while DSH is stopped rewires `<profile>/cordis.patch.yml` and writes a reversible transaction receipt to `<profile>/.workspace-guard/receipt.json`.
+- **Automatic Configuration on Install / Enable**: DSH's plugin manager enables the bundle by default. The plugin's lifecycle entry (`workspace-guard-lifecycle`) checks supported host and Purge versions, writes the owned paired configuration to `<profile>/cordis.patch.yml` and `<profile>/.workspace-guard/receipt.json`, and DSH's native profile watcher (HMR) loads the repaired providers automatically.
+- **Automatic Restoration on Disable / Uninstall**: Disabling or uninstalling the bundle in DSH's plugin manager automatically restores the previous native providers and removes the scoped Purge adapter through the same owned-change transaction and native profile reload. Ordinary application shutdown retains the active configuration for the next startup.
+- **Optional CLI Diagnostics and Recovery**: The `doctor`, `plan`, `activate`, `deactivate`, and `rollback` CLI commands are provided as optional diagnostics and offline recovery tools (see [Advanced Diagnostics and Offline Recovery (CLI)](#advanced-diagnostics-and-offline-recovery-cli)).
 
-### Step 1: Package Installation (Inert by Default)
+### Installation and Automatic Setup
 
 #### Primary Method (Recommended): Official npm Registry via DSH Plugin Installer
 
@@ -190,14 +189,13 @@ DSH Workspace Guard uses a **two-step design**:
      ```text
      dsh-workspace-guard
      ```
-   - **Version-pinned installation (matching current package metadata `0.2.0`)**:
+   - **Version-pinned installation (matching current package metadata `0.2.1`)**:
      ```text
-     dsh-workspace-guard@0.2.0
+     dsh-workspace-guard@0.2.1
      ```
-3. Once installed, enable/select the **`dsh-workspace-guard`** bundle in your target profile so DSH adds the package to `<profile>/package.json` and installs it under `<profile>/node_modules/dsh-workspace-guard`.
-4. Close DSH completely before proceeding to [Step 2: Configuration Activation](#step-2-configuration-activation).
+3. Keep the **`dsh-workspace-guard`** bundle enabled (the default in DSH's plugin manager). The plugin automatically saves its configuration changes and DSH's profile watcher loads the repaired providers.
 
-> **Note**: The package includes prebuilt `lib/` artefacts with `diff`, `yaml`, and `zod` bundled. Shared host dependencies and native resources remain external. Installation requires no compiler or installation-time build; maintainer builds use `build:release`.
+> **Note**: The package includes prebuilt `lib/` artefacts with `diff`, `yaml`, and `zod` bundled. Shared host dependencies and native resources remain external. Installation requires no compiler or installation-time build; maintainer builds use `build:release`. Automatic setup uses the Desktop profile's native HMR service.
 
 #### Alternative Method: Git-Source Installation
 
@@ -205,17 +203,44 @@ If you are installing directly from a Git repository URL or a local Git checkout
 
 1. In DSH's plugin installation interface (or in `<profile>/package.json`), specify the Git source:
    ```text
-   git+https://github.com/<owner>/dsh-workspace-guard.git#v0.2.0
+   git+https://github.com/cleverpigeb/dsh-workspace-guard.git#v0.2.1
    ```
-2. Enable the plugin in your target profile so it is linked into `<profile>/node_modules/dsh-workspace-guard`, then close DSH before running Step 2.
+2. Ensure the bundle is enabled in your target profile so DSH runs the automatic configuration and reloads the repaired providers.
 
 ---
 
-### Step 2: Configuration Activation
+### Daily Usage and Native Chat Behaviour
 
-Activation must be performed **offline while all DSH processes are stopped**.
+- **New Sessions**: The native fallback default is **Workspace** (`workspace-write`). Explicit configuration, `DSH_PERMISSION_MODE`, and recorded session selections are retained; Purge’s automatic promotion is suppressed.
+- **Native Chat and Preset Reload Behaviour**:
+  - **New chats** created after automatic reload immediately use the updated tool preset.
+  - **Existing agents and their children** retain their earlier preset revision until their scopes end; reopening an already-live tab reuses its current agent.
+  - **Refreshing existing sessions**: A genuine cold session resume mounts the current preset revision, or you can finish ongoing work and restart DSH normally to refresh all surviving sessions.
+- **Switching Modes**: Use the standard DSH session permission selector to switch any session between **Read Only** (`read-only`), **Workspace** (`workspace-write`), and **Full Access** (`danger-full-access`).
+- **After Running Purge (Apply/reapply)**:
+  - Guard’s prebuilt providers are independent of the host packages Purge patches and remain selected through formal `cordis.patch.yml` configuration.
+  - Isolated explicit-target Apply/reapply and fresh engine starts passed. Full Desktop/all-host maintenance remains unverified.
 
-Set your actual target profile and host module paths in PowerShell. This example uses the inspected Windows Desktop layout:
+---
+
+### Upgrading, Disabling, and Uninstalling
+
+Manage upgrades, enabling, disabling, and uninstallation directly through **DSH's normal plugin manager**:
+
+- **Upgrading**: Install or update to `dsh-workspace-guard@0.2.1` in DSH's plugin manager. Automatic setup is idempotent and reuses a valid existing configuration (including active `0.2.0` version-2 receipts, while an installed but inactive `0.2.0` bundle is configured automatically on upgrade). To refresh existing live chat tabs after an upgrade, finish ongoing work and restart DSH normally.
+- **Ordinary Shutdown**: Closing DSH normally keeps the active configuration in `<profile>/cordis.patch.yml` for the next startup.
+- **Disabling and Uninstalling**: Disabling or removing the bundle in DSH's plugin manager automatically restores the previous native providers and removes the scoped Purge adapter before package deletion. Restoring the previous providers also restores their behaviour with Purge.
+- **Configuration Ownership and Conflict Handling**:
+  - Normal removal preserves later unrelated edits to `<profile>/cordis.patch.yml`, migrates edited owned tool settings back to their native providers, and reports conflicting changes to owned identities rather than overwriting them.
+  - On DSH `0.2.1-rc.5`, if an ownership conflict prevents automatic restoration during uninstall, the host logs the teardown error and can still finish removing the package while leaving `<profile>/cordis.patch.yml` and `<profile>/.workspace-guard/receipt.json` intact for recovery. If this occurs, resolve the reported conflict and run the [optional offline recovery procedure](#advanced-diagnostics-and-offline-recovery-cli) below.
+
+---
+
+### Advanced Diagnostics and Offline Recovery (CLI)
+
+The CLI (`doctor`, `plan`, `activate`, `deactivate`, `rollback`) is optional diagnostics and offline recovery tooling. Commands preview by default; offline writes require an explicit `--profile` directory and `--apply --host-stopped` while every DSH process using that profile is stopped.
+
+Set your target profile and host module paths in PowerShell (this example uses the inspected Windows Desktop layout):
 
 ```powershell
 $ProfileDir  = "$env:USERPROFILE\.dsh\profiles\desktop"
@@ -224,73 +249,29 @@ $HostModules = "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\app\dsh\no
 $Cli         = "$ProfileDir\node_modules\dsh-workspace-guard\lib\cli.js"
 ```
 
-*(If `<profile>\node_modules\.bin\dsh-workspace-guard.cmd` is on your PATH or invoked directly, you can run `dsh-workspace-guard` instead of `node $Cli`.)*
+*(After package removal, set `$Cli` to `lib\cli.js` inside a downloaded matching `dsh-workspace-guard@0.2.1` package or checkout, then proceed directly to step 4. Steps 1–3 inspect or configure an installed, selected bundle.)*
 
-1. **Run `doctor` (Read-Only Environment & Compatibility Check)**
-   Checks selected bundle versions and offline configuration composition. A successful result does not prove native-backend availability or running-host activation:
+1. **Inspect Compatibility and Owned Status (`doctor`)**:
    ```powershell
    node $Cli doctor --profile $ProfileDir --home $DshHome --host-modules $HostModules
    ```
-
-2. **Run `plan` (Dry-Run Configuration Diff)**
-   Previews the exact Cordis entries that will be disabled and inserted without modifying any files:
+2. **Preview Proposed Configuration Changes (`plan`)**:
    ```powershell
    node $Cli plan --profile $ProfileDir --home $DshHome --host-modules $HostModules
    ```
-
-3. **Run `activate` (Write Paired Configuration & Receipt)**
-   Confirm that **all DeepSeek Harness windows and background processes are closed**, then apply the configuration:
+3. **Offline Activation or Repair (`activate`)**:
+   With all DSH processes stopped:
    ```powershell
    node $Cli activate --profile $ProfileDir --home $DshHome --host-modules $HostModules --apply --host-stopped
    ```
-   - Writes the owned changes to `cordis.patch.yml` and records the transaction in `<profile>/.workspace-guard/receipt.json`.
-   - Start DSH normally after `activate` reports `"status": "active"`.
-
----
-
-### Daily Usage
-
-- **New Sessions**: The native fallback default is **Workspace** (`workspace-write`). Explicit configuration, `DSH_PERMISSION_MODE`, and recorded session selections are retained; Purge’s automatic promotion is suppressed.
-- **Switching Modes**: Use the standard DSH session permission selector to switch any session between **Read Only** (`read-only`), **Workspace** (`workspace-write`), and **Full Access** (`danger-full-access`).
-- **After Running Purge (Apply/reapply)**:
-  - Guard’s prebuilt providers are independent of the host packages Purge patches and are selected through formal `cordis.patch.yml` configuration.
-  - Isolated explicit-target Apply/reapply and fresh engine starts passed. Full Desktop/all-host maintenance remains unverified. Run `doctor` to check that the offline receipt reports `"status": "active"`; this is not a runtime enforcement test.
-
----
-
-### Upgrading
-
-When upgrading `dsh-workspace-guard` to a newer version:
-
-1. Obtain the updated package, let work finish, and stop every host using the target profile before replacing its installed package. Retain the previous verified package for recovery.
-2. Run `doctor` and `plan` against your profile to verify compatibility with your installed DSH version.
-3. Re-run `activate --apply --host-stopped`:
-   ```powershell
-   node $Cli activate --profile $ProfileDir --home $DshHome --host-modules $HostModules --apply --host-stopped
-   ```
-   An already-active configuration is checked against its ownership receipt. Unrelated later edits are preserved; conflicting owned changes are reported. This is configuration reconciliation, not an automatic package-version rollback.
-
----
-
-### Deactivation, Rollback, and Uninstallation
-
-> **Important**: Always run **`deactivate`** (or **`rollback`**) **before** removing the `dsh-workspace-guard` package in DSH. Uninstalling the package while `<profile>/cordis.patch.yml` still references `dsh-workspace-guard/*` while native providers are set to `disabled: true` will leave the profile unable to load its replaced services.
-
-1. Close all DSH processes.
-2. **Deactivate (Recommended — Preserves User Edits to Other Plugins)**:
-   Removes the owned replacement entries and restores the paired native host settings while keeping unrelated changes made to `cordis.patch.yml` since activation:
+4. **Offline Deactivation or Post-Uninstall Conflict Recovery (`deactivate` / `rollback`)**:
+   With all DSH processes stopped, restore the native providers while preserving unrelated later edits (also works with a valid receipt after the bundle has been deselected or removed):
    ```powershell
    node $Cli deactivate --profile $ProfileDir --home $DshHome --host-modules $HostModules --apply --host-stopped
    ```
-   **Or Rollback (Remove Owned Configuration Changes)**:
-   Uses the same ownership-based removal as `deactivate`, preserving unrelated later edits and reporting conflicts. Restoring an earlier package version is a separate recovery step.
-   ```powershell
-   node $Cli rollback --profile $ProfileDir --home $DshHome --host-modules $HostModules --apply --host-stopped
-   ```
-3. With the package still installed, run `doctor` with the same path options. It reports `"status": "inactive"` after `deactivate`, or `"status": "rolled-back"` after `rollback`.
-4. Start DSH and uninstall `dsh-workspace-guard` through DSH's plugin manager if desired.
+   *(Or use `rollback` with the same flags to record `"status": "rolled-back"` in the receipt.)*
 
-Removing the replacements returns to the host's current providers and may restore Purge's Workspace conflict.
+For lasting disablement, disable or deselect the bundle in DSH's plugin manager. An enabled bundle reapplies its configuration on the next startup.
 
 ---
 
@@ -337,23 +318,24 @@ DSH Workspace Guard is an **accidental-damage and workflow safety control** that
 - **Same-Process Cordis Plugins Are Trusted**: All plugins loaded into the same DSH Node.js/Electron process share the root Cordis context and process memory. The `workspace-guard-purge` service isolation prevents `dsh-purge`'s standard `ctx.permissionPresets.set(session, "danger-full-access")` listener from promoting new sessions, but it cannot stop arbitrary in-process code that intentionally bypasses Cordis DI or mutates the filesystem directly.
 - **Host Integrity Outside Replaced Modules**: Workspace Guard replaces the 11 sandbox, policy, approval, permission, filesystem, and tool modules and binds two identity-sensitive symbols (`TOOL_RUNTIME_SCHEDULER` and `SandboxUnavailableError`) from the host. It assumes the remaining host runtime (`AgentLoop`, Electron main process, UI renderer, and `@deepseek-ai/dsh-sandbox-windows-acl`) has not been maliciously trojanised.
 - **Operator Actions Are Authoritative**: Explicitly switching a session to **Full Access** (`danger-full-access`) or approving an escalation prompt intentionally grants unrestricted execution for that session or command.
-- **Offline Activation Requirement (`--host-stopped`)**: The CLI uses a profile lockfile (`<profile>/.workspace-guard/configuration.lock`), temporary files, and atomic renames, but relies on the operator ensuring DSH is stopped when passing `--apply --host-stopped` so the running host does not overwrite `cordis.patch.yml` on exit.
+- **Offline CLI Recovery Requirement (`--host-stopped`)**: Normal installation and removal run inside DSH's plugin lifecycle and HMR watcher. When using the optional CLI recovery commands (`activate`, `deactivate`, `rollback`), the CLI uses a profile lockfile (`<profile>/.workspace-guard/configuration.lock`), temporary files, and atomic renames, and relies on the operator ensuring DSH is stopped when passing `--apply --host-stopped`.
 - **Subject-Matter Neutrality**: The repair restores native permission modes, path checks, and approval outcomes; it adds no prompt-topic or document-content classification. Existing external approval answerers remain unchanged.
 
 ---
 
-## Release Status (`0.2.0`)
+## Release Status (`0.2.1`)
 
-- **Current Version**: `0.2.0` (**Review / Candidate Build** targeting `dsh@0.2.1-rc.5`, `dsh-purge@1.6.67`, `dsh-ops@0.4.4`).
+- **Current Version**: `0.2.1` (targeting `dsh@0.2.1-rc.5` and `dsh-purge@1.6.67`).
 - **Automated & Isolated Runtime Acceptance** ([`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md), [`docs/acceptance-results.json`](docs/acceptance-results.json)):
-  - **41 passed, 0 failed, 1 `native-baseline-unavailable`** in the native suite; a separate physically absent approval-handler test passed, giving **42 distinct passing checks**.
-  - Identical pass/fail counts verified across **direct runtime execution**, **explicit-target Purge `Apply`**, and **Purge `reapply`**.
-  - **0 source/profile hash drift** across all 21 monitored normal installation and profile files before and after verification.
+  - **Automatic Activation & Lifecycle Suite (`0.2.1`)**: Passed 10 focused transaction scenario groups (automatic activation, repeat-load idempotence, shutdown retention, `0.2.0` version-2 receipt reuse, later-edit preservation, disable/removal restoration, launch-overlay conflicts, dynamic-state diagnostics, interrupted-journal recovery, and offline recovery after package removal), isolated Cordis Loader / DSH `app-boot` / HMR / `PluginManager` lifecycle tests, and end-to-end isolated activation with real compiled Guard providers.
+  - **Native Functional Baseline (`0.2.0`)**: **41 passed, 0 failed, 1 `native-baseline-unavailable`** in the native suite, plus a separate physically absent approval-handler check (**42 distinct passing checks**), verified across direct runtime execution, explicit-target Purge `Apply`, and Purge `reapply` with **0 source/profile hash drift** across 21 monitored normal installation and profile files.
+  - **Normal Desktop Profile Status**: Left untouched during engineering verification and remains awaiting user installation.
 - **Documented Runtime Observations**:
   1. **`persistent-pwsh` (ConPTY)**: Categorised as `native-baseline-unavailable` (`PTY shell exited during startup` on both clean official `0.2.1-rc.5` and `dsh-workspace-guard`). Not counted as a pass and not artificially disabled.
   2. **Transient Windows `ReplaceFileW` (`EIO` / Win32 `1175`)**: Observed once in an initial reused-file fixture. Its cause remains unconfirmed. An isolated retry and later direct/Apply/reapply runs passed.
-- **Unverified Boundaries in `0.2.0`**:
-  - Live Desktop GUI interactive click-through and normal user profile mutation (all tests ran in isolated temporary copies to preserve the host untouched).
+  3. **Read Only Shell Startup**: One initial isolated startup timed out; a bounded repeat passed. The cause remains unconfirmed.
+- **Unverified Boundaries in `0.2.1`**:
+  - Live Desktop GUI interactive click-through and normal user profile installation (all tests ran in isolated temporary copies to preserve the host untouched).
   - `persistent-pwsh` under `danger-full-access` where ConPTY can spawn.
   - Live model-backed subagent `spawn`/`fork`/`resume` turns and background task survival past parent session close.
   - End-to-end `git worktree add` checkout via a live VCS service.
@@ -408,7 +390,7 @@ dsh-workspace-guard/
 |   |-- upstream.mjs               # Selected upstream modules and bundled dependencies
 |   `-- verify-upstream.mjs        # Verifies pinned inputs; refreshes provenance only on request
 |-- docs/
-|   |-- ACCEPTANCE.md              # 0.2.0 acceptance test report, observations, and unverified boundaries
+|   |-- ACCEPTANCE.md              # 0.2.1 acceptance test report, observations, and unverified boundaries
 |   |-- acceptance-results.json    # Machine-readable acceptance matrix results
 |   |-- CONFIGURATION-PREVIEW.yml  # Example paired Cordis configuration delta
 |   |-- CONFIGURATION.md           # Cordis configuration format and CLI reference
@@ -422,14 +404,14 @@ dsh-workspace-guard/
 |   `-- zh.json                    # Simplified Chinese UI locale strings
 |-- src/
 |   |-- entries/                   # Entry wrappers for the 10 generated replacement providers
-|   |-- cli.ts                     # Offline CLI (doctor, plan, activate, deactivate, rollback)
-|   |-- compatibility.ts           # DSH, Purge, and OPS version checks
+|   |-- cli.ts                     # Optional offline diagnostics and recovery CLI (doctor, plan, activate, deactivate, rollback)
+|   |-- compatibility.ts           # DSH and Purge version checks
 |   |-- configuration.ts           # Paired Cordis configuration planner, merger, and receipt manager
-|   |-- index.ts                   # Informational installation plugin (workspace-guard-status)
+|   |-- index.ts                   # Lifecycle plugin for automatic configuration (workspace-guard-lifecycle)
 |   |-- permission-bridge.ts       # Captures root permissionPresets service
 |   |-- purge-permission.ts        # Isolated permissionPresets facade for dsh-purge
 |   `-- runtime-version.ts         # Runtime version discovery helpers
-|-- cordis.patch.yml               # Inert package-install patch (registers workspace-guard-status only)
+|-- cordis.patch.yml               # Bundle lifecycle patch (registers workspace-guard-status)
 |-- LICENSE                        # GNU General Public License v3.0 (with GPL-3.0-or-later notice)
 |-- package.json                   # Package metadata, exports, and scripts
 |-- README.md                      # British English documentation (this file)
@@ -444,9 +426,9 @@ dsh-workspace-guard/
 
 - [**Coverage Matrix (`docs/COVERAGE.md`)**](docs/COVERAGE.md) — Breakdown of documented native routes and Purge `1.6.67` patch handling.
 - [**Architecture & Design (`docs/DESIGN.md`)**](docs/DESIGN.md) — Root-cause analysis of Purge's patches, single-instance `@deepseek-ai/dsh-sandbox` graph design, and Cordis realm isolation.
-- [**Installation & Recovery Guide (`docs/INSTALLATION.md`)**](docs/INSTALLATION.md) — Step-by-step installation, offline CLI activation, Purge reapply workflow, and emergency rollback procedures.
+- [**Installation & Recovery Guide (`docs/INSTALLATION.md`)**](docs/INSTALLATION.md) — Automatic setup, native reload behaviour, upgrade/removal lifecycle, and offline recovery procedures.
 - [**Configuration Reference (`docs/CONFIGURATION.md`)**](docs/CONFIGURATION.md) & [**Preview (`docs/CONFIGURATION-PREVIEW.yml`)**](docs/CONFIGURATION-PREVIEW.yml) — Formal paired Cordis configuration and `<profile>/.workspace-guard/receipt.json`.
-- [**Acceptance Report (`docs/ACCEPTANCE.md`)**](docs/ACCEPTANCE.md) & [**Results (`docs/acceptance-results.json`)**](docs/acceptance-results.json) — Full `0.2.0` test results, ConPTY and `ReplaceFileW` observations, and hash-drift audit.
+- [**Acceptance Report (`docs/ACCEPTANCE.md`)**](docs/ACCEPTANCE.md) & [**Results (`docs/acceptance-results.json`)**](docs/acceptance-results.json) — Full `0.2.1` automatic installation and `0.2.0` baseline test results, observations, and hash-drift audit.
 - [**Upstream Provenance (`docs/UPSTREAM.md`)**](docs/UPSTREAM.md) — Verification of official `@deepseek-ai/*@0.2.1-rc.5` inputs and build manifests.
 
 ---
@@ -479,4 +461,4 @@ Complete upstream copyright notices and the full, unmodified `MIT`, `BSD-3-Claus
 
 The npm package includes project TypeScript and build scripts. To rebuild its contents, first copy `lib/build-lock.yaml` to `pnpm-lock.yaml`, then use the development commands above.
 
-Maintainers run `pnpm source:release` in the Git checkout to generate `.local/artifacts/dsh-workspace-guard-0.2.0-source.tar.gz`; `pnpm source:release --output <directory>` selects another destination. It includes the current tracked project files, four pinned upstream archives, and a checksum manifest. Publish that companion archive beside the matching release and link it from the package’s release documentation. Upstream archive URLs and checksums are also available in [`build/source-lock.json`](build/source-lock.json). See [the source-distribution details and verification limits](THIRD_PARTY_NOTICES.md#source-access-and-redistribution).
+Maintainers run `pnpm source:release` in the Git checkout to generate `.local/artifacts/dsh-workspace-guard-0.2.1-source.tar.gz`; `pnpm source:release --output <directory>` selects another destination. It includes the current tracked project files, four pinned upstream archives, and a checksum manifest. Publish that companion archive beside the matching release and link it from the package’s release documentation. Upstream archive URLs and checksums are also available in [`build/source-lock.json`](build/source-lock.json). See [the source-distribution details and verification limits](THIRD_PARTY_NOTICES.md#source-access-and-redistribution).

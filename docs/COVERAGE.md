@@ -1,6 +1,6 @@
 # Compatibility coverage
 
-Target: DSH 0.2.1-rc.5, Purge 1.6.67, OPS 0.4.4, Windows x64. This matrix distinguishes restored source behavior from executed acceptance. See ACCEPTANCE.md for actual results.
+Target: DSH 0.2.1-rc.5, Purge 1.6.67, Windows x64. OPS 0.4.4 was one consumer used in isolated acceptance; its version is not an activation requirement. This matrix distinguishes restored source behavior from executed acceptance. See ACCEPTANCE.md for actual results.
 
 | Route | Purge change or dependency | Repair |
 | --- | --- | --- |

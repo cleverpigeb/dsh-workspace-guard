@@ -9,7 +9,6 @@ import { fileURLToPath } from "node:url";
 export const SUPPORTED = {
   dsh: "0.2.1-rc.5",
   purge: "1.6.67",
-  ops: "0.4.4",
   guard: "0.2.1",
 } as const;
 export function validateBundleVersion(
@@ -23,17 +22,12 @@ export function validateBundleVersion(
         ? SUPPORTED.dsh
         : ["dsh-purge", "dsh-purge-community"].includes(name)
           ? SUPPORTED.purge
-          : name === "dsh-ops"
-            ? SUPPORTED.ops
-            : undefined;
+          : undefined;
   if (expected && (manifest.name !== name || manifest.version !== expected))
     throw new Error(
       `Unsupported bundle ${name}: expected ${expected}, found ${String(manifest.version)}. No configuration changes were made.`,
     );
-  if (
-    (/^dsh-purge(?:-|$)/.test(name) && !["dsh-purge", "dsh-purge-community"].includes(name)) ||
-    (/^dsh-ops(?:-|$)/.test(name) && name !== "dsh-ops")
-  )
+  if (/^dsh-purge(?:-|$)/.test(name) && !["dsh-purge", "dsh-purge-community"].includes(name))
     throw new Error(`Unsupported affected consumer variant: ${name}.`);
 }
 function manifestOf(
@@ -69,8 +63,6 @@ export function assertNativeRuntimeCompatibility(): void {
     throw new Error(
       `Unsupported DSH runtime: expected ${SUPPORTED.dsh}, found ${dsh?.version ?? "unresolved"}.`,
     );
-  const ops = manifestOf("dsh-ops");
-  if (ops) validateBundleVersion("dsh-ops", ops);
   checked = true;
 }
 /** Only the consumer actually selected in this Loader tree determines Purge compatibility. */

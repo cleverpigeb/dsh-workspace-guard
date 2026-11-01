@@ -1,6 +1,6 @@
 # Design
 
-DSH Workspace Guard repairs Purge's changes to native DSH permission behavior. The supported baseline is DSH 0.2.1-rc.5, Purge 1.6.67 and OPS 0.4.4 on Windows x64.
+DSH Workspace Guard repairs Purge's changes to native DSH permission behavior. The supported baseline is DSH 0.2.1-rc.5 and Purge 1.6.67 on Windows x64. Other installed plugins use the restored native services; their versions are outside Guard's compatibility checks.
 
 Official packages are pinned build inputs. Small entries select native providers and consumers; tsdown generates their implementations into the release. Selected modules share one clean sandbox helper. Cordis, session/event contracts, subprocess services and Windows ACL resources remain host dependencies. The plugin does not edit installed DSH, Purge or OPS source.
 
@@ -24,4 +24,4 @@ Windows enforcement remains native partial write restriction. Read/network isola
 
 ## Documentation ownership
 
-The English and Chinese READMEs are maintained by Antigravity. Their automatic-installation update is pending. Engineering documents here describe this implementation.
+The English and Chinese READMEs are maintained by Antigravity. Their automatic-installation update was reviewed for this release, with authorised factual corrections.

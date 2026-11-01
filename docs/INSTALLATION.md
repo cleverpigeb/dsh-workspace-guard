@@ -2,7 +2,7 @@
 
 Install `dsh-workspace-guard` through DSH's plugin manager using its npm or Git source. The manager enables the bundle by default. The plugin then records its configuration changes and DSH's normal profile watcher loads the repaired native providers automatically. Installation and enabling are the complete setup flow.
 
-The package contains prebuilt ESM JavaScript and its resources. Both installation sources use that runtime. The plugin checks its supported DSH, Purge and OPS versions before changing configuration.
+The package contains prebuilt ESM JavaScript and its resources. Both installation sources use that runtime. The plugin checks its supported DSH and Purge versions before changing configuration.
 
 Automatic setup uses the Desktop profile's native HMR service (DSH's configuration reloader). Configuration and provider loading are asynchronous; the plugin logs when configuration is saved, and DSH reports provider-loading errors through its normal plugin diagnostics. A profile with HMR disabled requires its native reload service for this automatic flow.
 
@@ -24,5 +24,5 @@ Version 0.2.0's active version-2 receipts remain supported. An installed but ina
 
 The plugin introduces no separate ACL reset procedure. Native ACL resource lifecycle remains native; do not perform blanket ACL resets.
 
-README authoring remains with Antigravity. The automatic-installation update for the English and Chinese READMEs is pending; this directory describes the current implementation.
+README authoring remains with Antigravity. The English and Chinese installation guidance has been reviewed against this implementation.
 Developer builds use pnpm build:release. A bare build script is intentionally absent because npm treats that name as a Git-dependency preparation trigger and installs development dependencies.

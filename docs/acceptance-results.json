@@ -39,7 +39,7 @@
     "retainedAgentPreset": "Native source confirms existing agents and their children retain preset revisions; cold resume uses current revision",
     "generatedEntryEquivalence": "12 entry bodies/imports equal after generated-filename and import-order normalization",
     "normalDesktopActivated": false,
-    "readmeAutomaticInstallationUpdate": "pending Antigravity"
+    "readmeAutomaticInstallationUpdate": "reviewed Antigravity update; authorized factual corrections"
   },
   "platform": "Windows x64",
   "runtime": {
@@ -231,8 +231,18 @@
     "developerBuildCommand": "pnpm build:release"
   },
   "readme": {
-    "sha256": "2C7C175C7B23D4F8FB9E01E55A63DB730DB0133C1FD974B957D8C7E490E9B5A9",
     "owner": "Antigravity",
-    "changed": false
+    "reviewedVersion": "0.2.1",
+    "changed": true
+  },
+  "releaseCompatibility": {
+    "status": "passed",
+    "fixtureCheckGroups": 5,
+    "checkedVersions": [
+      "DSH",
+      "Purge"
+    ],
+    "unrelatedPluginVersionGate": false,
+    "normalProfileChanged": false
   }
 }

@@ -11,6 +11,7 @@ This revision moves the owned configuration transaction into the plugin lifecycl
 - Native filesystem effects passed in Read Only, Workspace Write and Full Access. Actual OPS Bash passed Workspace Write and Full Access; its initial Read Only startup timed out, and one bounded repeat passed. The timeout cause is unconfirmed and retained in local evidence.
 - Twelve generated provider/consumer entry bodies and imports match the prior release after normalizing generated shared-module filenames and import order. The pinned official inputs and preservation transformations still pass verification.
 - Strict TypeScript and Oxlint passed.
+- Release compatibility review removed the unrelated OPS version gate. Five focused fixture checks passed: unrelated plugin versions accepted, supported DSH accepted with an unrelated resolvable plugin, unsupported DSH/Purge manifests rejected, selected Purge checked, and unsupported DSH runtime rejected. Both README link sets and matching CLI commands passed validation; all 14 bundled license sections and 25 generated runtime/resource hashes were verified.
 
 ## Native behavior and recovery observations
 
@@ -18,7 +19,7 @@ DSH retains preset revisions per agent. Source inspection confirms newly mounted
 
 An ownership-conflict removal test exposed a DSH teardown limitation: Cordis logs a disposer rejection and the plugin manager can still remove the package. The edited patch and receipt were preserved, and the manager returned provider warnings. Refusal of package removal in this case failed the test. Optional offline recovery now works with a valid receipt after the package has been removed, whether its bundle remains selected or has been deselected. Conflicting identities continue to require review before restoration.
 
-The normal Desktop profile and its running tasks were left untouched. The English and Chinese READMEs retain their prior contents; their automatic-installation update is assigned to Antigravity.
+The normal Desktop profile and its running tasks were left untouched. Antigravity updated both READMEs for automatic installation; the release review corrected acceptance wording and offline recovery instructions with the user's authorization.
 
 ## Native baseline — 0.2.0
 
@@ -59,7 +60,7 @@ Use a disposable DSH profile with supported versions, an internal workspace and 
 
 The necessary local harness and raw failure evidence remain untracked under .local/new and .local/new-validation. Sanitized results are in acceptance-results.json. Test scripts are deliberately not distributed in Git.
 
-README.md remains byte-for-byte unchanged for Antigravity. Its earlier content is pending replacement by its owner; these engineering documents describe the current implementation.
+Both READMEs remain maintained by Antigravity. These engineering documents retain detailed evidence and its scope.
 ## Distribution
 
 Local tarball and Git-source installations passed with lifecycle scripts disabled. All 24 runtime/resource files matched the release, all 13 JavaScript export entries imported, host scheduler identity matched, an actual workspace write succeeded, and an outside sentinel remained unchanged. The corrected Git install added only this package; it did not install the development toolchain. The developer build command is build:release because npm treats a bare build script as a Git preparation trigger. Hosted installation remains unverified.
