@@ -25,7 +25,27 @@ export async function apply(ctx: any): Promise<void> {
     if (removal?.changed)
       ctx.logger.info("Workspace Guard configuration removed; DSH is restoring its providers.");
   });
-  const plan = await synchronizeInstalledConfiguration(options, "load");
+  let plan;
+  try {
+    plan = await synchronizeInstalledConfiguration(options, "load");
+  } catch (error) {
+    // Cordis clears failed-initialization effects. A later uninstall would have
+    // no cleanup callback, so restore valid owned state before reporting failure.
+    try {
+      const restoration = await synchronizeInstalledConfiguration(options, "failed-load");
+      if (restoration?.changed)
+        ctx.logger.warn(
+          "Workspace Guard activation failed; its previous configuration was restored.",
+        );
+    } catch (recoveryError) {
+      throw new AggregateError(
+        [error, recoveryError],
+        "Workspace Guard activation failed and configuration restoration also failed. Keep the package installed and resolve the reported errors before removal; the patch and receipt are retained for offline recovery.",
+        { cause: error },
+      );
+    }
+    throw error;
+  }
   if (!plan) return;
   ctx.logger.info(
     plan.changed

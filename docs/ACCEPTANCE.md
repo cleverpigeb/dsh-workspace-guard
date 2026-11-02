@@ -1,4 +1,25 @@
-# Acceptance — 1.0.0 implementation candidate
+# Acceptance — 1.1.0
+
+Validated locally on Windows x64 with Node 26.7.0. Installed dependencies now have minimum-only version requirements: DSH >=0.2.1-rc.1, Purge >=1.1.70, Cordis >=4.0.3, Schemastery >=3.18.3, node-addon-system >=0.1.2 and Node >=22.19.0. Exact build inputs remain pinned. The unpublished 1.0.1 preparation was superseded by 1.1.0.
+
+## Current checks
+
+- Version ordering passed 1,849 differential comparisons against SemVer, 31 invalid-input cases and five exact large-number prerelease cases. Source/native compatibility gates passed 58 cases; copied generated runtime gates passed 60. Floors, future versions, prereleases, package identities and malformed versions were checked. Source comparison supports the lower floors; complete execution on every older host was not performed.
+- The reported uninstall failure was reproduced using the v1.0.0 runtime with actual Cordis Loader, DSH app-boot, HMR and PluginManager. After Purge 1.6.69 caused initialization rejection, uninstall deleted the fixture package with its receipt still active and native providers disabled. A fresh process then failed to import the missing providers. The incident backup separately contained 27 intact owned entries; the original incident's exact activation error was not preserved in its crash log.
+- The rebuilt lifecycle restores valid owned configuration before reporting initialization failure. Native checks passed ordinary shutdown/restart, disable/re-enable, normal removal, removal with Purge 1.6.69 and removal after a forced below-minimum activation failure. Restoration completed before package deletion; a fresh process started all six fixture native providers without the package. Package-manager execution and provider implementations were explicit stubs, while the Loader/HMR/PluginManager and built lifecycle were real.
+- Eight independent source checks passed failed-load restoration, untouched unconfigured state, before/after journal recovery, unchanged patch timestamps, preserved ownership/third-state errors and ordinary shutdown retention. The broader configuration suite passed 26 maintained-source and 25 generated-runtime scenario groups, including receipt schema 2, ordered edits, locks and recovery.
+- Copied generated CLI activation, write-free repeat activation and removal passed with Purge 1.6.69. Real Cordis mounted the generated bridge/facade and a copied safe 1.6.69 fresh-session hook: Workspace was retained and manual root Full Access remained usable. The root permission service was an explicit stub; this was not a full Desktop or all-provider smoke.
+- TypeScript, Oxlint, Actionlint and all 12 official input checks passed. Generated provenance covers 25 outputs. All 12 provider/adapter namespaces imported; shared native scheduler/error identities, the single restored helper and Purge transformations #22/#48 were retained. No comparative benchmarks or numerical speedup claims were made.
+
+## Remaining limits
+
+If ownership, journal, lock or missing-configuration problems prevent restoration, Guard retains the patch and receipt and reports both activation and recovery errors. Native conflict tests confirmed that DSH can still delete a package after a disposer error; this change does not add a native removal barrier. Resolve such errors before uninstalling, using the documented offline recovery when necessary. Direct filesystem deletion also bypasses cleanup.
+
+No normal Desktop configuration or process was changed by this implementation task. Full older-host execution, every future dependency release, hosted 1.1.0 installation and publication are unverified. Existing native Windows, shell, active-agent preset and other acceptance limits below remain applicable. Local checks use isolated fixtures with external process timeouts; source observations and stubbed tests are not claims of full-host execution.
+
+Current evidence is under `.local/release-1.1.0/`; earlier-started minimum-version analysis and compatibility harnesses remain under `.local/release-1.0.1/`, explicitly labeled 1.1.0 in their final results. Final npm/source archives are verified against the release revision separately. The following older results retain their original scope and versions.
+
+## Historical 1.0.0 implementation candidate
 
 Validated locally on Windows x64 with Node 26.7.0, DSH 0.2.1-rc.5 and Purge 1.6.67. This candidate retains automatic installation, native permission selection and receipt schema 2. Antigravity's README/licence update has been reviewed; the runtime remains byte-identical to the tested implementation. Final archive checks are recorded separately from these implementation checks. The records below distinguish current checks from historical results.
 

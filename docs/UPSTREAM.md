@@ -2,6 +2,8 @@
 
 The release is generated from exact official npm build dependencies at DSH 0.2.1-rc.5. The twelve selected module inputs are listed in build/upstream.mjs, including the stateless atomic-write lock helper bundled for standalone offline recovery. They are not maintained as copied source files.
 
+Installed peers use minimum-only ranges independently of these build pins: DSH >=0.2.1-rc.1, Cordis >=4.0.3, Schemastery >=3.18.3 and node-addon-system >=0.1.2. The selected Purge consumer requires >=1.1.70. The DSH minimum's 16 external peer packages contain 73 JavaScript files identical to the pinned baseline; HMR was compared separately. Cordis 4.0.3 and Schemastery 3.18.3 have identical inspected runtime JavaScript to their build versions. Earlier Schemastery lacks the used `volatile()` API; earlier inspected Purge configuration lacks the planner's required static `inject` declaration. These source comparisons support the floors; they are not full older-host execution or a guarantee for future releases.
+
 ## Build
 
 1. Install the frozen pnpm lockfile.

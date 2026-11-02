@@ -5,12 +5,46 @@ import { createRequire } from "node:module";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-/** Native generated implementations are build inputs; installed host source is never patched. */
+/** Minimum installed versions; exact generated build inputs are locked separately. */
 export const SUPPORTED = {
-  dsh: "0.2.1-rc.5",
-  purge: "1.6.67",
-  guard: "1.0.0",
+  dsh: "0.2.1-rc.1",
+  purge: "1.1.70",
+  guard: "0.2.1",
 } as const;
+function semanticVersion(value: string | undefined) {
+  if (typeof value !== "string" || value.length > 256) return undefined;
+  const match =
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/.exec(
+      value,
+    );
+  if (!match || match[0] !== value) return undefined;
+  const core = match.slice(1, 4).map(Number),
+    prerelease = match[4]?.split(".") ?? [];
+  if (!core.every(Number.isSafeInteger) || prerelease.some((id) => /^0\d+$/.test(id)))
+    return undefined;
+  return { core, prerelease };
+}
+/** SemVer minimum only, including prereleases as native DSH does; never an upper bound. */
+export function atLeastVersion(version: string | undefined, minimum: string): boolean {
+  const actual = semanticVersion(version),
+    floor = semanticVersion(minimum);
+  if (!actual || !floor) return false;
+  for (let i = 0; i < 3; i++)
+    if (actual.core[i] !== floor.core[i]) return actual.core[i] > floor.core[i];
+  if (!actual.prerelease.length) return true;
+  if (!floor.prerelease.length) return false;
+  for (let i = 0; i < Math.min(actual.prerelease.length, floor.prerelease.length); i++) {
+    const left = actual.prerelease[i],
+      right = floor.prerelease[i];
+    if (left === right) continue;
+    const leftNumeric = /^\d+$/.test(left),
+      rightNumeric = /^\d+$/.test(right);
+    if (leftNumeric && rightNumeric) return BigInt(left) > BigInt(right);
+    if (leftNumeric !== rightNumeric) return rightNumeric;
+    return left > right;
+  }
+  return actual.prerelease.length >= floor.prerelease.length;
+}
 export function validateBundleVersion(
   name: string,
   manifest: { name?: string; version?: string },
@@ -23,9 +57,9 @@ export function validateBundleVersion(
         : ["dsh-purge", "dsh-purge-community"].includes(name)
           ? SUPPORTED.purge
           : undefined;
-  if (expected && (manifest.name !== name || manifest.version !== expected))
+  if (expected && (manifest.name !== name || !atLeastVersion(manifest.version, expected)))
     throw new Error(
-      `Unsupported bundle ${name}: expected ${expected}, found ${String(manifest.version)}. No configuration changes were made.`,
+      `Unsupported bundle ${name}: requires >=${expected}, found ${String(manifest.version)}. Configuration activation was refused.`,
     );
   if (/^dsh-purge(?:-|$)/.test(name) && !["dsh-purge", "dsh-purge-community"].includes(name))
     throw new Error(`Unsupported affected consumer variant: ${name}.`);
@@ -59,9 +93,13 @@ let checked = false;
 export function assertNativeRuntimeCompatibility(): void {
   if (checked) return;
   const dsh = manifestOf("@deepseek-ai/dsh-app-boot");
-  if (!dsh || dsh.name !== "@deepseek-ai/dsh-app-boot" || dsh.version !== SUPPORTED.dsh)
+  if (
+    !dsh ||
+    dsh.name !== "@deepseek-ai/dsh-app-boot" ||
+    !atLeastVersion(dsh.version, SUPPORTED.dsh)
+  )
     throw new Error(
-      `Unsupported DSH runtime: expected ${SUPPORTED.dsh}, found ${dsh?.version ?? "unresolved"}.`,
+      `Unsupported DSH runtime: requires >=${SUPPORTED.dsh}, found ${dsh?.version ?? "unresolved"}.`,
     );
   checked = true;
 }

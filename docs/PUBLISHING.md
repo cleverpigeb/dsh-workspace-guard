@@ -1,8 +1,8 @@
 # Publishing the tested npm archive
 
-The workflow publishes `@cleverpig/dsh-workspace-guard` from the existing GitHub release assets. It does not build or repack them. No npm token is stored in the workflow. Hosted run [41318207959](https://github.com/cleverpigeb/dsh-workspace-guard/actions/runs/41318207959) verified the v0.2.1 release checkout and assets, then skipped its identical published npm tarball. This establishes hosted verification and retry behavior; genuine npm OIDC publication remains unexercised.
+The workflow publishes `@cleverpig/dsh-workspace-guard` from the existing GitHub release assets. It does not build or repack them. No npm token is stored in the workflow. Hosted run [41318207959](https://github.com/cleverpigeb/dsh-workspace-guard/actions/runs/41318207959) verified the v0.2.1 release checkout and assets, then skipped its identical published npm tarball. That run established hosted verification and retry behavior, but did not exercise genuine npm OIDC publication.
 
-The v1.0.0 documentation update has been reviewed. Final immutable archives are prepared from that reviewed revision; the earlier implementation candidate archive is not a final release asset. Publication and genuine OIDC validation remain separate from local release preparation.
+Version 1.1.0 replaces the unpublished 1.0.1 preparation. Final immutable archives are prepared from the reviewed 1.1.0 revision and checked against its tag. GitHub Release creation and npm publication remain separate from local preparation and pushing the source/tag.
 
 ## One-time npm setup
 

@@ -1,374 +1,457 @@
 {
-  "version": "1.0.0",
-  "status": "implementation validated; final documentation reviewed; publication pending",
+  "version": "1.1.0",
+  "status": "validated locally; final archives verified separately; publication pending",
   "platform": "Windows x64",
   "node": "26.7.0",
-  "supported": {
+  "minimumInstalled": {
+    "dsh": ">=0.2.1-rc.1",
+    "purge": ">=1.1.70",
+    "cordis": ">=4.0.3",
+    "schemastery": ">=3.18.3",
+    "nodeAddonSystem": ">=0.1.2",
+    "node": ">=22.19.0",
+    "upperBounds": false
+  },
+  "buildBaseline": {
     "dsh": "0.2.1-rc.5",
-    "purge": "1.6.67"
+    "purgeTransformations": "1.6.67",
+    "exactPinsUnchanged": true
+  },
+  "minimumEvidence": {
+    "dshExternalPeerPackages": 16,
+    "identicalJavaScriptFiles": 73,
+    "hmrComparedSeparately": true,
+    "scope": "Inspected runtime source comparisons and required APIs/configuration; no complete older-host execution"
+  },
+  "compatibility": {
+    "semverComparisons": 1849,
+    "invalidInputs": 31,
+    "largePrereleaseCases": 5,
+    "sourceNativeGateCases": 58,
+    "generatedGateCases": 60,
+    "copiedCliWithPurge1669": "activation/no-op/removal passed",
+    "permissionFacade": "Real Cordis + generated bridge/facade + copied safe Purge1.6.69 hook; explicit root-service stub; Workspace/manual Full Access retained"
+  },
+  "uninstall": {
+    "baseline": "v1.0.0 failed initialization then native removal reproduced leftover entries and fresh-process missing imports",
+    "incidentReceiptOwnedEntries": 27,
+    "incidentActivationError": "not independently established from preserved crash log",
+    "candidateCases": [
+      "normal shutdown/restart",
+      "disable/re-enable",
+      "normal removal before package deletion",
+      "Purge1.6.69 accepted and removed",
+      "below-minimum activation failure restores configuration before removal",
+      "conflicting recovery preserves both errors and files"
+    ],
+    "independentSourceCases": 8,
+    "freshProcessNativeProviders": 6,
+    "scope": "Actual Loader/app-boot/HMR/PluginManager and generated lifecycle; explicit provider/package-operation stubs",
+    "remainingNativeLimitation": "A restoration conflict or error can still be followed by native package deletion; reproduced, not fixed"
   },
   "configuration": {
-    "sourceScenarioGroupsPassed": 26,
-    "generatedScenarioGroupsPassed": 25,
-    "sourceOnlyCase": "Transaction callback executes at most once",
-    "receiptSchema": 2,
-    "scoped021ReceiptReuse": true,
-    "effectiveOverrideAndCommentPreservation": "passed",
-    "nativeLockAndLegacyMigration": "passed",
-    "snapshotLockRecovery": "passed",
-    "beforeAfterJournalRecovery": "passed",
-    "unchangedPatchTimestamp": "passed",
-    "readOnlyDiagnostics": "passed",
-    "finalizedNoopWriteFree": true
-  },
-  "release": {
-    "fixtureScenariosPassed": 36,
-    "archiveTypesAndRoots": "passed",
-    "requiredRootNotices": "passed",
-    "streamedSourceHashAndSize": "passed",
-    "immutableVersionRetries": "passed"
+    "sourceGroupsPassed": 26,
+    "generatedGroupsPassed": 25,
+    "receiptSchema": 2
   },
   "build": {
     "typeScript": "passed",
     "oxlint": "passed",
     "actionlint": "passed",
     "officialInputsVerified": 12,
-    "generatedOutputHashesVerified": 25,
+    "generatedOutputsVerified": 25,
     "importedProviderAdapterNamespaces": 12,
-    "generatedLicenseSections": 15,
-    "sharedHelperAndHostIdentities": "passed",
-    "purge22And48": "passed",
-    "newRuntimePeers": 0
+    "sharedRuntimeIdentities": "passed",
+    "purge22And48": "passed"
   },
-  "lifecycle": {
-    "stagesPassed": [
-      "install",
-      "disable",
-      "restart",
-      "removal"
-    ],
-    "laterEditsPreserved": true,
-    "restoredBeforePackageDeletion": true,
-    "scope": "Actual Cordis Loader/app-boot/HMR/PluginManager and built Guard lifecycle; explicit package-operation and provider stubs"
-  },
-  "realProviderSmoke": {
-    "status": "partial-native-shell-unavailable",
-    "actualCompiledProviderAdapterCount": 10,
-    "groupsPassed": [
-      "automatic activation",
-      "exact Purge fresh-session hook retains Workspace",
-      "native file write inside and rejection outside",
-      "manual root Full Access allows outside write and return to Workspace"
-    ],
-    "approvalRequests": 0,
-    "remainingOwnedProcesses": 0,
-    "scope": "Actual copied Guard, native DSH services and HMR; base metadata, extracted Purge hook and explicit Bash executable-selection subclass are fixtures"
-  },
-  "currentNativeShell": {
-    "status": "unavailable; matched clean official provider control",
-    "discoveryFailure": "Windows WSL Bash/E_ACCESSDENIED",
-    "explicitExecutableFailure": "could not create signal pipe, Win32 error 5",
-    "exitCode": 3221225794,
-    "insideEffect": false,
-    "cleanOfficialControlMatched": true,
-    "newOpsStartupOrCacheRun": false
-  },
-  "preservation": {
-    "normalSourceAndProfileHashesChecked": 18,
-    "normalDrift": 0,
+  "boundaries": {
     "normalDesktopActivated": false,
-    "readmeOwner": "Antigravity",
-    "finalDocumentation": "Antigravity README and third-party notice updates reviewed; root LICENSE unchanged"
-  },
-  "performance": {
-    "implemented": [
-      "reuse lower composition",
-      "parse once per planning attempt and restore incrementally",
-      "preindex nested preset pairs",
-      "reuse explicit-field and overlay information",
-      "normalize transform paths once and precompute input lookup",
-      "Set membership for tracked source files",
-      "one stat per source input",
-      "stream archive hash and obtain metadata size"
-    ],
-    "validation": "source/design inspection and functional checks",
+    "normalProfileModified": false,
+    "fullOlderHostExecution": false,
+    "futureVersionsPrevalidated": false,
+    "hosted110Installation": false,
+    "publication": false,
+    "newShellOrOpsSmoke": false,
     "comparativeBenchmarks": false,
-    "numericalSpeedupClaim": false,
-    "freshNativePathChecksRetained": true,
-    "reparseAfterLockAcquisition": true,
-    "independentIntegrityChecksRetained": true
+    "numericalSpeedupClaims": false
   },
-  "distribution": {
-    "candidateArchiveEvidence": "Ignored local release-1.0.0 implementation records identify the exact tarball and extracted CLI checks",
-    "finalArchivesAndTag": "after Antigravity documentation revision",
-    "published": false,
-    "hosted100Installation": "not performed",
-    "genuineNpmOidc": "unexercised",
-    "priorHosted021Run": "41318207959 verified archives and skipped identical existing npm version"
-  },
-  "independentReview": "No remaining actionable regression found in the changed configuration, locks, CLI and release code",
-  "evidence": ".local/release-1.0.0/ (ignored harnesses, raw failures, results and handoff)",
-  "historicalResults": {
-    "version": "0.2.1",
-    "nativeBaselineVersion": "0.2.0",
-    "automaticInstallation": {
-      "transactionScenarioGroupsPassed": 10,
-      "nativeHostLifecycle": {
-        "installation": "passed",
-        "disable": "passed",
-        "restart": "passed",
-        "removal": "passed",
-        "scope": "Actual Loader/app-boot/HMR/PluginManager and built lifecycle; explicit package-operation and provider fixtures",
-        "laterEditsPreserved": true,
-        "restoredBeforePackageDeletion": true
-      },
-      "actualProviderInstallation": {
-        "status": "passed",
-        "actualBuiltProviders": 9,
-        "cliActivationUsed": false,
-        "freshSessionMode": "workspace-write",
-        "opsBashInsideWrite": "passed",
-        "opsBashOutsideWrite": "rejected; sentinel unchanged",
-        "nativeFileTool": "inside written; outside rejected",
-        "windowsEnforcement": "partial",
-        "approvalRequests": 0,
-        "remainingOwnedProcesses": 0,
-        "scope": "Real compiled Guard, DSH services, HMR and OPS; isolated base metadata and safe Purge fresh-session hook fixture"
-      },
-      "conflictRemovalRefusal": {
-        "status": "failed-native-boundary",
-        "observation": "Cordis logs teardown rejection; package manager can remove the package while the edited configuration and receipt remain",
-        "configurationPreserved": true,
-        "offlineRecoveryAfterPackageRemoval": "passed"
-      },
-      "nativeSmoke": {
-        "filesystemAllModes": "passed",
-        "opsWorkspaceAndFullAccess": "passed",
-        "opsReadOnly": "initial abort timeout; one bounded repeat passed; cause unconfirmed"
-      },
-      "retainedAgentPreset": "Native source confirms existing agents and their children retain preset revisions; cold resume uses current revision",
-      "generatedEntryEquivalence": "12 entry bodies/imports equal after generated-filename and import-order normalization",
-      "normalDesktopActivated": false,
-      "readmeAutomaticInstallationUpdate": "reviewed Antigravity update; authorized factual corrections"
-    },
+  "evidence": [
+    ".local/release-1.1.0/",
+    ".local/release-1.0.1/compatibility/ (final reports label1.1.0)",
+    ".local/release-1.0.1/floor-evidence.json"
+  ],
+  "historical100": {
+    "version": "1.0.0",
+    "status": "implementation validated; final documentation reviewed; publication pending",
     "platform": "Windows x64",
-    "runtime": {
-      "design": "native replacement providers; original retained resources and tool families preserved",
-      "direct": {
-        "status": "partial",
-        "passed": 41,
-        "nativeBaselineUnavailable": 1,
-        "failed": 0
-      },
-      "absentApprovalChannel": {
-        "status": "passed",
-        "auditedOutcome": "unavailable",
-        "externalSentinelUnchanged": true
-      },
-      "explicitTargetPurgeLifecycle": {
-        "status": "passed",
-        "stages": [
-          {
-            "phase": "apply fresh engine",
-            "processExit": 0,
-            "functionalStatus": "partial",
-            "passed": 41,
-            "nativeBaselineUnavailable": 1
-          },
-          {
-            "phase": "reapply fresh engine",
-            "processExit": 0,
-            "functionalStatus": "partial",
-            "passed": 41,
-            "nativeBaselineUnavailable": 1
-          }
-        ],
-        "targetCount": 16,
-        "outsideTargets": 0,
-        "physicalCopies": {
-          "noLinks": true,
-          "singleLinkFiles": true
-        },
-        "maintenanceStateAndTemp": "inside [OWNED]/purge-host/home",
-        "selectedNormalSourceAndProfileHashes": 21,
-        "normalSourceDrift": 0
-      },
-      "realExecutionEvidence": [
-        "Host AgentLoop deterministic two-request tool dispatch using external scheduler identity",
-        "OPS ordinary Bash startup exit0 in read-only, Workspace, and Full Access without extra prompts",
-        "OPS Workspace-only write exit0; outside sentinel denied in Workspace",
-        "OPS verified native file worker write/copy/remove data envelopes in read-only, Workspace, and Full Access",
-        "Native write/edit, relative and missing-parent writes; traversal and external junction denial",
-        "Static write/bash/pwsh/plugin-manager and run_code rejected/cancelled/unavailable/abort requests",
-        "Actual per-call run_code processes in all3modes; shared host sandbox error instanceof",
-        "Retained PTC state1then2 and native policy narrowing; real OPS background job"
-      ],
-      "cleanBaseline": {
-        "status": "failed",
-        "nativePowerShellPTY": "PTY shell exited during startup",
-        "matchedWithGeneratedProviders": true,
-        "notCountedAsSuccess": true,
-        "evidence": "native-persistent-baseline.json"
-      },
-      "observations": [
-        {
-          "kind": "transient-native-filesystem-error",
-          "code": "ReplaceFileW EIO Win32 1175",
-          "cause": "unconfirmed",
-          "followup": "isolated retry and later full/direct plus both lifecycle suites passed",
-          "evidence": [
-            "first-frozen-run.json",
-            "fs-retry-observation.json"
-          ]
-        }
-      ],
-      "unverified": [
-        "Workspace native PowerShell ConPTY remains unavailable in both clean baseline and generated-provider fixture",
-        "Full Access PTY execution was not tested",
-        "Actual model-backed subagent spawn/fork/resume and descendant lifetimes were not tested; only native adapter dispatch used deterministic endpoint",
-        "No normal Desktop GUI or normal profile installation/loading acceptance",
-        "No hosted plugin-manager network install/update/remove; only static approval rejection before inert endpoint",
-        "No live LSP server/editor transport acceptance",
-        "No real Git checkout/worktree creation; adapter dispatch only",
-        "No full all-host Purge maintenance, shim edits, archive swaps, production host restart, or global ACL change"
-      ],
-      "cleanup": {
-        "status": "completed",
-        "onlyOwnedFixtures": true,
-        "logicalBytesRemoved": 426806742,
-        "entriesRemoved": 11359,
-        "linksUnlinkedWithoutFollowing": 1,
-        "ownedTestProcessesConfirmedExited": true
-      }
+    "node": "26.7.0",
+    "supported": {
+      "dsh": "0.2.1-rc.5",
+      "purge": "1.6.67"
     },
     "configuration": {
-      "status": "passed",
-      "applied": false,
-      "normalProfileChanged": false,
-      "installedHostChanged": false,
-      "design": "generated native providers; paired formal identity; no blanket route bans",
-      "supportedObservedVersions": {
-        "dsh": "0.2.1-rc.5",
-        "purge": "1.6.67",
-        "ops": "0.4.4"
-      },
-      "ownedDeltaCount": 27,
-      "rootPairs": 10,
-      "nestedPresetPairs": [
-        {
-          "preset": "preset-standard",
-          "pairs": 4
-        },
-        {
-          "preset": "preset-ptc",
-          "pairs": 4
-        },
-        {
-          "preset": "preset-minimal",
-          "pairs": 1
-        },
-        {
-          "preset": "preset-cordis",
-          "pairs": 4
-        }
-      ],
-      "presets": [
-        {
-          "id": "preset-standard",
-          "disabled": false
-        },
-        {
-          "id": "preset-ptc",
-          "disabled": false
-        },
-        {
-          "id": "preset-minimal",
-          "disabled": false
-        },
-        {
-          "id": "preset-cordis",
-          "disabled": false
-        }
-      ],
-      "sanitizedPaths": 0,
-      "summary": [
-        "Install 10 native row pairs and 4 preserved preset configurations.",
-        "Native tools, scopes, platform conditions and user configuration remain available; only Purge automatic Full Access promotion is suppressed."
-      ],
-      "limitations": [
-        "Offline composition is not running desktop acceptance.",
-        "Applying requires explicit profile and host-stopped acknowledgement; processes are never stopped automatically.",
-        "If source packages/manifests disappear, automatic ownership-based recovery may be unable to rebase and requires manual receipt review."
-      ]
+      "sourceScenarioGroupsPassed": 26,
+      "generatedScenarioGroupsPassed": 25,
+      "sourceOnlyCase": "Transaction callback executes at most once",
+      "receiptSchema": 2,
+      "scoped021ReceiptReuse": true,
+      "effectiveOverrideAndCommentPreservation": "passed",
+      "nativeLockAndLegacyMigration": "passed",
+      "snapshotLockRecovery": "passed",
+      "beforeAfterJournalRecovery": "passed",
+      "unchangedPatchTimestamp": "passed",
+      "readOnlyDiagnostics": "passed",
+      "finalizedNoopWriteFree": true
     },
-    "purgeFacade": {
-      "status": "passed",
-      "nativePermissionService": true,
-      "nativeShellService": true,
-      "formalCordisLoader": true,
-      "copiedUnmodifiedPurgeHook": true,
-      "hookSha256": "259b051706d72e1eae078e7dd39d837ae08b1193015cdcd254664d9ecbd39dd9",
-      "assertions": [
-        "actual fresh-session Purge hook leaves Workspace selection unchanged",
-        "Purge full-access .set is synchronous no-op",
-        "all other set calls forwarded",
-        "root explicit full access works",
-        "catalog and registerAuto forwarded",
-        "remaining native API delegates on registered instance"
-      ],
-      "normalProfileChanged": false,
-      "installedSourceChanged": false
-    },
-    "runtimeVersions": {
-      "status": "passed",
-      "actualDshVersionAccepted": true,
-      "sharedCheckCached": true,
-      "actualLoaderSelectedConsumerMetadata": true,
-      "unusedVariantIgnored": true,
-      "selectedUpgradeRejected": true,
-      "missingSelectedConsumerRejected": true,
-      "productionChanged": false
+    "release": {
+      "fixtureScenariosPassed": 36,
+      "archiveTypesAndRoots": "passed",
+      "requiredRootNotices": "passed",
+      "streamedSourceHashAndSize": "passed",
+      "immutableVersionRetries": "passed"
     },
     "build": {
-      "finalNativeFilesUnchanged": true,
-      "nativeIdentityChecks": "passed",
-      "status": "passed"
+      "typeScript": "passed",
+      "oxlint": "passed",
+      "actionlint": "passed",
+      "officialInputsVerified": 12,
+      "generatedOutputHashesVerified": 25,
+      "importedProviderAdapterNamespaces": 12,
+      "generatedLicenseSections": 15,
+      "sharedHelperAndHostIdentities": "passed",
+      "purge22And48": "passed",
+      "newRuntimePeers": 0
+    },
+    "lifecycle": {
+      "stagesPassed": [
+        "install",
+        "disable",
+        "restart",
+        "removal"
+      ],
+      "laterEditsPreserved": true,
+      "restoredBeforePackageDeletion": true,
+      "scope": "Actual Cordis Loader/app-boot/HMR/PluginManager and built Guard lifecycle; explicit package-operation and provider stubs"
+    },
+    "realProviderSmoke": {
+      "status": "partial-native-shell-unavailable",
+      "actualCompiledProviderAdapterCount": 10,
+      "groupsPassed": [
+        "automatic activation",
+        "exact Purge fresh-session hook retains Workspace",
+        "native file write inside and rejection outside",
+        "manual root Full Access allows outside write and return to Workspace"
+      ],
+      "approvalRequests": 0,
+      "remainingOwnedProcesses": 0,
+      "scope": "Actual copied Guard, native DSH services and HMR; base metadata, extracted Purge hook and explicit Bash executable-selection subclass are fixtures"
+    },
+    "currentNativeShell": {
+      "status": "unavailable; matched clean official provider control",
+      "discoveryFailure": "Windows WSL Bash/E_ACCESSDENIED",
+      "explicitExecutableFailure": "could not create signal pipe, Win32 error 5",
+      "exitCode": 3221225794,
+      "insideEffect": false,
+      "cleanOfficialControlMatched": true,
+      "newOpsStartupOrCacheRun": false
+    },
+    "preservation": {
+      "normalSourceAndProfileHashesChecked": 18,
+      "normalDrift": 0,
+      "normalDesktopActivated": false,
+      "readmeOwner": "Antigravity",
+      "finalDocumentation": "Antigravity README and third-party notice updates reviewed; root LICENSE unchanged"
+    },
+    "performance": {
+      "implemented": [
+        "reuse lower composition",
+        "parse once per planning attempt and restore incrementally",
+        "preindex nested preset pairs",
+        "reuse explicit-field and overlay information",
+        "normalize transform paths once and precompute input lookup",
+        "Set membership for tracked source files",
+        "one stat per source input",
+        "stream archive hash and obtain metadata size"
+      ],
+      "validation": "source/design inspection and functional checks",
+      "comparativeBenchmarks": false,
+      "numericalSpeedupClaim": false,
+      "freshNativePathChecksRetained": true,
+      "reparseAfterLockAcquisition": true,
+      "independentIntegrityChecksRetained": true
     },
     "distribution": {
-      "localGitSource": "passed: exact local Git commit source installed one package without build toolchain; same native effects and host scheduler identity",
-      "tarball": "passed: installed with scripts disabled; 24 runtime files matched; all13 entries imported; actual workspace write and outside denial",
-      "hostedInstallation": "not performed",
-      "developerBuildCommand": "pnpm build:release"
+      "candidateArchiveEvidence": "Ignored local release-1.0.0 implementation records identify the exact tarball and extracted CLI checks",
+      "finalArchivesAndTag": "after Antigravity documentation revision",
+      "published": false,
+      "hosted100Installation": "not performed",
+      "genuineNpmOidc": "unexercised",
+      "priorHosted021Run": "41318207959 verified archives and skipped identical existing npm version"
     },
-    "readme": {
-      "owner": "Antigravity",
-      "reviewedVersion": "0.2.1",
-      "changed": true
-    },
-    "releaseCompatibility": {
-      "status": "passed",
-      "fixtureCheckGroups": 5,
-      "checkedVersions": [
-        "DSH",
-        "Purge"
-      ],
-      "unrelatedPluginVersionGate": false,
-      "normalProfileChanged": false
-    },
-    "package": "@cleverpig/dsh-workspace-guard",
-    "scopedRelease": {
+    "independentReview": "No remaining actionable regression found in the changed configuration, locks, CLI and release code",
+    "evidence": ".local/release-1.0.0/ (ignored harnesses, raw failures, results and handoff)",
+    "historicalResults": {
       "version": "0.2.1",
-      "configurationGroupsPassed": 11,
-      "legacyActiveReceipt": "rejected before writes; explicit restoration then scoped activation passed",
-      "nativeLifecycle": "install/disable/restart/removal passed with actual Loader/HMR/PluginManager and fixture providers/package execution",
-      "realProviders": 9,
-      "nativeWorkspaceEffects": "inside writes succeeded; external sentinel unchanged",
-      "shellObservation": "initial 15-second tool deadline aborted; one 40-second bounded retry passed; cause unconfirmed",
-      "remainingOwnedProcesses": 0,
-      "normalProfileChanged": false,
-      "publishingFixtureChecksPassed": 11,
-      "hostedWorkflow": "not yet run",
-      "npmOidcAuthorization": "not yet exercised"
+      "nativeBaselineVersion": "0.2.0",
+      "automaticInstallation": {
+        "transactionScenarioGroupsPassed": 10,
+        "nativeHostLifecycle": {
+          "installation": "passed",
+          "disable": "passed",
+          "restart": "passed",
+          "removal": "passed",
+          "scope": "Actual Loader/app-boot/HMR/PluginManager and built lifecycle; explicit package-operation and provider fixtures",
+          "laterEditsPreserved": true,
+          "restoredBeforePackageDeletion": true
+        },
+        "actualProviderInstallation": {
+          "status": "passed",
+          "actualBuiltProviders": 9,
+          "cliActivationUsed": false,
+          "freshSessionMode": "workspace-write",
+          "opsBashInsideWrite": "passed",
+          "opsBashOutsideWrite": "rejected; sentinel unchanged",
+          "nativeFileTool": "inside written; outside rejected",
+          "windowsEnforcement": "partial",
+          "approvalRequests": 0,
+          "remainingOwnedProcesses": 0,
+          "scope": "Real compiled Guard, DSH services, HMR and OPS; isolated base metadata and safe Purge fresh-session hook fixture"
+        },
+        "conflictRemovalRefusal": {
+          "status": "failed-native-boundary",
+          "observation": "Cordis logs teardown rejection; package manager can remove the package while the edited configuration and receipt remain",
+          "configurationPreserved": true,
+          "offlineRecoveryAfterPackageRemoval": "passed"
+        },
+        "nativeSmoke": {
+          "filesystemAllModes": "passed",
+          "opsWorkspaceAndFullAccess": "passed",
+          "opsReadOnly": "initial abort timeout; one bounded repeat passed; cause unconfirmed"
+        },
+        "retainedAgentPreset": "Native source confirms existing agents and their children retain preset revisions; cold resume uses current revision",
+        "generatedEntryEquivalence": "12 entry bodies/imports equal after generated-filename and import-order normalization",
+        "normalDesktopActivated": false,
+        "readmeAutomaticInstallationUpdate": "reviewed Antigravity update; authorized factual corrections"
+      },
+      "platform": "Windows x64",
+      "runtime": {
+        "design": "native replacement providers; original retained resources and tool families preserved",
+        "direct": {
+          "status": "partial",
+          "passed": 41,
+          "nativeBaselineUnavailable": 1,
+          "failed": 0
+        },
+        "absentApprovalChannel": {
+          "status": "passed",
+          "auditedOutcome": "unavailable",
+          "externalSentinelUnchanged": true
+        },
+        "explicitTargetPurgeLifecycle": {
+          "status": "passed",
+          "stages": [
+            {
+              "phase": "apply fresh engine",
+              "processExit": 0,
+              "functionalStatus": "partial",
+              "passed": 41,
+              "nativeBaselineUnavailable": 1
+            },
+            {
+              "phase": "reapply fresh engine",
+              "processExit": 0,
+              "functionalStatus": "partial",
+              "passed": 41,
+              "nativeBaselineUnavailable": 1
+            }
+          ],
+          "targetCount": 16,
+          "outsideTargets": 0,
+          "physicalCopies": {
+            "noLinks": true,
+            "singleLinkFiles": true
+          },
+          "maintenanceStateAndTemp": "inside [OWNED]/purge-host/home",
+          "selectedNormalSourceAndProfileHashes": 21,
+          "normalSourceDrift": 0
+        },
+        "realExecutionEvidence": [
+          "Host AgentLoop deterministic two-request tool dispatch using external scheduler identity",
+          "OPS ordinary Bash startup exit0 in read-only, Workspace, and Full Access without extra prompts",
+          "OPS Workspace-only write exit0; outside sentinel denied in Workspace",
+          "OPS verified native file worker write/copy/remove data envelopes in read-only, Workspace, and Full Access",
+          "Native write/edit, relative and missing-parent writes; traversal and external junction denial",
+          "Static write/bash/pwsh/plugin-manager and run_code rejected/cancelled/unavailable/abort requests",
+          "Actual per-call run_code processes in all3modes; shared host sandbox error instanceof",
+          "Retained PTC state1then2 and native policy narrowing; real OPS background job"
+        ],
+        "cleanBaseline": {
+          "status": "failed",
+          "nativePowerShellPTY": "PTY shell exited during startup",
+          "matchedWithGeneratedProviders": true,
+          "notCountedAsSuccess": true,
+          "evidence": "native-persistent-baseline.json"
+        },
+        "observations": [
+          {
+            "kind": "transient-native-filesystem-error",
+            "code": "ReplaceFileW EIO Win32 1175",
+            "cause": "unconfirmed",
+            "followup": "isolated retry and later full/direct plus both lifecycle suites passed",
+            "evidence": [
+              "first-frozen-run.json",
+              "fs-retry-observation.json"
+            ]
+          }
+        ],
+        "unverified": [
+          "Workspace native PowerShell ConPTY remains unavailable in both clean baseline and generated-provider fixture",
+          "Full Access PTY execution was not tested",
+          "Actual model-backed subagent spawn/fork/resume and descendant lifetimes were not tested; only native adapter dispatch used deterministic endpoint",
+          "No normal Desktop GUI or normal profile installation/loading acceptance",
+          "No hosted plugin-manager network install/update/remove; only static approval rejection before inert endpoint",
+          "No live LSP server/editor transport acceptance",
+          "No real Git checkout/worktree creation; adapter dispatch only",
+          "No full all-host Purge maintenance, shim edits, archive swaps, production host restart, or global ACL change"
+        ],
+        "cleanup": {
+          "status": "completed",
+          "onlyOwnedFixtures": true,
+          "logicalBytesRemoved": 426806742,
+          "entriesRemoved": 11359,
+          "linksUnlinkedWithoutFollowing": 1,
+          "ownedTestProcessesConfirmedExited": true
+        }
+      },
+      "configuration": {
+        "status": "passed",
+        "applied": false,
+        "normalProfileChanged": false,
+        "installedHostChanged": false,
+        "design": "generated native providers; paired formal identity; no blanket route bans",
+        "supportedObservedVersions": {
+          "dsh": "0.2.1-rc.5",
+          "purge": "1.6.67",
+          "ops": "0.4.4"
+        },
+        "ownedDeltaCount": 27,
+        "rootPairs": 10,
+        "nestedPresetPairs": [
+          {
+            "preset": "preset-standard",
+            "pairs": 4
+          },
+          {
+            "preset": "preset-ptc",
+            "pairs": 4
+          },
+          {
+            "preset": "preset-minimal",
+            "pairs": 1
+          },
+          {
+            "preset": "preset-cordis",
+            "pairs": 4
+          }
+        ],
+        "presets": [
+          {
+            "id": "preset-standard",
+            "disabled": false
+          },
+          {
+            "id": "preset-ptc",
+            "disabled": false
+          },
+          {
+            "id": "preset-minimal",
+            "disabled": false
+          },
+          {
+            "id": "preset-cordis",
+            "disabled": false
+          }
+        ],
+        "sanitizedPaths": 0,
+        "summary": [
+          "Install 10 native row pairs and 4 preserved preset configurations.",
+          "Native tools, scopes, platform conditions and user configuration remain available; only Purge automatic Full Access promotion is suppressed."
+        ],
+        "limitations": [
+          "Offline composition is not running desktop acceptance.",
+          "Applying requires explicit profile and host-stopped acknowledgement; processes are never stopped automatically.",
+          "If source packages/manifests disappear, automatic ownership-based recovery may be unable to rebase and requires manual receipt review."
+        ]
+      },
+      "purgeFacade": {
+        "status": "passed",
+        "nativePermissionService": true,
+        "nativeShellService": true,
+        "formalCordisLoader": true,
+        "copiedUnmodifiedPurgeHook": true,
+        "hookSha256": "259b051706d72e1eae078e7dd39d837ae08b1193015cdcd254664d9ecbd39dd9",
+        "assertions": [
+          "actual fresh-session Purge hook leaves Workspace selection unchanged",
+          "Purge full-access .set is synchronous no-op",
+          "all other set calls forwarded",
+          "root explicit full access works",
+          "catalog and registerAuto forwarded",
+          "remaining native API delegates on registered instance"
+        ],
+        "normalProfileChanged": false,
+        "installedSourceChanged": false
+      },
+      "runtimeVersions": {
+        "status": "passed",
+        "actualDshVersionAccepted": true,
+        "sharedCheckCached": true,
+        "actualLoaderSelectedConsumerMetadata": true,
+        "unusedVariantIgnored": true,
+        "selectedUpgradeRejected": true,
+        "missingSelectedConsumerRejected": true,
+        "productionChanged": false
+      },
+      "build": {
+        "finalNativeFilesUnchanged": true,
+        "nativeIdentityChecks": "passed",
+        "status": "passed"
+      },
+      "distribution": {
+        "localGitSource": "passed: exact local Git commit source installed one package without build toolchain; same native effects and host scheduler identity",
+        "tarball": "passed: installed with scripts disabled; 24 runtime files matched; all13 entries imported; actual workspace write and outside denial",
+        "hostedInstallation": "not performed",
+        "developerBuildCommand": "pnpm build:release"
+      },
+      "readme": {
+        "owner": "Antigravity",
+        "reviewedVersion": "0.2.1",
+        "changed": true
+      },
+      "releaseCompatibility": {
+        "status": "passed",
+        "fixtureCheckGroups": 5,
+        "checkedVersions": [
+          "DSH",
+          "Purge"
+        ],
+        "unrelatedPluginVersionGate": false,
+        "normalProfileChanged": false
+      },
+      "package": "@cleverpig/dsh-workspace-guard",
+      "scopedRelease": {
+        "version": "0.2.1",
+        "configurationGroupsPassed": 11,
+        "legacyActiveReceipt": "rejected before writes; explicit restoration then scoped activation passed",
+        "nativeLifecycle": "install/disable/restart/removal passed with actual Loader/HMR/PluginManager and fixture providers/package execution",
+        "realProviders": 9,
+        "nativeWorkspaceEffects": "inside writes succeeded; external sentinel unchanged",
+        "shellObservation": "initial 15-second tool deadline aborted; one 40-second bounded retry passed; cause unconfirmed",
+        "remainingOwnedProcesses": 0,
+        "normalProfileChanged": false,
+        "publishingFixtureChecksPassed": 11,
+        "hostedWorkflow": "not yet run",
+        "npmOidcAuthorization": "not yet exercised"
+      }
     }
   }
 }

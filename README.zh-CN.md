@@ -2,7 +2,7 @@
 
 [English](README.md) | **简体中文**
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](package.json)
 [![License: GPL v3 or later](https://img.shields.io/badge/License-GPLv3%2B-blue.svg)](LICENSE)
 [![Target DSH](https://img.shields.io/badge/DSH-0.2.1--rc.5-teal.svg)](package.json)
 [![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey.svg)](docs/COVERAGE.md)
@@ -44,7 +44,7 @@
 
 当用户对 DSH 应用 **Purge（`1.6.67`）** 时，Purge 的补丁会修改宿主沙盒、策略、审批、权限、文件系统及内置工具模块，以跳过审批与沙盒执行；同时其运行时插件（`dsh-purge`）会在新建会话（`session.created`）时自动将会话提权为 **Full Access（完全访问）**（`danger-full-access`）。这可能导致会话被自动切回 Full Access，或缺失原生沙盒与策略保护。恢复原生提供方即可修复沙盒与策略执行，并保持正常的会话权限行为。
 
-**DSH Workspace Guard（`1.0.0`）** 通过非侵入式架构解决了这一冲突：
+**DSH Workspace Guard（`1.1.0`）** 通过非侵入式架构解决了这一冲突：
 
 - 基于官方 `@deepseek-ai/*@0.2.1-rc.5` 原包预构建自包含的替换服务提供方，恢复选定的原生沙盒、策略与审批链路，并保留其上游限制。
 - 在替换的工具模块中精准保留 Purge 与沙盒无关的文件读取上限扩容（补丁 `#22`）及删除/移动提示词精简（补丁 `#48`），同时保留宿主层的其他 Purge 补丁（如禁用 Auto Review 的补丁 `#59`）。
@@ -117,11 +117,13 @@ DSH Workspace Guard 由四个协同机制组成：
 
 | 组件 / 运行环境 | 支持版本 / 要求 | 校验与执行行为 |
 | :--- | :--- | :--- |
-| **DeepSeek Harness (`dsh`)** | `0.2.1-rc.5` | 自动生命周期配置、生成的运行时替换入口及可选 CLI 命令（`doctor`、`plan`、`activate`）均会校验所选宿主与包版本。自动配置使用 Desktop Profile 的原生 HMR 服务。 |
-| **Purge (`dsh-purge` / `dsh-purge-community`)** | `1.6.67` | 校验所选包版本；已测试隔离显式目标的 Apply/reapply，未测试全宿主维护。 |
+| **DeepSeek Harness (`dsh`)** | `>=0.2.1-rc.1` | 自动生命周期配置、生成的运行时替换入口及可选 CLI 命令（`doctor`、`plan`、`activate`）均会校验所选宿主与包版本。自动配置使用 Desktop Profile 的原生 HMR 服务。 |
+| **Purge (`dsh-purge` / `dsh-purge-community`)** | `>=1.1.70` | 校验所选包版本；已测试隔离显式目标的 Apply/reapply，未测试全宿主维护。 |
 | **操作系统** | Windows x64 (`win32`) | 这是已验证的运行环境。`doctor` 不证明平台、架构或原生后端可用性。 |
 | **Node.js** | `>=22.19.0`（已在 `26.7.0` 验证） | 运行离线 CLI 与构建脚本所需（见 `package.json` 的 `engines.node`）。 |
 | **原生 Windows ACL 扩展** | `@deepseek-ai/dsh-sandbox-windows-acl` | 运行时通过 `import.meta.resolve` 解析宿主包的 runner 导出。`read-only` 与 `workspace-write` 模式下执行命令需可用的原生后端。 |
+
+安装依赖仅设最低版本，不设上限。共享宿主依赖要求 Cordis `>=4.0.3`、Schemastery `>=3.18.3` 与 node-addon-system `>=0.1.2`。构建输入仍固定为已审查的 DSH `0.2.1-rc.5` 基线；接受较新版本不代表未来所有版本均已测试。
 
 ---
 
@@ -139,9 +141,9 @@ DSH Workspace Guard 由四个协同机制组成：
 
 ## 功能特性与覆盖矩阵
 
-下表概述 DSH Workspace Guard（`1.0.0`）涉及的能力与连接方式，区分了源码级恢复与已执行验收（含历史基线证据），并非 [`docs/COVERAGE.md`](docs/COVERAGE.md) 的逐行副本或完整验收证明。各项检查的记录范围与未验证边界见[验收测试报告](docs/ACCEPTANCE.md)：
+下表概述 DSH Workspace Guard（`1.1.0`）涉及的能力与连接方式，区分了源码级恢复与已执行验收（含历史基线证据），并非 [`docs/COVERAGE.md`](docs/COVERAGE.md) 的逐行副本或完整验收证明。各项检查的记录范围与未验证边界见[验收测试报告](docs/ACCEPTANCE.md)：
 
-| # | 能力链路 | 上游官方包 (`0.2.1-rc.5`) | 插件导出子路径 | `1.0.0` 状态 |
+| # | 能力链路 | 上游官方包 (`0.2.1-rc.5`) | 插件导出子路径 | `1.1.0` 状态 |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | **权限预设服务**（`read-only`、`workspace-write`、`danger-full-access`） | `@deepseek-ai/dsh-permission-presets` | `@cleverpig/dsh-workspace-guard/permission` | 已恢复（遵循原生默认与显式选择） |
 | 2 | **Purge 会话权限隔离**（`permissionPresets` 隔离门面） | `@deepseek-ai/dsh-permission-presets` + `dsh-purge@1.6.67` | `@cleverpig/dsh-workspace-guard/permission-bridge`、`@cleverpig/dsh-workspace-guard/purge-permission` | 已启用（阻止 Purge 自动提权至 Full Access） |
@@ -173,6 +175,7 @@ DSH Workspace Guard 由四个协同机制组成：
 
 - **安装 / 启用时自动配置**：DSH 插件管理器默认启用已安装的插件包。插件的生命周期入口（`workspace-guard-lifecycle`）会自动校验受支持的宿主与 Purge 版本，将受管的配对配置写入 `<profile>/cordis.patch.yml` 与 `<profile>/.workspace-guard/receipt.json`，并由 DSH 原生配置监听器（HMR）自动加载修复后的原生提供方。
 - **停用 / 卸载时自动恢复**：在 DSH 插件管理器中停用或卸载本插件时，生命周期释放钩子会通过同一受管事务自动恢复原有的原生提供方并移除 Purge 隔离域，随后由 DSH 重载恢复后的配置。日常正常关闭 DSH 会保留当前激活的配置供下次启动使用。
+- **激活失败**：如果通过 Profile 校验后的配置激活失败，Guard 会先尝试还原有效的已有受管配置，再报告错误。还原成功后，后续卸载不会残留这些服务引用。
 - **可选的 CLI 诊断与离线恢复**：`doctor`、`plan`、`activate`、`deactivate`、`rollback` 与 `recover-lock` 命令作为可选的诊断与离线恢复工具提供（详见[高级诊断与离线恢复（CLI）](#高级诊断与离线恢复cli)）。
 
 ### 安装与自动配置
@@ -185,9 +188,9 @@ DSH Workspace Guard 由四个协同机制组成：
      ```text
      @cleverpig/dsh-workspace-guard
      ```
-   - **安装固定版本（对应当前 `package.json` 元数据版本 `1.0.0`）**：
+   - **安装固定版本（对应当前 `package.json` 元数据版本 `1.1.0`）**：
      ```text
-     @cleverpig/dsh-workspace-guard@1.0.0
+     @cleverpig/dsh-workspace-guard@1.1.0
      ```
 3. 保持 **`@cleverpig/dsh-workspace-guard`** 处于启用状态（DSH 插件管理器默认启用）。插件会自动保存配置变更，并由 DSH 的 Profile 配置监听器自动加载修复后的提供方。
 
@@ -199,7 +202,7 @@ DSH Workspace Guard 由四个协同机制组成：
 
 1. 在 DSH 插件安装界面（或 `<profile>/package.json`）中指定 Git 来源：
    ```text
-   git+https://github.com/cleverpigeb/dsh-workspace-guard.git#v1.0.0
+   git+https://github.com/cleverpigeb/dsh-workspace-guard.git#v1.1.0
    ```
 2. 确认插件在目标 Profile 中处于启用状态，DSH 将自动完成配置并重载修复后的提供方。
 
@@ -221,12 +224,12 @@ DSH Workspace Guard 由四个协同机制组成：
 
 日常升级、启用、停用与卸载均可直接通过 **DSH 插件管理器** 完成：
 
-- **版本升级**：在 DSH 插件管理器中更新至 `@cleverpig/dsh-workspace-guard@1.0.0`。自动配置具有幂等性，会复用属于此作用域包的有效 v2 凭证（含 `0.2.1`）。如果曾使用早期未带作用域的开发包，请先通过 DSH 卸载该开发包，再安装 `@cleverpig/dsh-workspace-guard`。升级后如需刷新已打开的活动聊天标签页，请在手头工作完成后正常重启 DSH。
+- **版本升级**：在 DSH 插件管理器中更新至 `@cleverpig/dsh-workspace-guard@1.1.0`。自动配置具有幂等性，会复用属于此作用域包的有效 v2 凭证（含 `0.2.1`）。如果曾使用早期未带作用域的开发包，请先通过 DSH 卸载该开发包，再安装 `@cleverpig/dsh-workspace-guard`。升级后如需刷新已打开的活动聊天标签页，请在手头工作完成后正常重启 DSH。
 - **正常关闭程序**：日常关闭 DSH 会保留 `<profile>/cordis.patch.yml` 中的激活配置，供下次启动直接使用。
 - **停用与卸载**：在 DSH 插件管理器中停用或卸载插件包时，会自动恢复原有的原生提供方并移除 Purge 隔离域配置。恢复原有提供方后，也会恢复其与 Purge 原有的交互行为。
 - **配置归属与冲突处理**：
   - 正常移除会保留后续对 `<profile>/cordis.patch.yml` 中无关条目的编辑（包括非标记注释），将生成提供方上适用的后续设置（包括 `disabled` 状态与嵌套预设编辑）迁回原生提供方标识，并在受管标识发生冲突或存在歧义时报告错误而非强制覆盖。
-  - 在 DSH `0.2.1-rc.5` 中，如果因手动修改受管标识导致卸载清理阶段报告冲突，宿主会记录释放错误并继续完成插件包移除，同时保留 `<profile>/cordis.patch.yml` 与 `<profile>/.workspace-guard/receipt.json` 以供恢复。遇到此情况时，请先排查报告的冲突项，再参照下方[高级诊断与离线恢复（CLI）](#高级诊断与离线恢复cli)执行恢复。
+  - 如果还原报告所有权、事务记录、文件锁或配置缺失错误，请保留插件包，解决问题后再卸载。DSH `0.2.1-rc.5` 可能在清理出错后继续移除包，残留的服务引用会导致启动失败。请保留 `<profile>/cordis.patch.yml` 与 `<profile>/.workspace-guard/receipt.json`，并参照下方[高级诊断与离线恢复（CLI）](#高级诊断与离线恢复cli)执行恢复。
 
 ---
 
@@ -243,7 +246,7 @@ $HostModules = "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\app\dsh\no
 $Cli         = "$ProfileDir\node_modules\@cleverpig\dsh-workspace-guard\lib\cli.js"
 ```
 
-*（插件包移除后，请将 `$Cli` 指向下载的同版本 `@cleverpig/dsh-workspace-guard@1.0.0` 包或源码目录中的 `lib\cli.js`，然后直接执行第 4 或第 5 项恢复。下载的 `1.0.0` CLI 在锁清理与仅凭证恢复场景下无需已安装的宿主 peer 依赖即可运行，而配置还原仍需对应的插件包配置与凭证记录。第 1–3 项用于检查或配置已安装且被选中的插件包。）*
+*（插件包移除后，请将 `$Cli` 指向下载的同版本 `@cleverpig/dsh-workspace-guard@1.1.0` 包或源码目录中的 `lib\cli.js`，然后直接执行第 4 或第 5 项恢复。下载的 `1.1.0` CLI 在锁清理与仅凭证恢复场景下无需已安装的宿主 peer 依赖即可运行，而配置还原仍需对应的插件包配置与凭证记录。第 1–3 项用于检查或配置已安装且被选中的插件包。）*
 
 1. **检查版本兼容性与受管配置状态（`doctor`）**：
    ```powershell
@@ -341,7 +344,7 @@ dsh-workspace-guard/
 |   |-- upstream.mjs               # 选定的上游模块与入口映射
 |   `-- verify-upstream.mjs        # 校验上游输入；仅显式刷新时更新溯源锁
 |-- docs/
-|   |-- ACCEPTANCE.md              # 1.0.0 验收测试报告、历史基线记录、运行观察项与未验证边界说明
+|   |-- ACCEPTANCE.md              # 1.1.0 验收测试报告、历史基线记录、运行观察项与未验证边界说明
 |   |-- acceptance-results.json    # 机器可读的验收测试矩阵结果
 |   |-- CONFIGURATION-PREVIEW.yml  # 配对式 Cordis 配置变更示例
 |   |-- CONFIGURATION.md           # Cordis 配置结构与 CLI 命令参考
@@ -380,7 +383,7 @@ dsh-workspace-guard/
 - [**架构与设计说明 (`docs/DESIGN.md`)**](docs/DESIGN.md) — Purge 补丁冲突根因分析、单实例 `@deepseek-ai/dsh-sandbox` 构建图设计及 Cordis 隔离域机制。
 - [**安装与恢复指南 (`docs/INSTALLATION.md`)**](docs/INSTALLATION.md) — 自动安装与还原流程、聊天会话行为说明、Purge 重新应用步骤及可选的离线 CLI 恢复指南。
 - [**配置参考 (`docs/CONFIGURATION.md`)**](docs/CONFIGURATION.md) 与 [**配置预览 (`docs/CONFIGURATION-PREVIEW.yml`)**](docs/CONFIGURATION-PREVIEW.yml) — 配对式 Cordis 配置与 `<profile>/.workspace-guard/receipt.json` 的结构；以实际 `plan` 输出为准。
-- [**验收测试报告 (`docs/ACCEPTANCE.md`)**](docs/ACCEPTANCE.md) 与 [**测试数据 (`docs/acceptance-results.json`)**](docs/acceptance-results.json) — 当前 `1.0.0` 实现与隔离宿主验证结果，以及保留的 `0.2.1`、`0.2.0` 历史验收记录、运行观察项与文件哈希零漂移审计。
+- [**验收测试报告 (`docs/ACCEPTANCE.md`)**](docs/ACCEPTANCE.md) 与 [**测试数据 (`docs/acceptance-results.json`)**](docs/acceptance-results.json) — 当前 `1.1.0` 实现与隔离宿主验证结果，以及保留的 `0.2.1`、`0.2.0` 历史验收记录、运行观察项与文件哈希零漂移审计。
 - [**上游模块溯源 (`docs/UPSTREAM.md`)**](docs/UPSTREAM.md) — 官方 `@deepseek-ai/*@0.2.1-rc.5` 输入源码校验与构建清单说明。
 
 ---
@@ -411,6 +414,6 @@ dsh-workspace-guard/
 
 ### 源码分发与重建
 
-维护者应先将维护的发布文件纳入 Git 跟踪或暂存，再运行 `pnpm source:release`。默认生成 `.local/artifacts/cleverpig-dsh-workspace-guard-1.0.0-source.tar.gz`，可用 `pnpm source:release --output <目录>` 指定输出目录。归档包含当前受跟踪文件在工作区中的内容，以及四个锁定的上游仓库源码归档。将此源码包与对应版本的二进制发布一同提供；接收者应获取同版本的配套源码包。
+维护者应先将维护的发布文件纳入 Git 跟踪或暂存，再运行 `pnpm source:release`。默认生成 `.local/artifacts/cleverpig-dsh-workspace-guard-1.1.0-source.tar.gz`，可用 `pnpm source:release --output <目录>` 指定输出目录。归档包含当前受跟踪文件在工作区中的内容，以及四个锁定的上游仓库源码归档。将此源码包与对应版本的二进制发布一同提供；接收者应获取同版本的配套源码包。
 
 从 npm 包重建时，先将 `lib/build-lock.yaml` 还原为 `pnpm-lock.yaml`，再运行上述冻结依赖安装、检查与构建命令。DSH 上游源码依据匹配的 tag/包版本选择；这不证明能够逐字节重建 npm 产物，也未确认完整组合宿主的全部源码义务。详细来源与边界见 [THIRD_PARTY_NOTICES.md 的源码分发说明](THIRD_PARTY_NOTICES.md#source-access-and-redistribution)。

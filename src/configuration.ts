@@ -71,6 +71,7 @@ export type ProfileOptions = {
   /** Launcher patches, applied after the home layer and never persisted. */
   overlays?: Row[];
 };
+type LifecyclePhase = "load" | "dispose" | "failed-load";
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 const same = (a: any, b: any): boolean => JSON.stringify(a) === JSON.stringify(b);
 const clone = <T>(value: T): T => structuredClone(value);
@@ -916,7 +917,7 @@ function recoverReceipt(
 async function loadProfile(
   options: ProfileOptions,
   validateVersions = true,
-  lifecycle?: "load" | "dispose",
+  lifecycle?: LifecyclePhase,
 ) {
   const profile = resolve(options.profile),
     patchPath = join(profile, "cordis.patch.yml"),
@@ -1051,9 +1052,13 @@ type LoadedProfile = Awaited<ReturnType<typeof loadProfile>>;
 type ConfigurationAction = "activate" | "deactivate" | "rollback";
 function lifecycleAction(
   loaded: LoadedProfile,
-  phase: "load" | "dispose",
+  phase: LifecyclePhase,
   plan: Planning,
 ): ConfigurationAction | undefined {
+  // A failed initialization loses its disposer even while the bundle remains
+  // selected. Restore an existing installation before relinquishing ownership.
+  if (phase === "failed-load")
+    return loaded.input.receipt?.status === "active" ? "deactivate" : undefined;
   const tree = composition([...plan.bundles, plan.profileRows, ...plan.later]).tree;
   let enabled = false,
     disabled = false,
@@ -1085,9 +1090,9 @@ function lifecycleAction(
 /** The installed lifecycle is authorization; manual CLI callers still need acknowledgements. */
 export async function synchronizeInstalledConfiguration(
   options: ProfileOptions,
-  phase: "load" | "dispose",
+  phase: LifecyclePhase,
 ): Promise<GuardPlan | undefined> {
-  if (phase === "dispose") {
+  if (phase !== "load") {
     const profile = resolve(options.profile),
       recovery = recoverReceipt(
         await optional(join(profile, ".workspace-guard", "receipt.json")),
@@ -1106,7 +1111,7 @@ async function transactConfiguration(
   select:
     | ConfigurationAction
     | ((loaded: LoadedProfile, plan: Planning) => ConfigurationAction | undefined),
-  lifecycle?: "load" | "dispose",
+  lifecycle?: LifecyclePhase,
 ): Promise<GuardPlan | undefined> {
   const prepare = async () => {
     const loaded = await loadProfile(
