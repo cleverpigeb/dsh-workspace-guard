@@ -1,6 +1,6 @@
 # Acceptance — 1.0.0 implementation candidate
 
-Validated locally on Windows x64 with Node 26.7.0, DSH 0.2.1-rc.5 and Purge 1.6.67. This candidate retains automatic installation, native permission selection and receipt schema 2. Antigravity's README/licence update and the final release archives follow this implementation. The records below distinguish current checks from historical results.
+Validated locally on Windows x64 with Node 26.7.0, DSH 0.2.1-rc.5 and Purge 1.6.67. This candidate retains automatic installation, native permission selection and receipt schema 2. Antigravity's README/licence update has been reviewed; the runtime remains byte-identical to the tested implementation. Final archive checks are recorded separately from these implementation checks. The records below distinguish current checks from historical results.
 
 ## Current repair and build checks
 

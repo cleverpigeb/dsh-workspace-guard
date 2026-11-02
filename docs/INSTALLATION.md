@@ -24,5 +24,5 @@ Version 1.0.0 reuses valid version-2 receipts from scoped v0.2.1. For an earlier
 
 The plugin introduces no separate ACL reset procedure. Native ACL resource lifecycle remains native; do not perform blanket ACL resets.
 
-README authoring remains with Antigravity. Its v1.0.0 update follows implementation validation.
+README authoring remains with Antigravity. Its English and Chinese v1.0.0 updates have been reviewed against the implementation.
 Developer builds use pnpm build:release. A bare build script is intentionally absent because npm treats that name as a Git-dependency preparation trigger and installs development dependencies.

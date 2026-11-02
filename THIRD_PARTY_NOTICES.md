@@ -29,13 +29,14 @@ The generated runtime in `lib/` bundles selected official DeepSeek Harness modul
 | `@deepseek-ai/dsh-tool-pwsh` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored PowerShell tool consumer (`./tool-pwsh`) |
 | `@deepseek-ai/dsh-tool-fs` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored filesystem tool consumer (`./tool-fs`) |
 | `@deepseek-ai/dsh-plugin-manager` (`./tools` only) | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored plugin-manager tools subentry (`./plugin-tools`) |
+| `@deepseek-ai/dsh-atomic-write` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Bundled native writer-lock helper for standalone recovery |
 | `diff` | `9.0.0` | `BSD-3-Clause` | Copyright (c) 2009-2015, Kevin Decker `<kpdecker@gmail.com>` | Bundled runtime dependency for unified diff generation |
 | `yaml` | `2.9.0` | `ISC` | Copyright Eemeli Aro `<eemeli@gmail.com>` | Bundled YAML AST parser/serializer for `cordis.patch.yml` |
 | `zod` | `4.4.3` | `MIT` | Copyright (c) 2025 Colin McDonnell | Bundled schema validation dependency for tool entries |
 
 ### Build Records and Source Distribution
 
-- `build/upstream-lock.json` records official npm registry tarballs, SHA-512 integrity digests, archive/source/license SHA-256 hashes, and exact input entry paths for all 11 official `@deepseek-ai/*` modules. Every release build (`pnpm run build:release`) verifies these hashes before bundling.
+- `build/upstream-lock.json` records official npm registry tarballs, SHA-512 integrity digests, archive/source/license SHA-256 hashes, and exact input entry paths for all 12 official `@deepseek-ai/*` modules. Every release build (`pnpm run build:release`) verifies these hashes before bundling.
 - `build/source-lock.json` and `build/source-release.mjs` (`pnpm run source:release`) record and package the tracked project files together with pinned upstream source archives (`deepseek-harness`, `jsdiff`, `yaml`, and `zod`) and `lib/build-lock.yaml` (restorable as `pnpm-lock.yaml`). Archive hashes are verified; upstream byte-equivalent rebuilding and complete combined-host source obligations are not established by the archive.
 - `lib/provenance.json` records the project metadata, verified upstream inputs, lockfile SHA-256, preserved Purge patch IDs (`22` and `48`), and generated output hashes.
 - `lib/build-manifest.json` records the bundled module graph and checked build transformations that preserve Purge `1.6.67` patch `#22` (larger file-read limits in `@deepseek-ai/dsh-tool-fs`) and patch `#48` (simplified delete/move prompt guidance in `@deepseek-ai/dsh-tool-bash` and `@deepseek-ai/dsh-tool-pwsh`).
@@ -48,7 +49,7 @@ The npm package includes the project's TypeScript and build scripts. Before rebu
 
 For each distributed prebuilt release, recipients must also have access to the corresponding source under GPL terms. Maintainers should publish the matching source companion alongside the release and place clear download directions beside the package. This archive does not require a compiler during plugin installation.
 
-Run `pnpm source:release` from the Git checkout after adding maintained release files to Git's index, with Git and `tar` available on PATH. It reads the current working-tree contents of tracked files and creates `.local/artifacts/cleverpig-dsh-workspace-guard-0.2.1-source.tar.gz`. Use `pnpm source:release --output <directory>` for another destination; existing archives are not overwritten. The archive contains `project/`, four unextracted upstream archives under `upstream/`, and a checksum manifest. Local tests, receipts, and agent working files remain untracked and outside the project source archive.
+Run `pnpm source:release` from the Git checkout after adding maintained release files to Git's index, with Git and `tar` available on PATH. It reads the current working-tree contents of tracked files and creates `.local/artifacts/cleverpig-dsh-workspace-guard-1.0.0-source.tar.gz`. Use `pnpm source:release --output <directory>` for another destination; existing archives are not overwritten. The archive contains `project/`, four unextracted upstream archives under `upstream/`, and a checksum manifest. Local tests, receipts, and agent working files remain untracked and outside the project source archive.
 
 Pinned upstream download URLs, revisions, versions, and SHA-256 values are in [build/source-lock.json](build/source-lock.json). DSH's release tag and package versions match `0.2.1-rc.5`, but its npm metadata supplies no `gitHead`; byte-equivalent rebuilding has not been verified. The source companion does not by itself establish completeness for every combined-host distribution. Assess the corresponding-source requirements of the actual distribution, including required host components, before publishing it.
 
@@ -70,6 +71,7 @@ Applies to:
 - `@deepseek-ai/dsh-tool-pwsh@0.2.1-rc.5`
 - `@deepseek-ai/dsh-tool-fs@0.2.1-rc.5`
 - `@deepseek-ai/dsh-plugin-manager@0.2.1-rc.5` (`./tools` entry only)
+- `@deepseek-ai/dsh-atomic-write@0.2.1-rc.5`
 
 ```text
 MIT License
