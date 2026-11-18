@@ -1,4 +1,23 @@
-# Acceptance — 1.1.0
+# Acceptance — 2.0.0
+
+The 18 November 2026 checks ran on Windows x64 using the `2.0.0-dev.0` build, the installed DSH Desktop 0.2.2-rc.3 and official npm packages from [DSH 0.2.2-rc.4](https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.4). All 28 runtime and resource files in the stable 2.0.0 build matched the tested files byte for byte. The 11 permission and tool checks passed again on each host with the stable build.
+
+| Check | Observed result |
+| --- | --- |
+| Startup regression | The original Desktop crash log identified the missing `TOOL_RUNTIME_SCHEDULER` import on rc.1. Loading the released Guard 1.1.0 tools entry against rc.4 reproduced the same error. The candidate imports the host tool registry successfully. |
+| Permissions on installed rc.3 and official npm rc.4 | Eleven checks passed on each runtime using Node 24.21.0. Workspace allowed in-workspace writes and preserved the outside sentinel. Read Only allowed reads and denied writes. Manual Full Access, rejected approval, one-time approval and replay of an existing session selection all passed. PowerShell exercised the Windows backend. |
+| Purge and tool dispatch | The archived Purge 1.6.69 session hook promoted the unguarded control to Full Access. The isolated Guard facade retained Workspace. Current Purge 1.7.20 supplied the selected bundle configuration. Both native and PTC executors honoured a test denial even under manual Full Access. An import trap on the host pipeline fired in the unguarded control and stayed untouched in Guard. |
+| Install from the local package | The rc.3 and rc.4 plugin managers each installed the archive with Desktop's bundled pnpm 11.28.5. On both hosts all 11 enabled Guard entries started on install and re-enable without a restart or duplicate service registration. Disable and removal restored the native configuration. This test used real providers, a minimal base bundle and an inert Purge consumer. |
+| Lifecycle and failed activation | Tests used the installed rc.3 Cordis Loader, app-boot, HMR and PluginManager with provider and package-operation stubs. Shutdown, restart, disable, re-enable, normal removal and failed-activation restoration passed. A separate process outside the repository started with all eight fixture providers after removal. |
+| Upgrades and recovery | Real 1.1.0 receipts created with the official 0.2.1-rc.5 base and web bundles migrated to rc.4 and restored the new native tree on removal. With the installed rc.3 bundle configuration, 27 ownership records became 31. Later tool settings and unrelated comments survived. A diagnostic using a temporary copy of the Desktop configuration also recovered from a stale active receipt after a complete patch reset. Repeat activation performed no writes. Conflicting ownership and partial resets were refused. |
+| Configuration regression suite | 26 source groups, 25 built-runtime groups and ten additional lifecycle cases passed. These cover journals, concurrent writers, lock recovery, scope conflicts, nested presets, removal, and recovery after a live service fails to release. |
+| Build | TypeScript, Oxlint and the frozen dependency check passed. All 15 official JavaScript inputs from 14 DSH packages matched the integrity lock. The provenance manifest records 28 outputs. Both executors share a clean approval pipeline. Five sandbox constructors and seven tool error constructors retain host identity. Checked transforms preserve Purge #22, #48 and #93. |
+
+The mode checks used real DSH providers, a simulated approval answerer, and native session events replayed into a fresh Cordis context. Local fixtures and raw evidence are under `.local/compat-20261118/`. The normal Desktop profile and its sessions were never activated or modified by these checks.
+
+**Limits.** DSH 0.2.2-rc.3 can still remove the package after an ownership conflict prevents cleanup. A fresh isolated process then reported missing Guard imports. Resolve ownership or journal conflicts before uninstalling. Full Desktop UI interaction, every third-party plugin, file-backed third-party presets and Purge's all-host Apply operation were outside these tests. Windows reported partial shell enforcement. The standalone CLI ran at Node 22.19.0. The current host needs DSH >=0.2.2-rc.2 for its sandbox error classes.
+
+# Historical acceptance — 1.1.0
 
 Validated locally on Windows x64 with Node 26.7.0. Installed dependencies now have minimum-only version requirements: DSH >=0.2.1-rc.1, Purge >=1.1.70, Cordis >=4.0.3, Schemastery >=3.18.3, node-addon-system >=0.1.2 and Node >=22.19.0. Exact build inputs remain pinned. The unpublished 1.0.1 preparation was superseded by 1.1.0.
 

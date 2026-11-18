@@ -2,11 +2,13 @@
 
 The installed bundle adds a lifecycle entry. Installing or enabling it automatically creates the owned native-provider configuration. DSH's existing profile-file watcher performs the subsequent serialized reload. Disabling or removing the bundle automatically restores its owned changes. Ordinary shutdown retains the configuration for the next startup.
 
-Activation accepts DSH >=0.2.1-rc.1 and Purge >=1.1.70 with no upper bound. If lifecycle initialization fails, Guard restores valid existing owned configuration before reporting the activation error, even while the bundle is still selected. Cordis discards failed initialization effects, so postponing this restoration until uninstall would lose the cleanup callback. Restoration skips activation version checks, retains receipt schema 2, and finalizes recognized interrupted transactions under the existing lock. A restoration failure reports both errors and preserves the patch and receipt.
+Activation accepts DSH >=0.2.2-rc.2 and Purge >=1.1.70 with no upper bound. If lifecycle initialization fails, Guard restores valid existing owned configuration before reporting the activation error, even while the bundle is still selected. Cordis discards failed initialization effects, so postponing this restoration until uninstall would lose the cleanup callback. Restoration skips activation version checks, retains receipt schema 2, and finalizes recognized interrupted transactions under the existing lock. A restoration failure reports both errors and preserves the patch and receipt.
 
 The helper reads selected bundle layers, the profile patch, the later home patch and launch overlays using DSH's formal insertion/name-guard semantics. It preserves JavaScript-valued YAML expressions without evaluating them. Activation creates paired rows: disable each affected original entry and insert a uniquely named generated entry with the original scope, settings and enabled/platform state. Preset plugin lists receive equivalent paired entries.
 
 A root bridge exposes the native permission service to a facade isolated for Purge. The Purge row receives that scope and an explicit permission dependency. Native UI callers use the root service. No other Purge configuration or unrelated provider is disabled.
+
+On upgrade from an earlier scoped schema-2 receipt, Guard first restores the native rows in memory and reapplies the current configuration to the host’s root and preset executors in one transaction. The receipt records the new layout for subsequent write-free starts. After a complete profile patch reset, setup can rebuild the configuration if all ownership markers, Guard references and Guard-owned disable or isolation settings are absent. Ordinary native settings and comments are preserved. Partial removal still requires ownership review.
 
 Fresh default behavior is native Workspace Write with approval; explicit user configuration and existing session selections are retained. Custom composition that cannot be reconciled is reported before application.
 
@@ -34,13 +36,13 @@ For malformed locks, reused process identifiers or interrupted takeover claims, 
 
 DSH bundle removal first deselects the bundle and reloads it, allowing the lifecycle disposer to restore the previous native providers and remove the scoped adapter. The manager then removes the package and reloads the restored configuration. Later unrelated settings are preserved; conflicting changes to owned identities are reported. Direct filesystem deletion bypasses DSH's lifecycle and requires receipt-based recovery.
 
-If an ownership, journal, lock or missing-configuration problem prevents restoration, keep the package installed until recovery succeeds. DSH 0.2.1-rc.5 can still finish removal after a cleanup error, and residual provider references can prevent startup. Resolve the reported error, then run the optional `deactivate --apply --host-stopped` recovery command from an installed or downloaded matching package, with the explicit profile directory. This recovery also works after the bundle has been deselected or removed. Ordinary removal with intact ownership completes automatically.
+If an ownership, journal, lock or missing-configuration problem prevents restoration, keep the package installed until recovery succeeds. DSH 0.2.1-rc.5 and 0.2.2-rc.3 can still finish removal after a cleanup error, and residual provider references can prevent startup. Resolve the reported error, then run the optional `deactivate --apply --host-stopped` recovery command from an installed or downloaded matching package, with the explicit profile directory. This recovery also works after the bundle has been deselected or removed. Ordinary removal with intact ownership completes automatically.
 
 Old prototype receipts require separate explicit migration. The normal profile was never activated by the prototype in this development session. Never infer running-host use from an offline composition check.
 
 ## Native reload integration
 
-The lifecycle entry depends on `profileContext` and `hmr`. It writes the configuration transaction and returns; DSH's already registered patch watcher queues the next reconciliation. This follows the host's serialization and application-readiness behavior. Calling HMR from plugin initialization, including an inherited timer context, would nest a transaction and is deliberately avoided.
+The lifecycle entry depends on `profileContext` and `hmr`. When setup changes the configuration, it waits for the live native entries identified in the receipt to release their services. DSH's patch watcher then loads the replacements. This ordering matters because the loader can otherwise start the new sandbox while the original still owns the same service. DSH schedules the reload through its existing watcher.
 
 This integration uses native provider lifecycles for active tools and retained resources. It adds no tool admission or process-control mechanism. Configuration conflicts and failed provider loading are distinct outcomes and retain their normal diagnostics.
 

@@ -11,6 +11,7 @@ export default defineConfig({
   entry: {
     index: "src/index.ts",
     cli: "src/cli.ts",
+    tools: "src/entries/tools.ts",
     "permission-bridge": "src/permission-bridge.ts",
     "purge-permission": "src/purge-permission.ts",
     ...Object.fromEntries(Object.keys(entries).map(name => [name, `src/entries/${name}.ts`])),

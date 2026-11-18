@@ -1,74 +1,110 @@
 [
   {
     "repository": "deepseek-ai/deepseek-harness",
-    "revision": "b830ec950faba0a46dda564be3e2d854afed94f1",
+    "revision": "3f321d32bfe382212a8ed8785c1d47a5a300aa23",
     "packages": [
       {
         "name": "@deepseek-ai/dsh-sandbox-local",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-sandbox-policy",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-user-approval",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-permission-presets",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-fs-sandbox",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
-        "name": "@deepseek-ai/dsh-tools",
-        "version": "0.2.1-rc.5"
+        "name": "@deepseek-ai/dsh-tool-executor-ptc",
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-tool-bash",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-tool-pwsh",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-tool-fs",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-plugin-manager",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-sandbox",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
       },
       {
         "name": "@deepseek-ai/dsh-atomic-write",
-        "version": "0.2.1-rc.5"
+        "version": "0.2.2-rc.4"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-executor-native",
+        "version": "0.2.2-rc.4"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tools",
+        "version": "0.2.2-rc.4"
       }
     ],
-    "file": "deepseek-harness-b830ec950faba0a46dda564be3e2d854afed94f1.tar.gz",
-    "url": "https://codeload.github.com/deepseek-ai/deepseek-harness/tar.gz/b830ec950faba0a46dda564be3e2d854afed94f1",
-    "bytes": 34811890,
-    "sha256": "4281be5574c2eb94d1024d0e165ee24581efc59876e0849610b2dfb0784e5b23",
+    "file": "deepseek-harness-3f321d32bfe382212a8ed8785c1d47a5a300aa23.tar.gz",
+    "url": "https://codeload.github.com/deepseek-ai/deepseek-harness/tar.gz/3f321d32bfe382212a8ed8785c1d47a5a300aa23",
+    "bytes": 42867233,
+    "sha256": "d1841a3e2e0d3fe704dffc12e261da21fdef2c7cd8f7494269d8ae260eaa5950",
     "evidence": {
       "kind": "git-tag",
-      "tag": "dsh-v0.2.1-rc.5",
-      "matchingLimitation": "Official npm metadata has no gitHead. Release tag and root package version match 0.2.1-rc.5; byte-equivalent rebuild against official npm inputs has not been verified."
+      "tag": "dsh-v0.2.2-rc.4",
+      "matchingLimitation": "Official npm metadata has no gitHead. Release tag and package versions match 0.2.2-rc.4. Checked TypeScript sources, including the four sources of the shared tools chunk, match those in the official npm archives byte for byte. Byte-equivalent rebuild against the published JavaScript inputs has not been verified."
     },
     "verifiedSourcePaths": [
       "package.json",
-      "packages/sandbox/sandbox-local/src/index.ts",
-      "packages/core/tools/src/index.ts",
-      "packages/boot/plugin-manager/src/tools.ts",
-      "packages/util/atomic-write/src/index.ts",
       "scripts/build.ts",
-      "pnpm-lock.yaml"
+      "pnpm-lock.yaml",
+      "packages/sandbox/sandbox-local/package.json",
+      "packages/sandbox/sandbox-local/src/index.ts",
+      "packages/sandbox/sandbox-policy/package.json",
+      "packages/sandbox/sandbox-policy/src/index.ts",
+      "packages/interaction/user-approval/package.json",
+      "packages/interaction/user-approval/src/index.ts",
+      "packages/interaction/permission-presets/package.json",
+      "packages/interaction/permission-presets/src/index.ts",
+      "packages/fs/fs-sandbox/package.json",
+      "packages/fs/fs-sandbox/src/index.ts",
+      "packages/core/tool-executor-ptc/package.json",
+      "packages/core/tool-executor-ptc/src/index.ts",
+      "packages/shell/tool-bash/package.json",
+      "packages/shell/tool-bash/src/index.ts",
+      "packages/shell/tool-pwsh/package.json",
+      "packages/shell/tool-pwsh/src/index.ts",
+      "packages/fs/tool-fs/package.json",
+      "packages/fs/tool-fs/src/index.ts",
+      "packages/boot/plugin-manager/package.json",
+      "packages/boot/plugin-manager/src/tools.ts",
+      "packages/sandbox/sandbox/package.json",
+      "packages/sandbox/sandbox/src/index.ts",
+      "packages/util/atomic-write/package.json",
+      "packages/util/atomic-write/src/index.ts",
+      "packages/core/tool-executor-native/package.json",
+      "packages/core/tool-executor-native/src/index.ts",
+      "packages/core/tools/package.json",
+      "packages/core/tools/src/pipeline.ts",
+      "packages/core/tools/src/executor.ts",
+      "packages/core/tools/src/json-schema.ts",
+      "packages/core/tools/src/error-codes.ts",
+      "packages/core/tools/src/contracts.ts"
     ]
   },
   {
@@ -120,20 +156,20 @@
   },
   {
     "repository": "colinhacks/zod",
-    "revision": "f3c9ec03ba7a28ae72d25cc295f38674bee0f559",
+    "revision": "284243fb0d6532665afdc9239188773bb624f73c",
     "packages": [
       {
         "name": "zod",
-        "version": "4.4.3"
+        "version": "4.6.6"
       }
     ],
-    "file": "zod-f3c9ec03ba7a28ae72d25cc295f38674bee0f559.tar.gz",
-    "url": "https://codeload.github.com/colinhacks/zod/tar.gz/f3c9ec03ba7a28ae72d25cc295f38674bee0f559",
-    "bytes": 9860867,
-    "sha256": "3647a866d486f04342e668b3730dd849c990a95900c5942d4f30ed3e9f9003fb",
+    "file": "zod-284243fb0d6532665afdc9239188773bb624f73c.tar.gz",
+    "url": "https://codeload.github.com/colinhacks/zod/tar.gz/284243fb0d6532665afdc9239188773bb624f73c",
+    "bytes": 10434751,
+    "sha256": "6755392b196996f224342e4f295848d6272ee85a8df024e624ca0399c33b6b2a",
     "evidence": {
       "kind": "npm-version-metadata-gitHead",
-      "url": "https://registry.npmjs.org/zod/4.4.3"
+      "url": "https://registry.npmjs.org/zod/4.6.6"
     },
     "verifiedSourcePaths": [
       "package.json",

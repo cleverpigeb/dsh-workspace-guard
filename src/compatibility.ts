@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 /** Minimum installed versions; exact generated build inputs are locked separately. */
 export const SUPPORTED = {
-  dsh: "0.2.1-rc.1",
+  dsh: "0.2.2-rc.2",
   purge: "1.1.70",
   guard: "0.2.1",
 } as const;

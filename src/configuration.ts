@@ -27,6 +27,8 @@ export const REPLACEMENTS: Record<string, string> = {
   "@deepseek-ai/dsh-permission-presets": "permission",
   "@deepseek-ai/dsh-fs-sandbox": "fs",
   "@deepseek-ai/dsh-tools": "tools",
+  "@deepseek-ai/dsh-tool-executor-native": "tool-executor-native",
+  "@deepseek-ai/dsh-tool-executor-ptc": "tool-executor-ptc",
   "@deepseek-ai/dsh-tool-bash": "tool-bash",
   "@deepseek-ai/dsh-tool-pwsh": "tool-pwsh",
   "@deepseek-ai/dsh-tool-fs": "tool-fs",
@@ -45,6 +47,7 @@ type Owned = {
 };
 export type GuardReceipt = {
   version: 2;
+  nativeLayout?: "split-executors";
   profile: string;
   status: "active" | "inactive" | "rolled-back";
   owned: Owned[];
@@ -687,6 +690,41 @@ export function previewConfiguration(
 ): GuardPlan {
   return previewPlanned(input, action, planning(input));
 }
+/** A profile rollback can leave a receipt behind. Only adopt a reset when
+ * none of its owned wiring survives, even without the YAML markers. */
+function patchWasReset(input: PreviewInput, plan: Planning, receipt: GuardReceipt): boolean {
+  if (input.patch.includes(MARKER)) return false;
+  const disabledIds = new Set<string>();
+  const generatedIds = new Set<string>();
+  for (const item of receipt.owned) {
+    if (item.kind === "disable") disabledIds.add(item.installed.id);
+    if (item.kind === "service" || item.kind === "replacement")
+      generatedIds.add(item.installed.insert[0].id);
+    for (const pair of item.pairs ?? []) {
+      disabledIds.add(pair.original.id);
+      generatedIds.add(pair.replacement.id);
+    }
+  }
+  const purge = receipt.owned.find((item) => item.kind === "purge");
+  const hasRemnant = (row: Row): boolean =>
+    !!row &&
+    typeof row === "object" &&
+    (generatedIds.has(row.id) ||
+      (typeof row.name === "string" && row.name.startsWith(PACKAGE_NAME + "/")) ||
+      row.isolate?.permissionPresets === LABEL ||
+      (disabledIds.has(row.id) && row.disabled === true) ||
+      (row.id === purge?.installed.id &&
+        Array.isArray(row.inject) &&
+        row.inject.includes("permissionPresets") &&
+        !purge?.origin?.inject?.includes("permissionPresets")) ||
+      (Array.isArray(row.insert) && row.insert.some(hasRemnant)) ||
+      (Array.isArray(row.config) && row.config.some(hasRemnant)) ||
+      (Array.isArray(row.config?.plugins) && row.config.plugins.some(hasRemnant)));
+  return (
+    disabledIds.size > 0 &&
+    ![plan.profileRows, ...plan.later].some((layer) => layer.some(hasRemnant))
+  );
+}
 function previewPlanned(
   input: PreviewInput,
   action: ConfigurationAction,
@@ -701,19 +739,45 @@ function previewPlanned(
     );
   if (action !== "activate" && !receipt)
     throw new Error("No ownership receipt exists for this profile.");
-  if (action === "activate" && receipt?.status === "active") {
-    if (
-      receipt.owned.some(
-        (item) =>
-          (item.kind === "replacement" || item.kind === "service") &&
-          !item.installed.insert?.[0]?.name?.startsWith(PACKAGE_NAME + "/"),
-      )
-    )
+  if (receipt?.status === "active") {
+    const foreign = receipt.owned.some(
+      (item) =>
+        (item.kind === "replacement" || item.kind === "service") &&
+        !item.installed.insert?.[0]?.name?.startsWith(PACKAGE_NAME + "/"),
+    );
+    if (action === "activate" && foreign)
       throw new Error(
         `The active receipt belongs to a different package name. Remove the earlier development bundle through DSH before installing ${PACKAGE_NAME}; existing configuration was preserved.`,
       );
+    if (!foreign && patchWasReset(input, plan, receipt)) {
+      if (action === "activate")
+        return previewPlanned({ ...input, receipt: undefined }, action, plan);
+      return {
+        patch: input.patch,
+        changed: false,
+        receipt: {
+          version: 2,
+          profile,
+          status: action === "rollback" ? "rolled-back" : "inactive",
+          owned: [],
+        },
+        summary: ["The profile patch was reset. Finalize the receipt without rewriting the patch."],
+      };
+    }
+  }
+  if (action === "activate" && receipt?.status === "active") {
     const probe = doc.clone();
     const lowerTree = restoreOwned(probe, receipt, plan)!;
+    // DSH split tool dispatch into two executors. Rebase the
+    // intact old pairs and preset edits in the same journaled transaction.
+    if (!receipt.nativeLayout) {
+      const migrated = previewConfiguration(
+        { ...input, patch: String(probe), receipt: undefined },
+        action,
+      );
+      previewConfiguration({ ...input, patch: migrated.patch, receipt: migrated.receipt }, action);
+      return { ...migrated, changed: migrated.patch !== input.patch };
+    }
     verifyActive(plan, receipt, lowerTree);
     return {
       patch: input.patch,
@@ -876,7 +940,7 @@ function previewPlanned(
   return {
     patch: String(doc),
     changed: String(doc) !== input.patch,
-    receipt: { version: 2, profile, status: "active", owned },
+    receipt: { version: 2, nativeLayout: "split-executors", profile, status: "active", owned },
     summary: [
       `Install ${replacedIds.size} native row pairs and ${owned.filter((row) => row.kind === "preset").length} preserved preset configurations.`,
       "Native tools, scopes, platform conditions and user configuration remain available; only Purge automatic Full Access promotion is suppressed.",

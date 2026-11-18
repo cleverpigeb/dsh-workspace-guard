@@ -2,7 +2,7 @@
 
 The workflow publishes `@cleverpig/dsh-workspace-guard` from the existing GitHub release assets. It does not build or repack them. No npm token is stored in the workflow. Hosted run [41318207959](https://github.com/cleverpigeb/dsh-workspace-guard/actions/runs/41318207959) verified the v0.2.1 release checkout and assets, then skipped its identical published npm tarball. That run established hosted verification and retry behavior, but did not exercise genuine npm OIDC publication.
 
-Version 1.1.0 replaces the unpublished 1.0.1 preparation. Final immutable archives are prepared from the reviewed 1.1.0 revision and checked against its tag. GitHub Release creation and npm publication remain separate from local preparation and pushing the source/tag.
+The [v1.1.0 release](https://github.com/cleverpigeb/dsh-workspace-guard/releases/tag/v1.1.0) shows the bilingual notes and the three files to upload. Its [npm workflow](https://github.com/cleverpigeb/dsh-workspace-guard/actions/runs/41380146704) completed successfully. For v2.0.0, select the pushed tag, attach the three verified files and publish a stable GitHub Release to start the workflow.
 
 ## One-time npm setup
 
@@ -34,7 +34,7 @@ Complete the first successful trusted publish within 48 hours of configuring the
    - `cleverpig-dsh-workspace-guard-X.Y.Z-source.tar.gz`
    - `SHA256SUMS`, containing standard SHA-256 lines for both filenames, for example `64-hex-digits  filename`.
 
-4. Commit/tag the exact files represented by those archives, push that tag and publish the stable GitHub release. The `release: published` event starts publishing. Drafts and prereleases are excluded. Updating assets on an already-published release does not start another automatic run.
+4. Verify that the tag points to the commit used for packaging and push it before selecting it in the release editor. The `release: published` event on a stable GitHub Release starts npm publishing. Drafts and prereleases are excluded. Updating assets on an already-published release does not start another automatic run.
 
 Do not rebuild between testing the tarball and uploading it. Hashes prove that the checked assets are the uploaded bytes; acceptance evidence must identify the exact tested tarball separately.
 

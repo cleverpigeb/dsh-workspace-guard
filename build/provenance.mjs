@@ -26,7 +26,7 @@ writeFileSync("lib/provenance.json", JSON.stringify({
   inputs,
   lockfileSha256: sha256(readFileSync("pnpm-lock.yaml")),
   packagedLockfile: { file: "lib/build-lock.yaml", restoreAs: "pnpm-lock.yaml" },
-  preservedPurgePatches: [22, 48],
+  preservedPurgePatches: [22, 48, 93],
   outputs: files.map(file => ({ file, sha256: sha256(readFileSync(`lib/${file}`)) })),
 }, null, 2) + "\n");
 console.log(`Recorded provenance for ${inputs.length} inputs and ${files.length} output files.`);

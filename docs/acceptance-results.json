@@ -1,10 +1,16 @@
 {
-  "version": "1.1.0",
-  "status": "validated locally; final archives verified separately; publication pending",
+  "version": "2.0.0",
+  "status": "locally verified; stable build matches tested runtime",
+  "testedVersion": "2.0.0-dev.0",
+  "stableVerification": {
+    "version": "2.0.0",
+    "identicalRuntimeAndResourceFiles": 28,
+    "permissionAndToolChecksPassedPerHost": 11
+  },
+  "date": "2026-11-18",
   "platform": "Windows x64",
-  "node": "26.7.0",
   "minimumInstalled": {
-    "dsh": ">=0.2.1-rc.1",
+    "dsh": ">=0.2.2-rc.2",
     "purge": ">=1.1.70",
     "cordis": ">=4.0.3",
     "schemastery": ">=3.18.3",
@@ -13,73 +19,152 @@
     "upperBounds": false
   },
   "buildBaseline": {
-    "dsh": "0.2.1-rc.5",
-    "purgeTransformations": "1.6.67",
-    "exactPinsUnchanged": true
+    "dsh": "0.2.2-rc.4",
+    "officialJavaScriptInputs": 15,
+    "officialPackages": 14,
+    "verifiedOutputs": 28,
+    "preservedPurgePatches": [
+      22,
+      48,
+      93
+    ]
   },
-  "minimumEvidence": {
-    "dshExternalPeerPackages": 16,
-    "identicalJavaScriptFiles": 73,
-    "hmrComparedSeparately": true,
-    "scope": "Inspected runtime source comparisons and required APIs/configuration; no complete older-host execution"
-  },
-  "compatibility": {
-    "semverComparisons": 1849,
-    "invalidInputs": 31,
-    "largePrereleaseCases": 5,
-    "sourceNativeGateCases": 58,
-    "generatedGateCases": 60,
-    "copiedCliWithPurge1669": "activation/no-op/removal passed",
-    "permissionFacade": "Real Cordis + generated bridge/facade + copied safe Purge1.6.69 hook; explicit root-service stub; Workspace/manual Full Access retained"
-  },
-  "uninstall": {
-    "baseline": "v1.0.0 failed initialization then native removal reproduced leftover entries and fresh-process missing imports",
-    "incidentReceiptOwnedEntries": 27,
-    "incidentActivationError": "not independently established from preserved crash log",
-    "candidateCases": [
-      "normal shutdown/restart",
-      "disable/re-enable",
-      "normal removal before package deletion",
-      "Purge1.6.69 accepted and removed",
-      "below-minimum activation failure restores configuration before removal",
-      "conflicting recovery preserves both errors and files"
-    ],
-    "independentSourceCases": 8,
-    "freshProcessNativeProviders": 6,
-    "scope": "Actual Loader/app-boot/HMR/PluginManager and generated lifecycle; explicit provider/package-operation stubs",
-    "remainingNativeLimitation": "A restoration conflict or error can still be followed by native package deletion; reproduced, not fixed"
+  "runtime": {
+    "desktop": "0.2.2-rc.3",
+    "registry": "0.2.2-rc.4",
+    "node": "24.21.0",
+    "casesPassedPerHost": 11,
+    "currentPurgeBundle": "1.7.20",
+    "archivedPurgeHook": "1.6.69",
+    "powerShellEnforcement": "partial",
+    "hostPipelineLoadedByGuard": false,
+    "normalProfileChanged": false
   },
   "configuration": {
     "sourceGroupsPassed": 26,
     "generatedGroupsPassed": 25,
-    "receiptSchema": 2
+    "failedLoadCasesPassed": 8,
+    "liveProviderReleaseCasesPassed": 2,
+    "receiptSchema": 2,
+    "oldOwnedRecords": 27,
+    "newOwnedRecords": 31,
+    "writeFreeRepeat": true,
+    "completeResetRecovered": true,
+    "partialResetReplacementsRefused": true
   },
-  "build": {
-    "typeScript": "passed",
-    "oxlint": "passed",
-    "actionlint": "passed",
-    "officialInputsVerified": 12,
-    "generatedOutputsVerified": 25,
-    "importedProviderAdapterNamespaces": 12,
-    "sharedRuntimeIdentities": "passed",
-    "purge22And48": "passed"
-  },
-  "boundaries": {
-    "normalDesktopActivated": false,
-    "normalProfileModified": false,
-    "fullOlderHostExecution": false,
-    "futureVersionsPrevalidated": false,
-    "hosted110Installation": false,
-    "publication": false,
-    "newShellOrOpsSmoke": false,
-    "comparativeBenchmarks": false,
-    "numericalSpeedupClaims": false
+  "lifecycle": {
+    "host": "0.2.2-rc.3",
+    "nativeComponents": [
+      "app-boot",
+      "Cordis Loader",
+      "HMR",
+      "PluginManager"
+    ],
+    "fixtureComponents": [
+      "package operations",
+      "provider implementations"
+    ],
+    "freshStartupOutsideRepository": true,
+    "localTarball": {
+      "hosts": ["0.2.2-rc.3", "0.2.2-rc.4"],
+      "packageManager": "Desktop PluginManager with pnpm 11.28.5",
+      "providers": "real native providers with a minimal base bundle and an inert Purge consumer",
+      "enabledEntries": 11,
+      "hotInstall": true,
+      "hotReenable": true,
+      "nativeConfigurationRestoredOnDisableAndRemoval": true
+    },
+    "unresolved": "Native removal can continue after an ownership conflict."
   },
   "evidence": [
-    ".local/release-1.1.0/",
-    ".local/release-1.0.1/compatibility/ (final reports label1.1.0)",
-    ".local/release-1.0.1/floor-evidence.json"
+    ".local/compat-20261118/configuration/",
+    ".local/compat-20261118/lifecycle/",
+    ".local/compat-20261118/modes/",
+    ".local/compat-20261118/native-analysis/"
   ],
+  "historical110": {
+    "version": "1.1.0",
+    "status": "validated locally; final archives verified separately; publication pending",
+    "platform": "Windows x64",
+    "node": "26.7.0",
+    "minimumInstalled": {
+      "dsh": ">=0.2.1-rc.1",
+      "purge": ">=1.1.70",
+      "cordis": ">=4.0.3",
+      "schemastery": ">=3.18.3",
+      "nodeAddonSystem": ">=0.1.2",
+      "node": ">=22.19.0",
+      "upperBounds": false
+    },
+    "buildBaseline": {
+      "dsh": "0.2.1-rc.5",
+      "purgeTransformations": "1.6.67",
+      "exactPinsUnchanged": true
+    },
+    "minimumEvidence": {
+      "dshExternalPeerPackages": 16,
+      "identicalJavaScriptFiles": 73,
+      "hmrComparedSeparately": true,
+      "scope": "Inspected runtime source comparisons and required APIs/configuration; no complete older-host execution"
+    },
+    "compatibility": {
+      "semverComparisons": 1849,
+      "invalidInputs": 31,
+      "largePrereleaseCases": 5,
+      "sourceNativeGateCases": 58,
+      "generatedGateCases": 60,
+      "copiedCliWithPurge1669": "activation/no-op/removal passed",
+      "permissionFacade": "Real Cordis + generated bridge/facade + copied safe Purge1.6.69 hook; explicit root-service stub; Workspace/manual Full Access retained"
+    },
+    "uninstall": {
+      "baseline": "v1.0.0 failed initialization then native removal reproduced leftover entries and fresh-process missing imports",
+      "incidentReceiptOwnedEntries": 27,
+      "incidentActivationError": "not independently established from preserved crash log",
+      "candidateCases": [
+        "normal shutdown/restart",
+        "disable/re-enable",
+        "normal removal before package deletion",
+        "Purge1.6.69 accepted and removed",
+        "below-minimum activation failure restores configuration before removal",
+        "conflicting recovery preserves both errors and files"
+      ],
+      "independentSourceCases": 8,
+      "freshProcessNativeProviders": 6,
+      "scope": "Actual Loader/app-boot/HMR/PluginManager and generated lifecycle; explicit provider/package-operation stubs",
+      "remainingNativeLimitation": "A restoration conflict or error can still be followed by native package deletion; reproduced, not fixed"
+    },
+    "configuration": {
+      "sourceGroupsPassed": 26,
+      "generatedGroupsPassed": 25,
+      "receiptSchema": 2
+    },
+    "build": {
+      "typeScript": "passed",
+      "oxlint": "passed",
+      "actionlint": "passed",
+      "officialInputsVerified": 12,
+      "generatedOutputsVerified": 25,
+      "importedProviderAdapterNamespaces": 12,
+      "sharedRuntimeIdentities": "passed",
+      "purge22And48": "passed"
+    },
+    "boundaries": {
+      "normalDesktopActivated": false,
+      "normalProfileModified": false,
+      "fullOlderHostExecution": false,
+      "futureVersionsPrevalidated": false,
+      "hosted110Installation": false,
+      "publication": false,
+      "newShellOrOpsSmoke": false,
+      "comparativeBenchmarks": false,
+      "numericalSpeedupClaims": false
+    },
+    "evidence": [
+      ".local/release-1.1.0/",
+      ".local/release-1.0.1/compatibility/ (final reports label1.1.0)",
+      ".local/release-1.0.1/floor-evidence.json"
+    ]
+  },
   "historical100": {
     "version": "1.0.0",
     "status": "implementation validated; final documentation reviewed; publication pending",

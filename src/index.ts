@@ -28,6 +28,18 @@ export async function apply(ctx: any): Promise<void> {
   let plan;
   try {
     plan = await synchronizeInstalledConfiguration(options, "load");
+    // The Loader starts replacement rows concurrently with disabling their
+    // originals. Release the affected live entries before HMR starts that
+    // pass, so the new instances can register the same root services.
+    if (plan?.changed) {
+      const tree = ctx.fiber?.entry?.parent.tree;
+      for (const { kind, installed } of plan.receipt.owned) {
+        if (kind !== "disable") continue;
+        const entry = tree?.store[installed.id];
+        if (entry?.options.name === installed.name && !entry.disabled)
+          await entry.update({ disabled: true });
+      }
+    }
   } catch (error) {
     // Cordis clears failed-initialization effects. A later uninstall would have
     // no cleanup callback, so restore valid owned state before reporting failure.

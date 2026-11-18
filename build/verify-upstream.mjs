@@ -7,11 +7,16 @@ import { createRequire } from "node:module";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
-import { selectedModules, packageName, upstreamVersion } from "./upstream.mjs";
+import { selectedInputs, privateInputs, packageName, upstreamVersion } from "./upstream.mjs";
 
 const require = createRequire(import.meta.url);
 const lockPath = new URL("./upstream-lock.json", import.meta.url);
 export const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
+function inputPath(specifier) {
+  if (!Object.hasOwn(privateInputs, specifier)) return require.resolve(specifier);
+  const manifest = require.resolve(`${packageName(specifier)}/package.json`);
+  return join(dirname(manifest), privateInputs[specifier]);
+}
 function tarFiles(bytes) {
   const archive = gunzipSync(bytes), files = new Map();
   for (let offset = 0; offset + 512 <= archive.length;) {
@@ -32,10 +37,10 @@ async function fetchBytes(url) {
   return Buffer.from(await response.arrayBuffer());
 }
 async function refresh() {
-  const records = await Promise.all(selectedModules.map(async specifier => {
+  const records = await Promise.all(selectedInputs.map(async specifier => {
     const name = packageName(specifier);
     const manifestPath = require.resolve(`${name}/package.json`);
-    const entryPath = require.resolve(specifier);
+    const entryPath = inputPath(specifier);
     const file = relative(dirname(manifestPath), entryPath).replaceAll("\\", "/");
     const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
     if (manifest.version !== upstreamVersion) throw new Error(`Unexpected installed ${name}: ${manifest.version}`);
@@ -56,11 +61,11 @@ async function refresh() {
 }
 export function verifyUpstream() {
   const records = JSON.parse(readFileSync(lockPath, "utf8"));
-  if (records.map(item => item.specifier).join() !== selectedModules.join()) throw new Error("Upstream module list changed; refresh official provenance first");
+  if (records.map(item => item.specifier).join() !== selectedInputs.join()) throw new Error("Upstream module list changed; refresh official provenance first");
   for (const record of records) {
     const manifestPath = require.resolve(`${record.name}/package.json`);
     const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-    if (manifest.version !== record.version || sha256(readFileSync(require.resolve(record.specifier))) !== record.sourceSha256)
+    if (manifest.version !== record.version || sha256(readFileSync(inputPath(record.specifier))) !== record.sourceSha256)
       throw new Error(`Upstream source mismatch: ${record.specifier}; install the locked official dependency`);
     if (sha256(readFileSync(join(dirname(manifestPath), "LICENSE"))) !== record.licenseSha256)
       throw new Error(`Upstream license mismatch: ${record.name}`);

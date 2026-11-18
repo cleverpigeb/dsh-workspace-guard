@@ -1,3 +1,4 @@
+# Historical v1.1.0 example. Use the current CLI plan to see both executor pairs for your profile.
 # Example owned native pair delta generated automatically when the bundle is installed/enabled.
 # No normal profile/installed package changed. Values are sanitized if marked <USER_WORKSPACE>.
 - id: tool-plugin-manager

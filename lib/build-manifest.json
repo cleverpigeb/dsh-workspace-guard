@@ -1,30 +1,41 @@
 {
+  "standaloneVersions": {
+    "yaml": "2.9.0",
+    "zod": "4.6.6",
+    "diff": "9.0.0"
+  },
   "preservedPurgePatches": [
+    {
+      "specifier": "@deepseek-ai/dsh-sandbox-policy",
+      "patch": 93,
+      "sourceSha256": "6c229f24f4b9ad67790ab5c8d1695e1ed538c0354955494bedd0dbe836debec4",
+      "transformedSha256": "c174a7511ed37ac79df614472de60fb3ca2fd63f06f237d097b4ac24ae6fdb5e"
+    },
     {
       "specifier": "@deepseek-ai/dsh-tool-bash",
       "patch": 48,
-      "sourceSha256": "a1215d7bcaf82c0755be48321ef6bb45075f1cb33296d6263009e9d10fd596f6",
-      "transformedSha256": "ef39bea3e20eea0c3fcacc4355136e84a4b1c9c114ca8cbb9b4e9526d923ea1f"
+      "sourceSha256": "8fb836a65eb633f85aa8b1b079fb306866e597fe8f4987c2205b5c4482df57de",
+      "transformedSha256": "420ab4772a9047630803273cbfba81f93c73d3486cdab91fe761b3c10b2f32e1"
     },
     {
       "specifier": "@deepseek-ai/dsh-tool-fs",
       "patch": 22,
-      "sourceSha256": "b11d3fa50b9042019a91cc38a6abe35d74ed651374278f95e60b42734e079df1",
-      "transformedSha256": "7ee1ea54182d70916ae9fa670da568d8dde8715318ca11c2c3d5e5f2aa663c3b"
+      "sourceSha256": "f27783bf0d89391ed775b65df47acb6b52adf526f4b9d849a0eeb3937a80d6c1",
+      "transformedSha256": "8ca8de6b09020a78aaa19e0c132c8d038c134f130c69f56e1d5e8151d7c6c907"
     },
     {
       "specifier": "@deepseek-ai/dsh-tool-pwsh",
       "patch": 48,
-      "sourceSha256": "94c7f68c425e62c8006907b3f4fea771935321581fd2327b7ee1f0ba8d15eec1",
-      "transformedSha256": "1df8d71d16322986115cc8ab81a5db71a43ae2d7d0f4b6417fc7781f25817476"
+      "sourceSha256": "03a29fb9cff987662c14ab925a37ff4ae8b1ec3cce21f8af9c44eec7dd4c66eb",
+      "transformedSha256": "e3c2c666093e49fde656fea5bbfd77568bbe99054b94513faa6ce8b3befd51dd"
     }
   ],
   "chunks": [
     {
       "file": "approval.js",
       "imports": [
-        "lib-KC55FOau.js",
-        "runtime-version-y6iaHXNj.js"
+        "lib-BH9l5trz.js",
+        "runtime-version-BxFG0_oq.js"
       ],
       "exports": [
         "APPROVAL_POLICIES",
@@ -38,7 +49,7 @@
     {
       "file": "cli.js",
       "imports": [
-        "configuration-CjEL45QR.js"
+        "configuration-B8H4Cvbs.js"
       ],
       "exports": [
         "main"
@@ -46,7 +57,7 @@
       "modules": []
     },
     {
-      "file": "compatibility-BafQJcif.js",
+      "file": "compatibility-DgEtJhn3.js",
       "imports": [
         "node:module",
         "node:path",
@@ -61,9 +72,9 @@
       "modules": []
     },
     {
-      "file": "configuration-CjEL45QR.js",
+      "file": "configuration-B8H4Cvbs.js",
       "imports": [
-        "compatibility-BafQJcif.js",
+        "compatibility-DgEtJhn3.js",
         "node:module",
         "node:path",
         "node:crypto",
@@ -157,8 +168,8 @@
     {
       "file": "fs.js",
       "imports": [
-        "lib-DWBq_88x.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
         "node:path",
         "node:fs/promises",
         "@deepseek-ai/dsh-fs-local",
@@ -175,7 +186,7 @@
     {
       "file": "index.js",
       "imports": [
-        "configuration-CjEL45QR.js",
+        "configuration-B8H4Cvbs.js",
         "node:path"
       ],
       "exports": [
@@ -186,118 +197,14 @@
       "modules": []
     },
     {
-      "file": "lib-BDj20byz.js",
+      "file": "lib-BH9l5trz.js",
       "imports": [
-        "lib-DWBq_88x.js",
-        "@deepseek-ai/cordis",
-        "@deepseek-ai/schemastery",
-        "@deepseek-ai/dsh-llm",
-        "@deepseek-ai/dsh-util-values",
-        "@deepseek-ai/dsh-scope",
-        "@deepseek-ai/dsh-brand",
-        "@deepseek-ai/dsh-tools"
-      ],
-      "exports": [
-        "S",
-        "_",
-        "a",
-        "b",
-        "c",
-        "d",
-        "f",
-        "g",
-        "h",
-        "i",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "x",
-        "y"
-      ],
-      "modules": [
-        "@deepseek-ai/dsh-tools/lib/index.js"
-      ]
-    },
-    {
-      "file": "lib-BFoXg-Us.js",
-      "imports": [
-        "node:path",
-        "@deepseek-ai/cordis",
-        "@deepseek-ai/schemastery"
-      ],
-      "exports": [
-        "a",
-        "c",
-        "i",
-        "n",
-        "o",
-        "r",
-        "s",
-        "t"
-      ],
-      "modules": [
-        "@deepseek-ai/dsh-sandbox-policy/lib/index.js",
-        "zod/v4/classic/errors.js",
-        "zod/v4/classic/iso.js",
-        "zod/v4/classic/parse.js",
-        "zod/v4/classic/schemas.js",
-        "zod/v4/core/api.js",
-        "zod/v4/core/checks.js",
-        "zod/v4/core/core.js",
-        "zod/v4/core/doc.js",
-        "zod/v4/core/errors.js",
-        "zod/v4/core/json-schema-processors.js",
-        "zod/v4/core/parse.js",
-        "zod/v4/core/regexes.js",
-        "zod/v4/core/registries.js",
-        "zod/v4/core/schemas.js",
-        "zod/v4/core/to-json-schema.js",
-        "zod/v4/core/util.js",
-        "zod/v4/core/versions.js"
-      ]
-    },
-    {
-      "file": "lib-DWBq_88x.js",
-      "imports": [
-        "node:fs",
-        "@deepseek-ai/cordis",
-        "node:os",
-        "@deepseek-ai/dsh-llm",
-        "@deepseek-ai/dsh-util-values",
-        "@deepseek-ai/dsh-sandbox"
-      ],
-      "exports": [
-        "a",
-        "c",
-        "i",
-        "l",
-        "n",
-        "o",
-        "r",
-        "s",
-        "t",
-        "u"
-      ],
-      "modules": [
-        "@deepseek-ai/dsh-sandbox/lib/index.js"
-      ]
-    },
-    {
-      "file": "lib-KC55FOau.js",
-      "imports": [
+        "schemas-CmeDQF0s.js",
         "node:crypto",
         "@deepseek-ai/cordis",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
-        "@deepseek-ai/dsh-scope",
-        "@deepseek-ai/dsh-session"
+        "@deepseek-ai/dsh-scope"
       ],
       "exports": [
         "i",
@@ -310,9 +217,59 @@
       ]
     },
     {
+      "file": "lib-bUsb4vS-.js",
+      "imports": [
+        "node:path",
+        "node:fs",
+        "@deepseek-ai/cordis",
+        "node:os",
+        "@deepseek-ai/dsh-sandbox",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-error",
+        "@deepseek-ai/dsh-util-values"
+      ],
+      "exports": [
+        "a",
+        "c",
+        "d",
+        "f",
+        "i",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "r",
+        "s",
+        "t",
+        "u"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox/lib/index.js"
+      ]
+    },
+    {
+      "file": "lib-DUirXNPS.js",
+      "imports": [
+        "lib-bUsb4vS-.js",
+        "schemas-CmeDQF0s.js",
+        "node:path",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery"
+      ],
+      "exports": [
+        "n",
+        "r",
+        "t"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-sandbox-policy/lib/index.js"
+      ]
+    },
+    {
       "file": "permission-bridge.js",
       "imports": [
-        "runtime-version-y6iaHXNj.js",
+        "runtime-version-BxFG0_oq.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -323,9 +280,11 @@
     {
       "file": "permission.js",
       "imports": [
-        "lib-BFoXg-Us.js",
-        "lib-KC55FOau.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-DUirXNPS.js",
+        "schemas-CmeDQF0s.js",
+        "lib-BH9l5trz.js",
+        "runtime-version-BxFG0_oq.js",
+        "@deepseek-ai/cordis",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-commands/brand",
         "@deepseek-ai/dsh-typert-protocol"
@@ -341,11 +300,29 @@
       ]
     },
     {
+      "file": "pipeline-CJKjgufX.js",
+      "imports": [
+        "@deepseek-ai/dsh-tools",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-scope"
+      ],
+      "exports": [
+        "n",
+        "r",
+        "t"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tools/lib/pipeline.js",
+        "@deepseek-ai/dsh-tools/lib/shared-DGx6D7zk.js"
+      ]
+    },
+    {
       "file": "plugin-tools.js",
       "imports": [
-        "lib-DWBq_88x.js",
-        "lib-BDj20byz.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
+        "@deepseek-ai/dsh-tools",
         "@deepseek-ai/dsh-util-values",
         "@deepseek-ai/dsh-app-boot"
       ],
@@ -360,8 +337,8 @@
     {
       "file": "policy.js",
       "imports": [
-        "lib-BFoXg-Us.js",
-        "runtime-version-y6iaHXNj.js"
+        "lib-DUirXNPS.js",
+        "runtime-version-BxFG0_oq.js"
       ],
       "exports": [
         "SANDBOX_MODES",
@@ -374,8 +351,8 @@
     {
       "file": "purge-permission.js",
       "imports": [
-        "runtime-version-y6iaHXNj.js",
-        "compatibility-BafQJcif.js",
+        "runtime-version-BxFG0_oq.js",
+        "compatibility-DgEtJhn3.js",
         "@deepseek-ai/cordis"
       ],
       "exports": [
@@ -384,9 +361,9 @@
       "modules": []
     },
     {
-      "file": "runtime-version-y6iaHXNj.js",
+      "file": "runtime-version-BxFG0_oq.js",
       "imports": [
-        "compatibility-BafQJcif.js"
+        "compatibility-DgEtJhn3.js"
       ],
       "exports": [],
       "modules": []
@@ -394,8 +371,8 @@
     {
       "file": "sandbox.js",
       "imports": [
-        "lib-DWBq_88x.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
         "node:path",
         "node:fs",
         "node:url",
@@ -415,14 +392,48 @@
       ]
     },
     {
+      "file": "schemas-CmeDQF0s.js",
+      "imports": [],
+      "exports": [
+        "a",
+        "i",
+        "n",
+        "o",
+        "r",
+        "t"
+      ],
+      "modules": [
+        "zod/v4/classic/errors.js",
+        "zod/v4/classic/parse.js",
+        "zod/v4/classic/schemas.js",
+        "zod/v4/core/api.js",
+        "zod/v4/core/checks.js",
+        "zod/v4/core/core.js",
+        "zod/v4/core/doc.js",
+        "zod/v4/core/errors.js",
+        "zod/v4/core/json-schema-processors.js",
+        "zod/v4/core/memoizer.js",
+        "zod/v4/core/parse.js",
+        "zod/v4/core/regexes.js",
+        "zod/v4/core/registries.js",
+        "zod/v4/core/schemas.js",
+        "zod/v4/core/to-json-schema.js",
+        "zod/v4/core/util.js",
+        "zod/v4/core/versions.js",
+        "zod/v4/locales/en.js"
+      ]
+    },
+    {
       "file": "tool-bash.js",
       "imports": [
-        "lib-BDj20byz.js",
-        "lib-DWBq_88x.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
         "node:path",
+        "@deepseek-ai/dsh-tools",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-jobs",
+        "@deepseek-ai/dsh-subprocess",
         "@deepseek-ai/dsh-shell"
       ],
       "exports": [
@@ -436,15 +447,67 @@
       ]
     },
     {
+      "file": "tool-executor-native.js",
+      "imports": [
+        "pipeline-CJKjgufX.js",
+        "runtime-version-BxFG0_oq.js",
+        "@deepseek-ai/dsh-tools"
+      ],
+      "exports": [
+        "NativeToolExecutor",
+        "apply",
+        "inject",
+        "name"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tool-executor-native/lib/index.js"
+      ]
+    },
+    {
+      "file": "tool-executor-ptc.js",
+      "imports": [
+        "pipeline-CJKjgufX.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
+        "@deepseek-ai/dsh-tools",
+        "@deepseek-ai/cordis",
+        "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-util-values",
+        "@deepseek-ai/dsh-scope",
+        "@deepseek-ai/dsh-brand"
+      ],
+      "exports": [
+        "CodeResetFailedError",
+        "CodeRunFailedError",
+        "Config",
+        "PtcExecutor",
+        "apply",
+        "inject",
+        "jsonSchemaToPy",
+        "jsonSchemaToTs",
+        "name",
+        "renderToolsSdk",
+        "renderToolsSdkPy"
+      ],
+      "modules": [
+        "@deepseek-ai/dsh-tool-executor-ptc/lib/index.js"
+      ]
+    },
+    {
       "file": "tool-fs.js",
       "imports": [
-        "lib-BDj20byz.js",
-        "lib-DWBq_88x.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
         "node:path",
+        "@deepseek-ai/dsh-tools",
         "@deepseek-ai/schemastery",
+        "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-error",
+        "@deepseek-ai/dsh-util-values",
         "@deepseek-ai/dsh-fs",
         "@deepseek-ai/dsh-util-code-language",
+        "@deepseek-ai/dsh-fs-patch",
         "@deepseek-ai/dsh-attachment"
       ],
       "exports": [
@@ -471,12 +534,14 @@
     {
       "file": "tool-pwsh.js",
       "imports": [
-        "lib-BDj20byz.js",
-        "lib-DWBq_88x.js",
-        "runtime-version-y6iaHXNj.js",
+        "lib-bUsb4vS-.js",
+        "runtime-version-BxFG0_oq.js",
         "node:path",
+        "@deepseek-ai/dsh-tools",
         "@deepseek-ai/schemastery",
         "@deepseek-ai/dsh-llm",
+        "@deepseek-ai/dsh-jobs",
+        "@deepseek-ai/dsh-subprocess",
         "@deepseek-ai/dsh-shell"
       ],
       "exports": [
@@ -492,33 +557,11 @@
     {
       "file": "tools.js",
       "imports": [
-        "lib-BDj20byz.js",
-        "runtime-version-y6iaHXNj.js"
+        "runtime-version-BxFG0_oq.js",
+        "@deepseek-ai/dsh-tools"
       ],
       "exports": [
-        "CodeRunFailedError",
-        "JsonSchemaError",
-        "RUN_CODE_NAME",
-        "TOOL_ABORTED",
-        "TOOL_ABORTED_BEFORE_DISPATCH",
-        "TOOL_RUNTIME_SCHEDULER",
-        "ToolArgsError",
-        "ToolNotFoundError",
-        "ToolOutputError",
-        "ToolRuntime",
-        "assertObjectJsonSchema",
-        "assertSupportedJsonSchema",
-        "default",
-        "defineContentToolFixture",
-        "defineTool",
-        "jsonSchemaToPy",
-        "jsonSchemaToTs",
-        "parameterSchemaSpecToJsonSchema",
-        "renderToolsSdk",
-        "renderToolsSdkPy",
-        "validateArgs",
-        "validateJsonSchemaValue",
-        "valueSchemaSpecToJsonSchema"
+        "default"
       ],
       "modules": []
     }

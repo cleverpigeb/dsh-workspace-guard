@@ -14,33 +14,35 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 ## Bundled Upstream Components and Provenance
 
-The generated runtime in `lib/` bundles selected official DeepSeek Harness modules (`0.2.1-rc.5`) and standalone JavaScript libraries (`diff@9.0.0`, `yaml@2.9.0`, and `zod@4.4.3`) under GPL-3.0-compatible permissive licenses (`MIT`, `BSD-3-Clause`, and `ISC`). These modules are generated from locked build dependencies rather than maintained as hand-copied source files:
+The generated runtime in `lib/` bundles selected official DeepSeek Harness modules (`0.2.2-rc.4`) and standalone JavaScript libraries (`diff@9.0.0`, `yaml@2.9.0`, and `zod@4.6.6`) under GPL-3.0-compatible permissive licenses (`MIT`, `BSD-3-Clause`, and `ISC`). These modules are generated from locked build dependencies rather than maintained as hand-copied source files:
 
 | Component | Version | License | Copyright Holder | Role in `@cleverpig/dsh-workspace-guard` |
 | --- | --- | --- | --- | --- |
-| `@deepseek-ai/dsh-sandbox-local` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored local sandbox provider (`./sandbox`) |
-| `@deepseek-ai/dsh-sandbox-policy` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored sandbox policy provider (`./policy`) |
-| `@deepseek-ai/dsh-user-approval` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored interactive approval broker (`./approval`) |
-| `@deepseek-ai/dsh-permission-presets` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored permission presets service (`./permission`) |
-| `@deepseek-ai/dsh-fs-sandbox` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored sandboxed filesystem service (`./fs`) |
-| `@deepseek-ai/dsh-sandbox` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Shared permission-expansion helper in the bundled graph |
-| `@deepseek-ai/dsh-tools` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored `ToolRuntime` and `run_code` consumer (`./tools`) |
-| `@deepseek-ai/dsh-tool-bash` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored Bash tool consumer (`./tool-bash`) |
-| `@deepseek-ai/dsh-tool-pwsh` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored PowerShell tool consumer (`./tool-pwsh`) |
-| `@deepseek-ai/dsh-tool-fs` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored filesystem tool consumer (`./tool-fs`) |
-| `@deepseek-ai/dsh-plugin-manager` (`./tools` only) | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Restored plugin-manager tools subentry (`./plugin-tools`) |
-| `@deepseek-ai/dsh-atomic-write` | `0.2.1-rc.5` | `MIT` | Copyright (c) 2026 DeepSeek | Bundled native writer-lock helper for standalone recovery |
+| `@deepseek-ai/dsh-sandbox-local` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored local sandbox provider (`./sandbox`) |
+| `@deepseek-ai/dsh-sandbox-policy` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored sandbox policy provider (`./policy`) |
+| `@deepseek-ai/dsh-user-approval` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored interactive approval broker (`./approval`) |
+| `@deepseek-ai/dsh-permission-presets` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored permission presets service (`./permission`) |
+| `@deepseek-ai/dsh-fs-sandbox` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored sandboxed filesystem service (`./fs`) |
+| `@deepseek-ai/dsh-sandbox` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Shared permission-expansion helper in the bundled graph |
+| `@deepseek-ai/dsh-tools` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Shared tool approval pipeline and its private helper |
+| `@deepseek-ai/dsh-tool-executor-native` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Native tool dispatch |
+| `@deepseek-ai/dsh-tool-executor-ptc` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Programmatic tool calling and run_code |
+| `@deepseek-ai/dsh-tool-bash` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored Bash tool consumer (`./tool-bash`) |
+| `@deepseek-ai/dsh-tool-pwsh` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored PowerShell tool consumer (`./tool-pwsh`) |
+| `@deepseek-ai/dsh-tool-fs` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored filesystem tool consumer (`./tool-fs`) |
+| `@deepseek-ai/dsh-plugin-manager` (`./tools` only) | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Restored plugin-manager tools subentry (`./plugin-tools`) |
+| `@deepseek-ai/dsh-atomic-write` | `0.2.2-rc.4` | `MIT` | Copyright (c) 2026 DeepSeek | Bundled native writer-lock helper for standalone recovery |
 | `diff` | `9.0.0` | `BSD-3-Clause` | Copyright (c) 2009-2015, Kevin Decker `<kpdecker@gmail.com>` | Bundled runtime dependency for unified diff generation |
 | `yaml` | `2.9.0` | `ISC` | Copyright Eemeli Aro `<eemeli@gmail.com>` | Bundled YAML AST parser/serializer for `cordis.patch.yml` |
-| `zod` | `4.4.3` | `MIT` | Copyright (c) 2025 Colin McDonnell | Bundled schema validation dependency for tool entries |
+| `zod` | `4.6.6` | `MIT` | Copyright (c) 2025 Colin McDonnell | Bundled schema validation dependency for tool entries |
 
 ### Build Records and Source Distribution
 
-- `build/upstream-lock.json` records official npm registry tarballs, SHA-512 integrity digests, archive/source/license SHA-256 hashes, and exact input entry paths for all 12 official `@deepseek-ai/*` modules. Every release build (`pnpm run build:release`) verifies these hashes before bundling.
+- `build/upstream-lock.json` records official npm registry tarballs, SHA-512 integrity digests, archive/source/license SHA-256 hashes, and exact input entry paths for all 15 inputs from 14 official `@deepseek-ai/*` packages. Every release build (`pnpm run build:release`) verifies these hashes before bundling.
 - `build/source-lock.json` and `build/source-release.mjs` (`pnpm run source:release`) record and package the tracked project files together with pinned upstream source archives (`deepseek-harness`, `jsdiff`, `yaml`, and `zod`) and `lib/build-lock.yaml` (restorable as `pnpm-lock.yaml`). Archive hashes are verified; upstream byte-equivalent rebuilding and complete combined-host source obligations are not established by the archive.
-- `lib/provenance.json` records the project metadata, verified upstream inputs, lockfile SHA-256, preserved Purge patch IDs (`22` and `48`), and generated output hashes.
-- `lib/build-manifest.json` records the bundled module graph and checked build transformations that preserve Purge `1.6.67` patch `#22` (larger file-read limits in `@deepseek-ai/dsh-tool-fs`) and patch `#48` (simplified delete/move prompt guidance in `@deepseek-ai/dsh-tool-bash` and `@deepseek-ai/dsh-tool-pwsh`).
-- `lib/host-identities.json` records the two identity-sensitive native exports that remain imported from the host at runtime: `dsh-tools.TOOL_RUNTIME_SCHEDULER` and `dsh-sandbox.SandboxUnavailableError`. This preserves the unmodified host `AgentLoop` scheduler symbol and PTC `instanceof` error classification without importing the host's patched permission or escalation functions.
+- `lib/provenance.json` records the project metadata, verified upstream inputs, lockfile SHA-256, preserved Purge patch IDs (`22`, `48`, and `93`), and generated output hashes.
+- `lib/build-manifest.json` records the bundled module graph and the transformations for Purge’s larger read limits (#22), shell guidance (#48) and branding change in file-policy text (#93).
+- `lib/host-identities.json` records the seven tool error constructors and five sandbox constructors supplied by DSH. Clients and generated providers share these identities for error handling and subclass checks.
 - `lib/THIRD_PARTY_LICENSES.txt` contains the per-package generated license notices shipped alongside the prebuilt runtime in `lib/`.
 
 ### Source Access and Redistribution
@@ -49,29 +51,31 @@ The npm package includes the project's TypeScript and build scripts. Before rebu
 
 For each distributed prebuilt release, recipients must also have access to the corresponding source under GPL terms. Maintainers should publish the matching source companion alongside the release and place clear download directions beside the package. This archive does not require a compiler during plugin installation.
 
-Run `pnpm source:release` from the Git checkout after adding maintained release files to Git's index, with Git and `tar` available on PATH. It reads the current working-tree contents of tracked files and creates `.local/artifacts/cleverpig-dsh-workspace-guard-1.1.0-source.tar.gz`. Use `pnpm source:release --output <directory>` for another destination; existing archives are not overwritten. The archive contains `project/`, four unextracted upstream archives under `upstream/`, and a checksum manifest. Local tests, receipts, and agent working files remain untracked and outside the project source archive.
+Run `pnpm source:release` from the Git checkout after adding maintained release files to Git's index, with Git and `tar` available on PATH. It reads the current working-tree contents of tracked files and creates `.local/artifacts/cleverpig-dsh-workspace-guard-2.0.0-source.tar.gz`. Use `pnpm source:release --output <directory>` for another destination; existing archives are not overwritten. The archive contains `project/`, four unextracted upstream archives under `upstream/`, and a checksum manifest. Local tests, receipts, and agent working files remain untracked and outside the project source archive.
 
-Pinned upstream download URLs, revisions, versions, and SHA-256 values are in [build/source-lock.json](build/source-lock.json). DSH's release tag and package versions match `0.2.1-rc.5`, but its npm metadata supplies no `gitHead`; byte-equivalent rebuilding has not been verified. The source companion does not by itself establish completeness for every combined-host distribution. Assess the corresponding-source requirements of the actual distribution, including required host components, before publishing it.
+Pinned upstream download URLs, revisions, versions, and SHA-256 values are in [build/source-lock.json](build/source-lock.json). DSH's release tag and package versions match `0.2.2-rc.4`, but its npm metadata supplies no `gitHead`; byte-equivalent rebuilding has not been verified. The source companion does not by itself establish completeness for every combined-host distribution. Assess the corresponding-source requirements of the actual distribution, including required host components, before publishing it.
 
 ---
 
 ## Upstream Copyright Notices and License Texts
 
-### 1. Official DeepSeek Harness Modules (`0.2.1-rc.5`) — MIT License
+### 1. Official DeepSeek Harness Modules (`0.2.2-rc.4`) — MIT License
 
 Applies to:
-- `@deepseek-ai/dsh-sandbox-local@0.2.1-rc.5`
-- `@deepseek-ai/dsh-sandbox-policy@0.2.1-rc.5`
-- `@deepseek-ai/dsh-user-approval@0.2.1-rc.5`
-- `@deepseek-ai/dsh-permission-presets@0.2.1-rc.5`
-- `@deepseek-ai/dsh-fs-sandbox@0.2.1-rc.5`
-- `@deepseek-ai/dsh-sandbox@0.2.1-rc.5`
-- `@deepseek-ai/dsh-tools@0.2.1-rc.5`
-- `@deepseek-ai/dsh-tool-bash@0.2.1-rc.5`
-- `@deepseek-ai/dsh-tool-pwsh@0.2.1-rc.5`
-- `@deepseek-ai/dsh-tool-fs@0.2.1-rc.5`
-- `@deepseek-ai/dsh-plugin-manager@0.2.1-rc.5` (`./tools` entry only)
-- `@deepseek-ai/dsh-atomic-write@0.2.1-rc.5`
+- `@deepseek-ai/dsh-sandbox-local@0.2.2-rc.4`
+- `@deepseek-ai/dsh-sandbox-policy@0.2.2-rc.4`
+- `@deepseek-ai/dsh-user-approval@0.2.2-rc.4`
+- `@deepseek-ai/dsh-permission-presets@0.2.2-rc.4`
+- `@deepseek-ai/dsh-fs-sandbox@0.2.2-rc.4`
+- `@deepseek-ai/dsh-sandbox@0.2.2-rc.4`
+- `@deepseek-ai/dsh-tools@0.2.2-rc.4` (pipeline and shared helper)
+- `@deepseek-ai/dsh-tool-executor-native@0.2.2-rc.4`
+- `@deepseek-ai/dsh-tool-executor-ptc@0.2.2-rc.4`
+- `@deepseek-ai/dsh-tool-bash@0.2.2-rc.4`
+- `@deepseek-ai/dsh-tool-pwsh@0.2.2-rc.4`
+- `@deepseek-ai/dsh-tool-fs@0.2.2-rc.4`
+- `@deepseek-ai/dsh-plugin-manager@0.2.2-rc.4` (`./tools` entry only)
+- `@deepseek-ai/dsh-atomic-write@0.2.2-rc.4`
 
 ```text
 MIT License
@@ -155,10 +159,10 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 ```
 
-### 4. `zod@4.4.3` (`colinhacks/zod`) — MIT License
+### 4. `zod@4.6.6` (`colinhacks/zod`) — MIT License
 
 Applies to:
-- `zod@4.4.3`
+- `zod@4.6.6`
 
 ```text
 MIT License
